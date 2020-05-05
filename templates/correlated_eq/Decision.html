@@ -1,0 +1,40 @@
+{% extends "otree_redwood/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Your Choice
+{% endblock %}
+
+{% block scripts %}
+    <script src="//code.highcharts.com/highcharts.js"></script>
+
+    <link
+        rel="import"
+        href="{% static "webcomponents/bimatrix/leeps-bimatrix/leeps-bimatrix.html" %}">
+{% endblock %}
+
+{% block content %}
+    <leeps-bimatrix>
+        initial-decision='{{ player.initial_decision }}'
+        payoff-matrix='{{ player.subsession.payoff_matrix }}'
+        period-length='{{ player.group.period_length }}'
+        rate-limit='{{ player.subsession.slider_rate_limit }}'
+        {% if player.group.mean_matching %}
+        mean-matching
+        {% endif %}
+        {% if player.group.num_subperiods %}
+        num-subperiods='{{ player.group.num_subperiods }}'
+        {% endif %}
+        {% if player.subsession.pure_strategy %}
+        pure-strategy
+        {% endif %}
+        {% if player.subsession.show_at_worst %}
+        show-at-worst
+        {% endif %}
+        {% if player.subsession.show_best_response %}
+        show-best-response
+        {% endif %}
+        >
+    </leeps-bimatrix>
+
+{% endblock %}

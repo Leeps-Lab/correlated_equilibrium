@@ -1,0 +1,16 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Introduction
+{% endblock %}
+
+{% block content %}
+
+	{% with template_name=subsession.app_name|add:"/Instructions.html" %}
+		{% include template_name %}
+	{% endwith %}
+
+    {% next_button %}
+
+{% endblock %}

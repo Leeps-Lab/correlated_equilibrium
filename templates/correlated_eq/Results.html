@@ -1,0 +1,31 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+
+    <table class="table" style="width:400px; margin-top:20px; margin-bottom:10px">
+        <th>
+            <td>Mix</td>
+            <td>Payoff</td>
+        </th>
+        <tr>
+            <td>Your Avg.</td>
+            <td>{{ player.get_average_strategy | floatformat:2 }}</td>
+            <td>{{ player.payoff }}</td>
+        </tr>
+        <tr>
+            <td>Others' Avg.</td>
+            <td>{{ player_average_strategy | floatformat:2 }}</td>
+            <td>{{ player_average_payoff }}</td>
+        </tr>
+    </table>
+
+    <div>Your total payoff so far: {{ player.participant.payoff }}</div>
+
+    {% next_button %}
+
+{% endblock %}

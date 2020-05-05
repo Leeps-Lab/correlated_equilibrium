@@ -1,0 +1,5 @@
+round,shuffle_role,period_length,num_subperiods,gamma,mean_matching,max_info,payoff1Aa,payoff1Ab,payoff1Ac,payoff1Ba,payoff1Bb,payoff1Bc,payoff1Ca,payoff1Cb,payoff1Cc,payoff2Aa,payoff2Ab,payoff2Ac,payoff2Ba,payoff2Bb,payoff2Bc,payoff2Ca,payoff2Cb,payoff2Cc
+1,TRUE,180,18,1,FALSE,TRUE,0,1,2,2,0,1,1,2,0,0,2,1,1,0,2,2,1,0
+2,TRUE,180,18,1,FALSE,FALSE,0,1,2,2,0,1,1,2,0,0,2,1,1,0,2,2,1,0
+3,TRUE,180,18,1,TRUE,TRUE,0,1,2,2,0,1,1,2,0,0,2,1,1,0,2,2,1,0
+4,TRUE,180,18,1,TRUE,FALSE,0,1,2,2,0,1,1,2,0,0,2,1,1,0,2,2,1,0

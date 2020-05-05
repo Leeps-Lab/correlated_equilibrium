@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script 
+        src="/static/bower_components/webcomponentsjs/webcomponents-lite.min.js">
+    </script>
+    <link
+        rel="import"
+        href="/static/webcomponents/app/leeps-bimatrix/leeps-bimatrix.html">
+    <link
+        rel="import"
+        href="/static/otree-redwood/webcomponents/redwood-debug/redwood-debug.html">
+    <link
+        rel="stylesheet"
+        href="/static/bootstrap/css/bootstrap.min.css">
+  </head>
+  <body>
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="/static/otree/js/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        var oTree = oTree || {};
+        (function() {
+            oTree.group = 1;
+            oTree.role = 'demo';
+            oTree.participantCode = 'demo';
+            oTree.appName = 'demo';
+            oTree.idInGroup = 1;
+            oTree.debug = true;
+        })();
+    </script>
+    <div style="margin: 0 10px 0 10px;">
+        <leeps-bimatrix
+            initial-decision="0.5"
+            payoff-matrix="[
+                [ 400, 400 ], [ 0,   800 ],
+                [ 800, 0   ], [ 200, 200 ]
+            ]"
+            period-length="120"
+            num-subperiods="10">
+        </leeps-bimatrix>
+        <redwood-debug></redwood-debug>
+    </div>
+  </body>
+</html>
