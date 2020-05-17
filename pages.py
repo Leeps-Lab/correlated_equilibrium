@@ -34,10 +34,11 @@ class Results(Page):
     def vars_for_template(self):
         if not self.player.payoff:
             self.player.set_payoff()
-        row_player = self.player.role() == 'row'
+        p1 = self.player.role() == 'p1'
+        p2 = self.player.role() == 'p2'
         return {
-            'player_average_strategy': self.subsession.get_average_strategy(row_player),
-            'player_average_payoff': self.subsession.get_average_payoff(row_player),
+            'player_average_strategy': self.subsession.get_average_strategy(p1, p2),
+            'player_average_payoff': self.subsession.get_average_payoff(p1, p2),
         }
 
     def is_displayed(self):
@@ -50,13 +51,14 @@ def get_config_columns(group):
     payoffs = reduce(concat, payoffs)
 
     return payoffs + [
-        config['num_subperiods'],
-        config['pure_strategy'],
         config['shuffle_role'],
-        config['show_at_worst'],
-        config['show_best_response'],
-        config['rate_limit'],
+        config['period_length'],
+        config['num_subperiods'],
+        config['gamma'],
         config['mean_matching'],
+        config['max_info'],
+        config['player_per_group'],
+        config['game'],
     ]
 
 
@@ -79,21 +81,14 @@ def get_output_table_header(groups):
         header.append('p{}_target'.format(player_num))
 
     header += [
-        'payoff1Aa',
-        'payoff2Aa',
-        'payoff1Ab',
-        'payoff2Ab',
-        'payoff1Ba',
-        'payoff2Ba',
-        'payoff1Bb',
-        'payoff2Bb',
+        'shuffle_role',
+        'period_length',
         'num_subperiods',
-        'pure_strategy',
-        'role_shuffle',
-        'show_at_worst',
-        'show_best_response',
-        'rate_limit',
+        'gamma',
         'mean_matching',
+        'max_info',
+        'player_per_group',
+        'game',
     ]
     return header
 
