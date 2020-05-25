@@ -76,6 +76,17 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                 group_matrix.append(players[i:i+players_per_silo])
             self.set_group_matrix(group_matrix)
 
+        # if pairwise matching, set group size based on config
+        else:
+            players = self.get_players()
+            players_per_silo = math.ceil(len(players) / num_silos)
+            group_matrix = []
+            ppg = config[self.round_number-1]['player_per_group']
+            for i in range(0, players_per_silo, ppg):
+                group_matrix.append(players[i:i+ppg])
+            self.set_group_matrix(group_matrix)
+
+        # randomize player id each period if not fixed id
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
 
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
@@ -195,7 +206,7 @@ class Player(BasePlayer):
         return self._initial_decision
 
     def other_player(self):
-        return self.get_others_in_group()[0]
+        return self.get_others_in_group()
 
     def set_payoff(self):
         decisions = list(Event.objects.filter(
