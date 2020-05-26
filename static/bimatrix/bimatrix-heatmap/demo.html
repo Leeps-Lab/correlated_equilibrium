@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="//code.highcharts.com/highcharts.js"></script>
+        <script type="module" src="{% bimatrix-heatmap.js' %}"></script>
+    </head>
+    <body>
+        <bimatrix-heatmap
+                width="300"
+                height="300"
+                my-decision=".8"
+                other-decision=".6"
+                payoffs="[
+                    400, 100,
+                    400, 200
+                ]"
+                color="rainbow">
+        </bimatrix-heatmap>
+    </body>
+</html>

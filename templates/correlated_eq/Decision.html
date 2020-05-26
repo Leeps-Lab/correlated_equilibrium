@@ -6,15 +6,13 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="{% static 'bimatrix/highcharts.js' %}"></script>
 
-    <link
-        rel="import"
-        href="{% static "webcomponents/bimatrix/leeps-bimatrix/leeps-bimatrix.html" %}">
+    <script type="module" src="{% static 'bimatrix/leeps-bimatrix/leeps-bimatrix.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-    <leeps-bimatrix>
+    <leeps-bimatrix
         initial-decision='{{ player.initial_decision }}'
         payoff-matrix='{{ player.subsession.payoff_matrix }}'
         period-length='{{ player.group.period_length }}'
@@ -34,7 +32,6 @@
         {% if player.subsession.show_best_response %}
         show-best-response
         {% endif %}
-        >
-    </leeps-bimatrix>
+    ></leeps-bimatrix>
 
 {% endblock %}
