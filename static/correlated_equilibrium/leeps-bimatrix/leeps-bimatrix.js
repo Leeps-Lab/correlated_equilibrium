@@ -9,7 +9,6 @@ import '/static/otree-redwood/src/redwood-period/redwood-period.js';
 import '/static/otree-redwood/src/redwood-decision-bot/redwood-decision-bot.js';
 import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 
-import '../bimatrix-heatmap/bimatrix-heatmap.js';
 import '../heatmap-thermometer/heatmap-thermometer.js';
 import '../payoff-graph/payoff-graph.js';
 import '../subperiod-payoff-graph/subperiod-payoff-graph.js';
