@@ -151,7 +151,7 @@ export class LeepsBimatrix extends PolymerElement {
                     <div class="layout horizontal">
 
                         <div id="heatmap-column" class="layout horizontal">
-                            
+                            <template is="dom-if" if="[[ pureStrategy ]]">
                                 <paper-radio-group
                                     class="layout vertical around-justified self-center"
                                     selected="{{ _myPlannedDecisionString }}">
@@ -209,8 +209,41 @@ export class LeepsBimatrix extends PolymerElement {
                                         </tr>
                                     </table>
                                 </template>
-                            
-                            
+                            </template>
+                            <template is="dom-if" if="[[ !pureStrategy ]]">
+                                <div class="layout vertical start">
+                                    <bimatrix-heatmap
+                                        id="counterpart-heatmap"
+                                        size="120"
+                                        my-decision="[[ myPlannedDecision ]]"
+                                        other-decision="[[ otherDecision ]]"
+                                        payoffs="[[ otherPayoffs ]]"
+                                        color="[[ otherColor ]]">
+                                    </bimatrix-heatmap>
+                                    <div id="your-heatmap" class="layout horizontal start">
+                                        <div class="slider-container">
+                                            <styled-range
+                                                min="0"
+                                                max="1"
+                                                step="0.01"
+                                                disabled="[[ !_isPeriodRunning ]]"
+                                                value="{{ myPlannedDecision }}"
+                                                rate-limit="[[ rateLimit ]]"
+                                                initial-value="[[ initialDecision ]]">
+                                            </styled-range>
+                                        </div>
+                                        <bimatrix-heatmap
+                                            size="300"
+                                            my-decision="[[ myPlannedDecision ]]"
+                                            other-decision="[[ otherDecision ]]"
+                                            payoffs="[[ myPayoffs ]]"
+                                            color="[[ myColor ]]"
+                                            show-at-worst="{{ showAtWorst }}"
+                                            show-best-response="{{ showBestResponse }}">
+                                        </bimatrix-heatmap>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
 
                         <div id="graphs-column" class="layout horizontal">
