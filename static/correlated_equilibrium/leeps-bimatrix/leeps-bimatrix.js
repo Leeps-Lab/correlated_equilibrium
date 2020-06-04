@@ -211,6 +211,14 @@ export class LeepsBimatrix extends PolymerElement {
                             </template>
                             <template is="dom-if" if="[[ !pureStrategy ]]">
                                 <div class="layout vertical start">
+                                    <bimatrix-heatmap
+                                        id="counterpart-heatmap"
+                                        size="120"
+                                        my-decision="[[ myPlannedDecision ]]"
+                                        other-decision="[[ otherDecision ]]"
+                                        payoffs="[[ otherPayoffs ]]"
+                                        color="[[ otherColor ]]">
+                                    </bimatrix-heatmap>
                                     <div id="your-heatmap" class="layout horizontal start">
                                         <div class="slider-container">
                                             <styled-range
@@ -223,6 +231,15 @@ export class LeepsBimatrix extends PolymerElement {
                                                 initial-value="[[ initialDecision ]]">
                                             </styled-range>
                                         </div>
+                                        <bimatrix-heatmap
+                                            size="300"
+                                            my-decision="[[ myPlannedDecision ]]"
+                                            other-decision="[[ otherDecision ]]"
+                                            payoffs="[[ myPayoffs ]]"
+                                            color="[[ myColor ]]"
+                                            show-at-worst="{{ showAtWorst }}"
+                                            show-best-response="{{ showBestResponse }}">
+                                        </bimatrix-heatmap>
                                     </div>
                                 </div>
                             </template>
