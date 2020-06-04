@@ -255,7 +255,9 @@ export class LeepsBimatrix extends PolymerElement {
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
         `
     }
