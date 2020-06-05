@@ -8,6 +8,7 @@ bimatrix was built using [otree-redwood](https://github.com/Leeps-Lab/otree-redw
 
 ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 dict(
     name='bimatrix',
     display_name='Generic Bimatrix Game',
@@ -17,6 +18,8 @@ dict(
     num_silos=1,
 ),
 =======
+=======
+>>>>>>> parent of d4d50de... Get most recent bimatrix code
 {
     'name': 'bimatrix',
     'display_name': "Generic Bimatrix Game",
@@ -25,5 +28,8 @@ dict(
     'config_file': 'demo.csv',
     'num_silos': 1,
 }
+<<<<<<< HEAD
+>>>>>>> parent of d4d50de... Get most recent bimatrix code
+=======
 >>>>>>> parent of d4d50de... Get most recent bimatrix code
 ```
