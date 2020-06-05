@@ -7,6 +7,7 @@ Corrleated Equilibrium was built using [otree-redwood](https://github.com/Leeps-
 ### Suggested session config:
 
 ```
+<<<<<<< HEAD
 dict(
     name='correlated_equilibrium',
     display_name='correlated_equilibrium Game',
@@ -15,4 +16,14 @@ dict(
     config_file='demo.csv',
     num_silos=1,
 ),
+=======
+{
+    'name': 'bimatrix',
+    'display_name': "Generic Bimatrix Game",
+    'num_demo_participants': 2,
+    'app_sequence': ['bimatrix', 'payment_info'],
+    'config_file': 'demo.csv',
+    'num_silos': 1,
+}
+>>>>>>> parent of d4d50de... Get most recent bimatrix code
 ```

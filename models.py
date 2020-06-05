@@ -16,17 +16,13 @@ This is a configurable bimatrix game.
 
 
 class Constants(BaseConstants):
-    name_in_url = 'correlated_equilibrium'
-    # players per group when not using mean matching
-    players_per_group = 2
-	# Maximum number of rounds, actual number is taken as the max round
-	# in the config file.
-    num_rounds = 100
+    name_in_url = 'corr_eq'
+    num_rounds = 50
     base_points = 0
 
 
 def parse_config(config_file):
-    with open('correlated_equilibrium/configs/' + config_file) as f:
+    with open('correlated_eq/configs/' + config_file) as f:
         rows = list(csv.DictReader(f))
 
     rounds = []
@@ -35,31 +31,27 @@ def parse_config(config_file):
             'shuffle_role': True if row['shuffle_role'] == 'TRUE' else False,
             'period_length': int(row['period_length']),
             'num_subperiods': int(row['num_subperiods']),
-            'pure_strategy': True if row['pure_strategy'] == 'TRUE' else False,
-            'show_at_worst': True if row['show_at_worst'] == 'TRUE' else False,
-            'show_best_response': True if row['show_best_response'] == 'TRUE' else False,
-            'rate_limit': int(row['rate_limit']) if row['rate_limit'] else 0,
+            'gamma': float(row['gamma']),
             'mean_matching': True if row['mean_matching'] == 'TRUE' else False,
-            'payoff_matrix': [
-                [int(row['payoff1Aa']), int(row['payoff2Aa'])], [int(row['payoff1Ab']), int(row['payoff2Ab'])],
-                [int(row['payoff1Ba']), int(row['payoff2Ba'])], [int(row['payoff1Bb']), int(row['payoff2Bb'])]
-            ],
+            'max_info': True if row['max_info'] == 'TRUE' else False,
+            'player_per_group': int(row['player_per_group']),
+            'game': str(row['game'])
         })
     return rounds
 
 
 class Subsession(BaseSubsession, SubsessionSilosMixin):
 
-    def get_average_strategy(self, row_player):
-        role = 'row' if row_player else 'column'
+    def get_average_strategy(self, p1, p2):
+        role = 'p1' if p1 else 'p2' if p2 else 'p3'
         players = [p for p in self.get_players() if p.role() == role] 
         sum_strategies = 0
         for p in players:
             sum_strategies += p.get_average_strategy()
         return sum_strategies / len(players)
     
-    def get_average_payoff(self, row_player):
-        role = 'row' if row_player else 'column'
+    def get_average_payoff(self, p1, p2):
+        role = 'p1' if p1 else 'p2' if p2 else 'p3'
         players = [p for p in self.get_players() if p.role() == role] 
         sum_payoffs = 0
         for p in players:
@@ -68,7 +60,7 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
             sum_payoffs += p.payoff
         return sum_payoffs / len(players)
 
-    def before_session_starts(self):
+    def creating_session(self):
         config = parse_config(self.session.config['config_file'])
         if self.round_number > len(config):
             return
@@ -84,24 +76,30 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                 group_matrix.append(players[i:i+players_per_silo])
             self.set_group_matrix(group_matrix)
 
+        # if pairwise matching, set group size based on config
+        else:
+            players = self.get_players()
+            players_per_silo = math.ceil(len(players) / num_silos)
+            group_matrix = []
+            ppg = config[self.round_number-1]['player_per_group']
+            for i in range(0, players_per_silo, ppg):
+                group_matrix.append(players[i:i+ppg])
+            self.set_group_matrix(group_matrix)
+
+        # randomize player id each period if not fixed id
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
+
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
         self.group_randomly_in_silos(num_silos, fixed_id_in_group)
 
-    def payoff_matrix(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['payoff_matrix']
-
-    def pure_strategy(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['pure_strategy']
-    
-    def show_at_worst(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['show_at_worst']
-
-    def show_best_response(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['show_best_response']
-    
-    def slider_rate_limit(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['rate_limit']
+        '''
+        group_matrix = []
+        players = self.get_players()
+        ppg = self.session.config['players_per_group']
+        for i in range(0, len(players), ppg):
+            group_matrix.append(players[i:i+ppg])
+        self.set_group_matrix(group_matrix)
+        '''
 
 
 class Group(DecisionGroup, GroupSilosMixin):
@@ -117,12 +115,46 @@ class Group(DecisionGroup, GroupSilosMixin):
     
     def mean_matching(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['mean_matching']
-    
-    def rate_limit(self):
-        if not self.subsession.pure_strategy() and self.mean_matching():
-            return 0.2
+
+    def max_info(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['max_info']
+
+    def game(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
+
+    def gamma(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['gamma']
+
+    def player_per_group(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['player_per_group']
+
+    def payoff_matrix(self):
+        # player.payoff = payoff_matrix[p3_strategy][p1_strategy][p2_strategy][role]
+
+        if self.game() == 'MV':
+            payoff_matrix = [
+                [[[0,0], [1,2], [2,1]],
+                 [[2,1], [0,0], [1,2]],
+                 [[1,2], [2,1], [0,0]]]
+            ]
+            return payoff_matrix
         else:
-            return None
+            if self.game() == 'FP':
+                payoff_matrix = [
+                    [[[0,1,3],[0,0,0]],
+                     [[1,1,1],[1,0,0]]],
+                    [[[2,2,2], [0,0,0]],
+                     [[2,2,0], [2,2,2]]],
+                    [[[0,1,0], [0,0,0]],
+                     [[1,1,0], [1,0,3]]]
+                ]
+                return payoff_matrix
+            else:
+                payoff_matrix = [
+                    [[1,1],[6,2]],
+                    [[2,6],[5,5]]
+                ]
+                return payoff_matrix
 
 
 class Player(BasePlayer):
@@ -132,10 +164,13 @@ class Player(BasePlayer):
     _initial_decision = FloatField(null=True)
 
     def role(self):
-        if self.id_in_group % 2 == 0:
-            return 'column'
+        if self.id_in_group % 3 == 0:
+            return 'p3'
         else:
-            return 'row'
+            if self.id_in_group % 2 == 0:
+                return 'p2'
+            else:
+                return 'p1'
 
     def get_average_strategy(self):
         decisions = list(Event.objects.filter(
@@ -171,7 +206,7 @@ class Player(BasePlayer):
         return self._initial_decision
 
     def other_player(self):
-        return self.get_others_in_group()[0]
+        return self.get_others_in_group()
 
     def set_payoff(self):
         decisions = list(Event.objects.filter(
@@ -193,7 +228,7 @@ class Player(BasePlayer):
         except Event.DoesNotExist:
             return float('nan')
 
-        payoff_matrix = self.subsession.payoff_matrix()
+        payoff_matrix = self.group.payoff_matrix()
 
         self.payoff = self.get_payoff(period_start, period_end, decisions, payoff_matrix)
 
@@ -201,29 +236,33 @@ class Player(BasePlayer):
         period_duration = period_end.timestamp - period_start.timestamp
 
         payoff = 0
-        role_index = 0 if self.role() == 'row' else 1
+        if self.role() == 'p1':
+            role_index = 0
+        else:
+            if self.role() == 'p2':
+                role_index = 1
+            else:
+                role_index = 2
 
-        Aa = payoff_matrix[0][role_index]
-        Ab = payoff_matrix[1][role_index]
-        Ba = payoff_matrix[2][role_index]
-        Bb = payoff_matrix[3][role_index]
-
-        q1, q2 = 0.5, 0.5
         for i, d in enumerate(decisions):
             if not d.value: continue
 
-            other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() != self.role()]
-            if self.role() == 'row':
-                q1 = d.value[self.participant.code]
-                q2 = sum(other_role_decisions) / len(other_role_decisions)
-            else:
-                q2 = d.value[self.participant.code]
-                q1 = sum(other_role_decisions) / len(other_role_decisions)
+            if self.group.player_per_group() == 2:
+                other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if
+                                        p.role() != self.role()]
+                if self.role() == 'row':
+                    q1 = d.value[self.participant.code]
+                    q2 = sum(other_role_decisions) / len(other_role_decisions)
+                    q3 = 0
+                else:
+                    q2 = d.value[self.participant.code]
+                    q1 = sum(other_role_decisions) / len(other_role_decisions)
+                    q3 = 0
 
-            flow_payoff = ((Aa * q1 * q2) +
-                           (Ab * q1 * (1 - q2)) +
-                           (Ba * (1 - q1) * q2) +
-                           (Bb * (1 - q1) * (1 - q2)))
+                flow_payoff = payoff_matrix[q3][q1][q2][role_index]
+
+            else:
+                flow_payoff = payoff_matrix[q3][q1][q2][role_index]
 
             if self.group.num_subperiods():
                 if i == 0:

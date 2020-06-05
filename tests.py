@@ -1,17 +1,17 @@
 from collections import namedtuple
 from otree.api import Bot, Submission
-from . import views
+from . import pages
 
 
 class PlayerBot(Bot):
 
     def play_round(self):
         if self.player.round_number == 1:
-            yield views.Introduction
+            yield pages.Introduction
         if self.player.round_number <= self.group.num_rounds():
             test_get_payoff()
-            yield Submission(views.Decision, {}, check_html=False)
-            yield views.Results
+            yield Submission(pages.Decision, {}, check_html=False)
+            yield pages.Results
 
 
     def validate_play(self):
