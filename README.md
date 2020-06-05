@@ -7,35 +7,12 @@ bimatrix was built using [otree-redwood](https://github.com/Leeps-Lab/otree-redw
 ### Suggested session config:
 
 ```
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 dict(
-    name='bimatrix',
-    display_name='Generic Bimatrix Game',
-    num_demo_participants=2,
-    app_sequence=['bimatrix'],
-    config_file='demo.csv',
-    num_silos=1,
+        name='correlated_equilibrium',
+        display_name='correlated_equilibrium Game',
+        num_demo_participants=2,
+        app_sequence=['correlated_equilibrium'],
+        config_file='demo.csv',
+        num_silos=1,
 ),
-=======
-=======
->>>>>>> parent of d4d50de... Get most recent bimatrix code
-=======
->>>>>>> parent of d4d50de... Get most recent bimatrix code
-{
-    'name': 'bimatrix',
-    'display_name': "Generic Bimatrix Game",
-    'num_demo_participants': 2,
-    'app_sequence': ['bimatrix', 'payment_info'],
-    'config_file': 'demo.csv',
-    'num_silos': 1,
-}
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of d4d50de... Get most recent bimatrix code
-=======
->>>>>>> parent of d4d50de... Get most recent bimatrix code
-=======
->>>>>>> parent of d4d50de... Get most recent bimatrix code
 ```
