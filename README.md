@@ -9,10 +9,10 @@ bimatrix was built using [otree-redwood](https://github.com/Leeps-Lab/otree-redw
 ```
 <<<<<<< HEAD
 dict(
-    name='correlated_equilibrium',
-    display_name='correlated_equilibrium Game',
+    name='bimatrix',
+    display_name='Generic Bimatrix Game',
     num_demo_participants=2,
-    app_sequence=['correlated_equilibrium'],
+    app_sequence=['bimatrix'],
     config_file='demo.csv',
     num_silos=1,
 ),
