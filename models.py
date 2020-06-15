@@ -86,9 +86,9 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
         if game == 'MV':
             payoff_matrix = [
-                [[[0,0], [1,2], [2,1]],
-                 [[2,1], [0,0], [1,2]],
-                 [[1,2], [2,1], [0,0]]]
+                [0,0], [1,2], [2,1],
+                 [2,1], [0,0], [1,2],
+                 [1,2], [2,1], [0,0]
             ]
             return payoff_matrix
         else:
@@ -201,9 +201,9 @@ class Group(DecisionGroup, GroupSilosMixin):
 
         if self.game() == 'MV':
             payoff_matrix = [
-                [[[0,0], [1,2], [2,1]],
-                 [[2,1], [0,0], [1,2]],
-                 [[1,2], [2,1], [0,0]]]
+                [0,0], [1,2], [2,1],
+                 [2,1], [0,0], [1,2],
+                 [1,2], [2,1], [0,0]
             ]
             return payoff_matrix
         else:
@@ -301,6 +301,11 @@ class Player(BasePlayer):
         self.payoff = self.get_payoff(period_start, period_end, decisions, payoff_matrix)
 
     def get_payoff(self, period_start, period_end, decisions, payoff_matrix):
+        
+        #Fix later#########################
+        return 0
+        ###################################
+
         period_duration = period_end.timestamp - period_start.timestamp
 
         payoff = 0
