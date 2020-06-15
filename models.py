@@ -188,7 +188,7 @@ class Group(DecisionGroup, GroupSilosMixin):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['gamma']
 
     def player_per_group(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['player_per_group']
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
     
     def rate_limit(self):
         if not self.subsession.pure_strategy() and self.mean_matching():
