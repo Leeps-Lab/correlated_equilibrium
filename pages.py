@@ -57,7 +57,7 @@ def get_config_columns(group):
         config['gamma'],
         config['mean_matching'],
         config['max_info'],
-        config['player_per_group'],
+        config['players_per_group'],
         config['game'],
     ]
 
@@ -187,7 +187,6 @@ def get_output_discrete_time(events):
     
 
 page_sequence = [
-    Introduction,
     DecisionWaitPage,
     Decision,
     Results

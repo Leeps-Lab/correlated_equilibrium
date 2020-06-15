@@ -11,8 +11,8 @@ dict(
         name='correlated_equilibrium',
         display_name='correlated_equilibrium Game',
         num_demo_participants=2,
-        app_sequence=['correlated_equilibrium'],
-        config_file='demo.csv',
+        app_sequence=['correlated_equilibrium', 'payment_info'],
+        config_file='pilot_test.csv',
         num_silos=1,
 ),
 ```

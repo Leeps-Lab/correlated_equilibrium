@@ -32,7 +32,7 @@ def test_get_payoff():
     from . import models
 
     sess = Session.objects.create(code=str(random.randint(0, 500000)), config={
-        'config_file': 'demo.csv',
+        'config_file': 'pilot_test.csv',
     })
     p1 = Participant.objects.create(session=sess, code='test_p1_'+str(random.randint(0, 500000)))
     p2 = Participant.objects.create(session=sess, code='test_p2_'+str(random.randint(0, 500000)))

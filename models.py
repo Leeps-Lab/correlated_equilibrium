@@ -16,13 +16,14 @@ This is a configurable bimatrix game.
 
 
 class Constants(BaseConstants):
-    name_in_url = 'corr_eq'
+    name_in_url = 'correlated_equilibrium'
+    players_per_group = 2
     num_rounds = 50
     base_points = 0
 
 
 def parse_config(config_file):
-    with open('correlated_eq/configs/' + config_file) as f:
+    with open('correlated_equilibrium/configs/' + config_file) as f:
         rows = list(csv.DictReader(f))
 
     rounds = []
@@ -34,7 +35,7 @@ def parse_config(config_file):
             'gamma': float(row['gamma']),
             'mean_matching': True if row['mean_matching'] == 'TRUE' else False,
             'max_info': True if row['max_info'] == 'TRUE' else False,
-            'player_per_group': int(row['player_per_group']),
+            'players_per_group': int(row['players_per_group']),
             'game': str(row['game'])
         })
     return rounds
@@ -59,6 +60,67 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                 p.set_payoff()
             sum_payoffs += p.payoff
         return sum_payoffs / len(players)
+    
+    def before_session_starts(self):
+        config = parse_config(self.session.config['config_file'])
+        if self.round_number > len(config):
+            return
+        
+        num_silos = self.session.config['num_silos']
+
+        # if mean matching is enabled, put everyone in the same silo in the same group
+        if config[self.round_number-1]['mean_matching']:
+            players = self.get_players()
+            players_per_silo = math.ceil(len(players) / num_silos)
+            group_matrix = []
+            for i in range(0, len(players), players_per_silo):
+                group_matrix.append(players[i:i+players_per_silo])
+            self.set_group_matrix(group_matrix)
+
+        fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
+        # use otree-redwood's SubsessionSilosMixin to organize the session into silos
+        self.group_randomly_in_silos(num_silos, fixed_id_in_group)
+
+    def payoff_matrix(self):
+        #return parse_config(self.session.config['config_file'])[self.round_number-1]['payoff_matrix']
+        game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
+        if game == 'MV':
+            payoff_matrix = [
+                [[[0,0], [1,2], [2,1]],
+                 [[2,1], [0,0], [1,2]],
+                 [[1,2], [2,1], [0,0]]]
+            ]
+            return payoff_matrix
+        else:
+            if game == 'FP':
+                payoff_matrix = [
+                    [[[0,1,3],[0,0,0]],
+                     [[1,1,1],[1,0,0]]],
+                    [[[2,2,2], [0,0,0]],
+                     [[2,2,0], [2,2,2]]],
+                    [[[0,1,0], [0,0,0]],
+                     [[1,1,0], [1,0,3]]]
+                ]
+                return payoff_matrix
+            else:
+                payoff_matrix = [
+                    [[1,1],[6,2]],
+                    [[2,6],[5,5]]
+                ]
+                return payoff_matrix
+
+    def pure_strategy(self):
+        return True
+        #return parse_config(self.session.config['config_file'])[self.round_number-1]['pure_strategy']
+    
+    def show_at_worst(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['show_at_worst']
+
+    def show_best_response(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['show_best_response']
+    
+    def slider_rate_limit(self):
+        return 0
 
     def creating_session(self):
         config = parse_config(self.session.config['config_file'])
@@ -81,7 +143,7 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
             players = self.get_players()
             players_per_silo = math.ceil(len(players) / num_silos)
             group_matrix = []
-            ppg = config[self.round_number-1]['player_per_group']
+            ppg = config[self.round_number-1]['players_per_group']
             for i in range(0, players_per_silo, ppg):
                 group_matrix.append(players[i:i+ppg])
             self.set_group_matrix(group_matrix)
@@ -127,6 +189,12 @@ class Group(DecisionGroup, GroupSilosMixin):
 
     def player_per_group(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['player_per_group']
+    
+    def rate_limit(self):
+        if not self.subsession.pure_strategy() and self.mean_matching():
+            return 0.2
+        else:
+            return None
 
     def payoff_matrix(self):
         # player.payoff = payoff_matrix[p3_strategy][p1_strategy][p2_strategy][role]
@@ -193,7 +261,7 @@ class Player(BasePlayer):
             decision_value = cur_decision.value[self.participant.code]
             weighted_sum_decision += decision_value * (next_change_time - cur_decision.timestamp).total_seconds()
         return weighted_sum_decision / self.group.period_length()
-
+    
     def initial_decision(self):
         self.refresh_from_db()
         if self._initial_decision:
