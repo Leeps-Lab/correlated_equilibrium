@@ -20,16 +20,18 @@ export class PayoffGraph extends PolymerElement {
             <div id="chart"></div>
         `
     }
+    
+    static get observers() {
+        return [
+          // Observer method name, followed by a list of dependencies, in parenthesis
+          '_updateDataset(groupDecisions.*)'
+        ]
+      }
 
     static get properties() {
         return {
-            myDecision: {
-                type: Number,
-                observer: '_updateDataset'
-            },
-            otherDecision: {
-                type: Number,
-                observer: '_updateDataset'
+            groupDecisions: {
+                type: Object,
             },
             myPayoffs: {
                 type: Array,
@@ -71,10 +73,17 @@ export class PayoffGraph extends PolymerElement {
     }
     // sets up payoff over time graph
     _initHighchart() {
-        const minPayoff = this.payoffMin === undefined ?
-            Math.min(... this.myPayoffs.concat(this.otherPayoffs)) : this.payoffMin;
-        const maxPayoff = this.payoffMax === undefined ?
-            Math.max(... this.myPayoffs.concat(this.otherPayoffs)) : this.payoffMax;
+
+        let minPayoff = Infinity;
+        let maxPayoff = -Infinity;
+
+        for (i=0; i< this.myPayoffs.length; i++) {
+            
+            for(j = 0; j < this.myPayoffs[0].length; j++) {
+                minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+            }
+        }
 
         // call highcharts setup function
         this.graph_obj = Highcharts.chart({

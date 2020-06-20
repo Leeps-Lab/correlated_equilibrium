@@ -180,78 +180,78 @@ export class LeepsBimatrix extends PolymerElement {
                                         <tr>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 2) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 0) ]]
+                                                    [[ _array(myPayoffs, 0, 0) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 0) ]]
+                                                    [[ _array(otherPayoffs, 0, 0) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 1) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 1) ]]
+                                                    [[ _array(myPayoffs, 0, 1) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 1) ]]
+                                                    [[ _array(otherPayoffs, 0, 1) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 0) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 2) ]]
+                                                    [[ _array(myPayoffs, 0, 2) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 2) ]]
+                                                    [[ _array(otherPayoffs, 0, 2) ]]
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 2) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 3) ]]
+                                                    [[ _array(myPayoffs, 1, 0) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 3) ]]
+                                                    [[ _array(otherPayoffs, 1, 0) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 1) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 4) ]]
+                                                    [[ _array(myPayoffs, 1, 1) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 4) ]]
+                                                    [[ _array(otherPayoffs, 1, 1) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 0) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 5) ]]
+                                                    [[ _array(myPayoffs, 1, 2) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 5) ]]
+                                                    [[ _array(otherPayoffs, 1, 2) ]]
                                                 </span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 2) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 6) ]]
+                                                    [[ _array(myPayoffs, 2, 0) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 6) ]]
+                                                    [[ _array(otherPayoffs, 2, 0) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 1) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 7) ]]
+                                                    [[ _array(myPayoffs, 2, 1) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 7) ]]
+                                                    [[ _array(otherPayoffs, 2, 1) ]]
                                                 </span>
                                             </td>
                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 0) ]]">
                                                 <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 8) ]]
+                                                    [[ _array(myPayoffs, 2, 2) ]]
                                                 </span>,
                                                 <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 8) ]]
+                                                    [[ _array(otherPayoffs, 2, 2) ]]
                                                 </span>
                                             </td>
                                         </tr>
@@ -314,6 +314,7 @@ export class LeepsBimatrix extends PolymerElement {
                                         <payoff-graph
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
+                                            group-decisions="{{ groupDecisions }}"
                                             my-payoffs="[[ myPayoffs ]]"
                                             other-payoffs="[[ otherPayoffs ]]"
                                             period-length="[[ periodLength ]]"
@@ -436,48 +437,24 @@ export class LeepsBimatrix extends PolymerElement {
             console.log('Not in game, manually setting payoffIndex');
             this.payoffIndex = 0;
         } else {
-            this.payoffIndex = this.$.constants.role == 'row' ? 0 : 1;
+            this.payoffIndex = (this.$.constants.idInGroup - 1) % 3;
         }
         this.otherPayoffIndex = 1 - this.payoffIndex;
 
         // transpose payoff and probability matrices if player controls vertical line
-        if (this.$.constants.role == 'column') {
-            /*
-            // first payoff matrix
-            let temp = this.payoffMatrix[1];
-            this.payoffMatrix[1] = this.payoffMatrix[2];
-            this.payoffMatrix[2] = temp;
-            */
-
-            // Calculate the width and height of the Array
-            var w = this.payoffMatrix.length || 0;
-            var h = this.payoffMatrix[0] instanceof Array ? this.payoffMatrix[0].length : 0;
-
-            // In case it is a zero matrix, no transpose routine needed.
-            if(h === 0 || w === 0) { return []; }
-
-            /**
-             * @var {Number} i Counter
-             * @var {Number} j Counter
-             * @var {Array} t Transposed data is stored in this array.
-             */
+        if (this.$.constants.role == 'p2') {
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
-            for(i=0; i<h; i++) {
+            for (i=0; i < this.payoffMatrix[0].length; i++) {
+                t[i] = []
 
-                // Insert a new row (array)
-                t[i] = [];
-
-                // Loop through every item per item in outer array (width)
-                for(j=0; j<w; j++) {
-
-                // Save transposed data.
-                t[i][j] = payoffMatrix[j][i];
+                for(j = 0; j < this.payoffMatrix.length; j++) {
+                    t[i][j] = this.payoffMatrix[j][i]
                 }
             }
 
-            this.payoffMatrix = t;
+            this.set("payoffMatrix", t);
         }
 
         // color schemes for each player's heatmaps
@@ -485,19 +462,23 @@ export class LeepsBimatrix extends PolymerElement {
         this.otherColor = 'red';
 
         // separate each player's payoffs into two separate arrays
-        this.myPayoffs = this.payoffMatrix.map(
-            val => parseInt(val[this.payoffIndex]));
-        this.otherPayoffs = this.payoffMatrix.map(
-            val => parseInt(val[this.otherPayoffIndex]));
-        
-        console.log(this.myPayoffs);
-        console.log(this.otherPayoffs);
-        console.log(this.payoffMatrix);
+        this.myPayoffs = [];
+        this.otherPayoffs = [];
+
+        for (i=0; i< this.payoffMatrix.length; i++) {
+            this.myPayoffs[i] = []
+            this.otherPayoffs[i] = [];
+
+            for(j = 0; j < this.payoffMatrix[0].length; j++) {
+                this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex]
+                this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex]
+            }
+        }
 
         this.$.bot.payoffFunction = (myDecision, otherDecision) => {
             const m = this.myPayoffs;
-            const row1 = myDecision * m[0] + (1 - myDecision) * m[2];
-            const row2 = myDecision * m[1] + (1 - myDecision) * m[3];
+            const row1 = myDecision * m[0][0] + (1 - myDecision) * m[0][1];
+            const row2 = myDecision * m[1][0] + (1 - myDecision) * m[1][1];
             const flowPayoff = otherDecision * row1 + (1 - otherDecision) * row2;
             return flowPayoff;
         };
@@ -511,8 +492,8 @@ export class LeepsBimatrix extends PolymerElement {
             this._myPlannedDecisionString = new String(this.initialDecision);
         }
     }
-    _array(a, i) {
-        return a[i];
+    _array(a, i, j) {
+        return a[i][j];
     }
     _payoffMatrixClass(myDecision, otherDecision, i, j) {
         if (myDecision === i && otherDecision === j) {

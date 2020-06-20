@@ -86,26 +86,26 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
         if game == 'MV':
             payoff_matrix = [
-                [0,0], [1,2], [2,1],
-                 [2,1], [0,0], [1,2],
-                 [1,2], [2,1], [0,0]
+                [[0,0], [100,200], [200,100]],
+                 [[200,100], [0,0], [100,200]],
+                 [[100,200], [200,100], [0,0]]
             ]
             return payoff_matrix
         else:
             if game == 'FP':
                 payoff_matrix = [
-                    [[[0,1,3],[0,0,0]],
-                     [[1,1,1],[1,0,0]]],
-                    [[[2,2,2], [0,0,0]],
-                     [[2,2,0], [2,2,2]]],
-                    [[[0,1,0], [0,0,0]],
-                     [[1,1,0], [1,0,3]]]
+                    [[[0,100,300],[0,0,0]],
+                     [[100,100,100],[100,0,0]]],
+                    [[[200,200,200], [0,0,0]],
+                     [[200,200,0], [200,200,200]]],
+                    [[[0,100,0], [0,0,0]],
+                     [[100,100,0], [100,0,300]]]
                 ]
                 return payoff_matrix
             else:
                 payoff_matrix = [
-                    [[1,1],[6,2]],
-                    [[2,6],[5,5]]
+                    [[100,100],[600,200]],
+                    [[200,600],[500,500]]
                 ]
                 return payoff_matrix
 
@@ -196,34 +196,6 @@ class Group(DecisionGroup, GroupSilosMixin):
         else:
             return None
 
-    def payoff_matrix(self):
-        # player.payoff = payoff_matrix[p3_strategy][p1_strategy][p2_strategy][role]
-
-        if self.game() == 'MV':
-            payoff_matrix = [
-                [0,0], [1,2], [2,1],
-                 [2,1], [0,0], [1,2],
-                 [1,2], [2,1], [0,0]
-            ]
-            return payoff_matrix
-        else:
-            if self.game() == 'FP':
-                payoff_matrix = [
-                    [[[0,1,3],[0,0,0]],
-                     [[1,1,1],[1,0,0]]],
-                    [[[2,2,2], [0,0,0]],
-                     [[2,2,0], [2,2,2]]],
-                    [[[0,1,0], [0,0,0]],
-                     [[1,1,0], [1,0,3]]]
-                ]
-                return payoff_matrix
-            else:
-                payoff_matrix = [
-                    [[1,1],[6,2]],
-                    [[2,6],[5,5]]
-                ]
-                return payoff_matrix
-
 
 class Player(BasePlayer):
 
@@ -232,13 +204,12 @@ class Player(BasePlayer):
     _initial_decision = FloatField(null=True)
 
     def role(self):
-        if self.id_in_group % 3 == 0:
+        if (self.id_in_group - 1) % 3 == 0:
+            return 'p1'
+        elif (self.id_in_group - 1) % 3 == 1:
+            return 'p2'
+        elif (self.id_in_group - 1) % 3 == 2:
             return 'p3'
-        else:
-            if self.id_in_group % 2 == 0:
-                return 'p2'
-            else:
-                return 'p1'
 
     def get_average_strategy(self):
         decisions = list(Event.objects.filter(
@@ -296,46 +267,33 @@ class Player(BasePlayer):
         except Event.DoesNotExist:
             return float('nan')
 
-        payoff_matrix = self.group.payoff_matrix()
+        payoff_matrix = self.subsession.payoff_matrix()
 
         self.payoff = self.get_payoff(period_start, period_end, decisions, payoff_matrix)
 
     def get_payoff(self, period_start, period_end, decisions, payoff_matrix):
-        
-        #Fix later#########################
-        return 0
-        ###################################
 
         period_duration = period_end.timestamp - period_start.timestamp
 
         payoff = 0
-        if self.role() == 'p1':
-            role_index = 0
-        else:
-            if self.role() == 'p2':
-                role_index = 1
-            else:
-                role_index = 2
+        role_index = (self.id_in_group - 1) % 3 
 
         for i, d in enumerate(decisions):
             if not d.value: continue
 
-            if self.group.player_per_group() == 2:
-                other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if
+            other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if
                                         p.role() != self.role()]
-                if self.role() == 'row':
-                    q1 = d.value[self.participant.code]
-                    q2 = sum(other_role_decisions) / len(other_role_decisions)
-                    q3 = 0
+            
+            flow_payoff = 0
+            my_decision = d.value[self.participant.code]
+
+            for decision in other_role_decisions:
+                if self.role() == 'p1':
+                    flow_payoff += payoff_matrix[my_decision][decision][role_index]
                 else:
-                    q2 = d.value[self.participant.code]
-                    q1 = sum(other_role_decisions) / len(other_role_decisions)
-                    q3 = 0
+                    flow_payoff += payoff_matrix[decision][my_decision][role_index]
 
-                flow_payoff = payoff_matrix[q3][q1][q2][role_index]
-
-            else:
-                flow_payoff = payoff_matrix[q3][q1][q2][role_index]
+            flow_payoff /= len(other_role_decisions)
 
             if self.group.num_subperiods():
                 if i == 0:
