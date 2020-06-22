@@ -40,7 +40,6 @@ def parse_config(config_file):
         })
     return rounds
 
-
 class Subsession(BaseSubsession, SubsessionSilosMixin):
 
     def get_average_strategy(self, p1, p2):
