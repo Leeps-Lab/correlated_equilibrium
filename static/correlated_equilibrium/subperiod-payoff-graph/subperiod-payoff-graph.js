@@ -60,6 +60,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
     }
     // sets up payoff over time graph
     _initHighchart() {
+        
         // readability is overrated
         // just sums each set of payoffs and divides by 4
         const myInitialPayoff = this.myPayoffs.reduce(
@@ -67,10 +68,16 @@ export class SubperiodPayoffGraph extends PolymerElement {
         const otherInitialPayoff = this.otherPayoffs.reduce(
             (a, b) => a + b, 0) / 4;
 
-        const minPayoff = this.payoffMin === undefined ?
-            Math.min(... this.myPayoffs.concat(this.otherPayoffs)) : this.payoffMin;
-        const maxPayoff = this.payoffMax === undefined ?
-            Math.max(... this.myPayoffs.concat(this.otherPayoffs)) : this.payoffMax;
+        let minPayoff = Infinity;
+        let maxPayoff = -Infinity;
+
+        for (var i=0; i< this.myPayoffs.length; i++) {
+            
+            for(var j = 0; j < this.myPayoffs[0].length; j++) {
+                minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+            }
+        }
 
         // call highcharts setup function
         this.graph_obj = Highcharts.chart({
@@ -174,18 +181,10 @@ export class SubperiodPayoffGraph extends PolymerElement {
         })();
 
         this._currSubperiod += 1;
-
-        const myPayoff =
-            (myDecision * otherDecision * this.myPayoffs[0]) +
-            (myDecision * (1 - otherDecision) * this.myPayoffs[1]) +
-            ((1 - myDecision) * otherDecision * this.myPayoffs[2]) +
-            ((1 - myDecision) * (1 - otherDecision) * this.myPayoffs[3]);
-
-        const otherPayoff =
-            (myDecision * otherDecision * this.otherPayoffs[0]) +
-            (myDecision * (1 - otherDecision) * this.otherPayoffs[1]) +
-            ((1 - myDecision) * otherDecision * this.otherPayoffs[2]) +
-            ((1 - myDecision) * (1 - otherDecision) * this.otherPayoffs[3]);
+        
+        //Get payoffs
+        var myPayoff = this.myPayoffs[myDecision][otherDecision];
+        var otherPayoff = this.otherPayoffs[otherDecision][myDecision];
 
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).update({y: myPayoff});

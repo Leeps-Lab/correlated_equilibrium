@@ -111,7 +111,6 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
 
     def pure_strategy(self):
         return True
-        #return parse_config(self.session.config['config_file'])[self.round_number-1]['pure_strategy']
     
     def show_at_worst(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['show_at_worst']

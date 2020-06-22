@@ -258,40 +258,6 @@ export class LeepsBimatrix extends PolymerElement {
                                     </table>
                                 </template>
                             </template>
-                            <template is="dom-if" if="[[ !pureStrategy ]]">
-                                <div class="layout vertical start">
-                                    <bimatrix-heatmap
-                                        id="counterpart-heatmap"
-                                        size="120"
-                                        my-decision="[[ myPlannedDecision ]]"
-                                        other-decision="[[ otherDecision ]]"
-                                        payoffs="[[ otherPayoffs ]]"
-                                        color="[[ otherColor ]]">
-                                    </bimatrix-heatmap>
-                                    <div id="your-heatmap" class="layout horizontal start">
-                                        <div class="slider-container">
-                                            <styled-range
-                                                min="0"
-                                                max="1"
-                                                step="0.01"
-                                                disabled="[[ !_isPeriodRunning ]]"
-                                                value="{{ myPlannedDecision }}"
-                                                rate-limit="[[ rateLimit ]]"
-                                                initial-value="[[ initialDecision ]]">
-                                            </styled-range>
-                                        </div>
-                                        <bimatrix-heatmap
-                                            size="300"
-                                            my-decision="[[ myPlannedDecision ]]"
-                                            other-decision="[[ otherDecision ]]"
-                                            payoffs="[[ myPayoffs ]]"
-                                            color="[[ myColor ]]"
-                                            show-at-worst="{{ showAtWorst }}"
-                                            show-best-response="{{ showBestResponse }}">
-                                        </bimatrix-heatmap>
-                                    </div>
-                                </div>
-                            </template>
                         </div>
 
                         <div id="graphs-column" class="layout horizontal">
@@ -314,7 +280,6 @@ export class LeepsBimatrix extends PolymerElement {
                                         <payoff-graph
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
-                                            group-decisions="{{ groupDecisions }}"
                                             my-payoffs="[[ myPayoffs ]]"
                                             other-payoffs="[[ otherPayoffs ]]"
                                             period-length="[[ periodLength ]]"
@@ -474,14 +439,18 @@ export class LeepsBimatrix extends PolymerElement {
                 this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex]
             }
         }
+        
 
         this.$.bot.payoffFunction = (myDecision, otherDecision) => {
+            console.log("p");
             const m = this.myPayoffs;
             const row1 = myDecision * m[0][0] + (1 - myDecision) * m[0][1];
             const row2 = myDecision * m[1][0] + (1 - myDecision) * m[1][1];
             const flowPayoff = otherDecision * row1 + (1 - otherDecision) * row2;
+            console.log(row1);
             return flowPayoff;
-        };
+        }
+        
 
         if (this.pureStrategy) {
             // if using pure strategy, set bot to only choose pure strategies

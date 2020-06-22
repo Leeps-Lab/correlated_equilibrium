@@ -84,6 +84,7 @@ export class PayoffGraph extends PolymerElement {
                 maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
             }
         }
+        
 
         // call highcharts setup function
         this.graph_obj = Highcharts.chart({
@@ -206,17 +207,8 @@ export class PayoffGraph extends PolymerElement {
         if (!this.graph_obj) return;
 
         // calculate the payoff with current decision values
-        const my_point_payoff =
-            (this.myDecision * this.otherDecision * this.myPayoffs[0]) +
-            (this.myDecision * (1 - this.otherDecision) * this.myPayoffs[1]) +
-            ((1 - this.myDecision) * this.otherDecision * this.myPayoffs[2]) +
-            ((1 - this.myDecision) * (1 - this.otherDecision) * this.myPayoffs[3]);
-
-        const other_point_payoff =
-            (this.myDecision * this.otherDecision * this.otherPayoffs[0]) +
-            (this.myDecision * (1 - this.otherDecision) * this.otherPayoffs[1]) +
-            ((1 - this.myDecision) * this.otherDecision * this.otherPayoffs[2]) +
-            ((1 - this.myDecision) * (1 - this.otherDecision) * this.otherPayoffs[3]);
+        var my_point_payoff = this.myPayoffs[this.myDecision][this.otherDecision];
+        var other_point_payoff = this.otherPayoffs[this.otherDecision][this.myDecision];
 
         // calculate new decision's timestamp as a value between 0 and 1
         const xval = (
