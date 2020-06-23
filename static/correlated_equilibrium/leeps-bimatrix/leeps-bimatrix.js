@@ -209,27 +209,29 @@ export class LeepsBimatrix extends PolymerElement {
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
 
-                                    <template is="dom-repeat" index-as="matrixIndex" items="{{_reverse(payoffMatrix)}}" as="matrix">
+                                        <template is="dom-repeat" index-as="matrixIndex" items="{{_reverse(payoffMatrix)}}" as="matrix">
 
-                                        <table id="payoff-table" class="self-center two" >
-                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
-                                                    <tr>
-                                                        <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                                <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
-                                                                        <span class="your-payoff">
-                                                                            [[ _array(column, 0) ]]
-                                                                        </span>,
-                                                                        <span class="other-payoff">
-                                                                            [[ _array(column, 1) ]]
-                                                                        </span>,
-                                                                        <span class="other-payoff">
-                                                                            [[ _array(column, 2) ]]
-                                                                        </span>
-                                                                </td>
-                                                        </template>
-                                                    </tr>
-                                        </table>
-                                    </template>    
+                                            <table id="payoff-table" class="self-center two" >
+                                                    <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                        <tr>
+                                                            <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                                    <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                            <span class="your-payoff">
+                                                                                [[ _array(column, 0) ]]
+                                                                            </span>,
+                                                                            <span class="other-payoff">
+                                                                                [[ _array(column, 1) ]]
+                                                                            </span>,
+                                                                            <span class="other-payoff">
+                                                                                [[ _array(column, 2) ]]
+                                                                            </span>
+                                                                    </td>
+                                                            </template>
+                                                        </tr>
+                                                    </template>
+                                            </table>
+                                        </template>  
+                                    </template>  
                                 </template>
                             </template>
                         </div>
