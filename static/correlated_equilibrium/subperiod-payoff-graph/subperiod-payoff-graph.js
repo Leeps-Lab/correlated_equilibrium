@@ -168,31 +168,33 @@ export class SubperiodPayoffGraph extends PolymerElement {
     _handleGroupDecisionsEvent(event) {
         const groupDecisions = event.detail.payload;
         const myDecision = groupDecisions[this.$.constants.participantCode];
-        const otherDecision = (() => {
-            let sum_avg_strategy = 0;
-            let num_other_players = 0;
-            for (const player of this.$.constants.group.players) {
-                if (player.role != this.$.constants.role) {
-                    sum_avg_strategy += groupDecisions[player.participantCode];
-                    num_other_players++;
-                }
-            }
-            return sum_avg_strategy / num_other_players;
-        })();
+        var my_flow_payoff = 0;
+        var other_flow_payoff = 0;
 
         this._currSubperiod += 1;
         
         //Get payoffs
-        var myPayoff = this.myPayoffs[myDecision][otherDecision];
-        var otherPayoff = this.otherPayoffs[otherDecision][myDecision];
+        let num_other_players = 0;
+
+        for (const player of this.$.constants.group.players) {
+            let otherDecision = groupDecisions[player.participantCode];
+            if (player.role != this.$.constants.role) {
+                my_flow_payoff += this.myPayoffs[myDecision][otherDecision];
+                other_flow_payoff += this.otherPayoffs[myDecision][otherDecision];
+                num_other_players++;
+            }
+        }
+
+        my_flow_payoff /= num_other_players;
+        other_flow_payoff /= num_other_players;
 
         let dataset = this.graph_obj.series[0];
-        this._lastElem(dataset.data).update({y: myPayoff});
-        dataset.addPoint([this._currSubperiod, myPayoff]);
+        this._lastElem(dataset.data).update({y: my_flow_payoff});
+        dataset.addPoint([this._currSubperiod, my_flow_payoff]);
 
         dataset = this.graph_obj.series[1];
-        this._lastElem(dataset.data).update({y: otherPayoff});
-        dataset.addPoint([this._currSubperiod, otherPayoff]);
+        this._lastElem(dataset.data).update({y: other_flow_payoff});
+        dataset.addPoint([this._currSubperiod, other_flow_payoff]);
     }
 }
 

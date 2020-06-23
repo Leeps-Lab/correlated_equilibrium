@@ -1,4 +1,5 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
+import '/static/otree-redwood/node_modules/@polymer/polymer/lib/elements/dom-repeat.js';
 import '../polymer-elements/iron-flex-layout-classes.js';
 import '../polymer-elements/paper-progress.js';
 import '../polymer-elements/paper-radio-button.js';
@@ -160,9 +161,10 @@ export class LeepsBimatrix extends PolymerElement {
                                 <paper-radio-group
                                     class="layout vertical around-justified self-center"
                                     selected="{{ _myPlannedDecisionString }}">
-                                    <paper-radio-button name="2"></paper-radio-button>
-                                    <paper-radio-button name="1"></paper-radio-button>
-                                    <paper-radio-button name="0"></paper-radio-button>
+
+                                    <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
+                                        <paper-radio-button name="[[item]]"></paper-radio-button>
+                                    </template>
                                 </paper-radio-group>
 
                                 <template is="dom-if" if="[[ meanMatching ]]">
@@ -176,86 +178,22 @@ export class LeepsBimatrix extends PolymerElement {
                                     </discrete-mean-matching-heatmap>
                                 </template>
                                 <template is="dom-if" if="[[ !meanMatching ]]">
-                                    <table id="payoff-table" class="self-center three" >
-                                        <tr>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 2) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 0, 0) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 0, 0) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 1) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 0, 1) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 0, 1) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 2, 0) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 0, 2) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 0, 2) ]]
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 2) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 1, 0) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 1, 0) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 1) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 1, 1) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 1, 1) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 1, 0) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 1, 2) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 1, 2) ]]
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 2) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 2, 0) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 2, 0) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 1) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 2, 1) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 2, 1) ]]
-                                                </span>
-                                            </td>
-                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, 0, 0) ]]">
-                                                <span class="your-payoff">
-                                                    [[ _array(myPayoffs, 2, 2) ]]
-                                                </span>,
-                                                <span class="other-payoff">
-                                                    [[ _array(otherPayoffs, 2, 2) ]]
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                        <table id="payoff-table" class="self-center" >
+                                            <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
+                                                <tr>
+                                                    <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                    <span class="your-payoff">
+                                                                        [[ _array(column, payoffIndex) ]]
+                                                                    </span>,
+                                                                    <span class="other-payoff">
+                                                                        [[ _array(column, otherPayoffIndex) ]]
+                                                                    </span>
+                                                            </td>
+                                                    </template>
+                                                </tr>
+                                            </template>
+                                        </table>
                                 </template>
                             </template>
                         </div>
@@ -317,6 +255,9 @@ export class LeepsBimatrix extends PolymerElement {
             payoffMatrix: Array,
             initialDecision: {
                 type: Number,
+            },
+            gameType: {
+                type: String,
             },
             myPlannedDecision: {
                 type: Number,
@@ -461,13 +402,36 @@ export class LeepsBimatrix extends PolymerElement {
             this._myPlannedDecisionString = new String(this.initialDecision);
         }
     }
-    _array(a, i, j) {
-        return a[i][j];
+
+    _reverse(list) {
+        return list.slice().reverse();
     }
-    _payoffMatrixClass(myDecision, otherDecision, i, j) {
-        if (myDecision === i && otherDecision === j) {
+
+    _isEqualTo(title, string) {
+        console.log(title == string);
+        return title == string;
+    }
+
+    _arrayIndex(array) {
+        var list = []
+        for(var i = array.length - 1; i >= 0; i--) {
+            list.push(i);
+        }
+        return list;
+    }
+
+    _game() {
+        console.log(this.gameType);
+        return this.gameType;
+    }
+
+    _array(a, i) {
+        return a[i];
+    }
+    _payoffMatrixClass(myDecision, otherDecision, i, j, payoffMatrix) {
+        if (myDecision === (payoffMatrix.length - 1 - i) && otherDecision === (payoffMatrix[0].length - 1 - j)) {
             return 'blue';
-        } else if (myDecision === i || otherDecision === j) {
+        } else if (myDecision === (payoffMatrix.length - 1 - i) || otherDecision === (payoffMatrix[0].length - 1 - j)) {
             return 'light-blue';
         }
         return '';

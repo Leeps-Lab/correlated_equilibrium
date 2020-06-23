@@ -79,19 +79,20 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
         self.group_randomly_in_silos(num_silos, fixed_id_in_group)
+    
+    def game_type(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
 
     def payoff_matrix(self):
-        #return parse_config(self.session.config['config_file'])[self.round_number-1]['payoff_matrix']
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
+
         if game == 'MV':
             payoff_matrix = [
                 [[0,0], [100,200], [200,100]],
                  [[200,100], [0,0], [100,200]],
                  [[100,200], [200,100], [0,0]]
             ]
-            return payoff_matrix
-        else:
-            if game == 'FP':
+        elif game == 'FP':
                 payoff_matrix = [
                     [[[0,100,300],[0,0,0]],
                      [[100,100,100],[100,0,0]]],
@@ -100,13 +101,12 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                     [[[0,100,0], [0,0,0]],
                      [[100,100,0], [100,0,300]]]
                 ]
-                return payoff_matrix
-            else:
-                payoff_matrix = [
-                    [[100,100],[600,200]],
-                    [[200,600],[500,500]]
-                ]
-                return payoff_matrix
+        elif game == 'BM':
+            payoff_matrix = [
+                [[100,100],[600,200]],
+                [[200,600],[500,500]]
+            ]
+        return payoff_matrix
 
     def pure_strategy(self):
         return True
