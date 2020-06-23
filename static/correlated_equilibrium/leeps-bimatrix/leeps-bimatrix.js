@@ -49,6 +49,13 @@ export class LeepsBimatrix extends PolymerElement {
                     border: 1px solid black;
                 }
 
+                #payoff-table  {
+                    width: 300px;
+                    height: 300px;
+                    border-collapse: collapse;
+                    border: 1px solid black;
+                }
+
                 .your-payoff {
                     font-weight: bold;
                     font-size: 16pt;
@@ -67,6 +74,11 @@ export class LeepsBimatrix extends PolymerElement {
                     text-align: center;
                     vertical-align: center;
                 }
+
+                #payoff-table.two {
+                    margin-right: 30px;
+                }
+                                
 
                 styled-range {
                     transform: rotate(270deg) translateX(-100%);
@@ -151,9 +163,16 @@ export class LeepsBimatrix extends PolymerElement {
                                 <paper-radio-group
                                     class="layout vertical around-justified self-center"
                                     selected="{{ _myPlannedDecisionString }}">
+                                    
+                                    <template is="dom-if" if="[[ !isMultiDim ]]">
+                                        <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
+                                            <paper-radio-button name="[[item]]"></paper-radio-button>
+                                        </template>
+                                    </template>
 
-                                    <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
-                                        <paper-radio-button name="[[item]]"></paper-radio-button>
+                                    <template is="dom-if" if="[[ isMultiDim ]]">
+                                        <paper-radio-button name="1"></paper-radio-button>
+                                        <paper-radio-button name="0"></paper-radio-button>
                                     </template>
                                 </paper-radio-group>
 
@@ -168,6 +187,8 @@ export class LeepsBimatrix extends PolymerElement {
                                     </discrete-mean-matching-heatmap>
                                 </template>
                                 <template is="dom-if" if="[[ !meanMatching ]]">
+                                    <template is="dom-if" if="[[ !isMultiDim ]]">
+
                                         <table id="payoff-table" class="self-center" >
                                             <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
                                                 <tr>
@@ -184,6 +205,31 @@ export class LeepsBimatrix extends PolymerElement {
                                                 </tr>
                                             </template>
                                         </table>
+                                    </template>
+
+                                    <template is="dom-if" if="[[ isMultiDim ]]">
+
+                                    <template is="dom-repeat" index-as="matrixIndex" items="{{_reverse(payoffMatrix)}}" as="matrix">
+
+                                        <table id="payoff-table" class="self-center two" >
+                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                    <tr>
+                                                        <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                                <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                        <span class="your-payoff">
+                                                                            [[ _array(column, 0) ]]
+                                                                        </span>,
+                                                                        <span class="other-payoff">
+                                                                            [[ _array(column, 1) ]]
+                                                                        </span>,
+                                                                        <span class="other-payoff">
+                                                                            [[ _array(column, 2) ]]
+                                                                        </span>
+                                                                </td>
+                                                        </template>
+                                                    </tr>
+                                        </table>
+                                    </template>    
                                 </template>
                             </template>
                         </div>
@@ -207,7 +253,6 @@ export class LeepsBimatrix extends PolymerElement {
                                         ></strategy-graph>
                                         <payoff-graph
                                             group-decisions="{{ groupDecisions }}"
-
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
                                             my-payoffs="[[ myPayoffs ]]"
@@ -268,6 +313,10 @@ export class LeepsBimatrix extends PolymerElement {
                 value: 0
             },
             pureStrategy: {
+                type: Boolean,
+                value: false
+            },
+            isMultiDim: {
                 type: Boolean,
                 value: false
             },

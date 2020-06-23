@@ -104,6 +104,10 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                 [[200,600],[500,500]]
             ]
         return payoff_matrix
+    
+    def is_multi_dim(self):
+        game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
+        return game == 'FP'
 
     def pure_strategy(self):
         return True
