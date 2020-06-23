@@ -145,3 +145,4 @@ export class SubperiodStrategyGraph extends PolymerElement {
 }
 
 window.customElements.define('subperiod-strategy-graph', SubperiodStrategyGraph);
+

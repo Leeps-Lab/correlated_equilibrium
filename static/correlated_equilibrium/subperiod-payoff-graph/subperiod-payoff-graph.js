@@ -170,7 +170,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         const myDecision = groupDecisions[this.$.constants.participantCode];
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
-
+        
         this._currSubperiod += 1;
         
         //Get payoffs

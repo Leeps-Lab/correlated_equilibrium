@@ -49,16 +49,6 @@ export class LeepsBimatrix extends PolymerElement {
                     border: 1px solid black;
                 }
 
-                #payoff-table.three tr td {
-                    height: 33%;
-                    width: 33%;
-                }
-
-                #payoff-table.two tr td {
-                    height: 50%;
-                    width: 50%;
-                }
-
                 .your-payoff {
                     font-weight: bold;
                     font-size: 16pt;
@@ -216,6 +206,8 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-choice-series="[[ otherChoiceSeries ]]"
                                         ></strategy-graph>
                                         <payoff-graph
+                                            group-decisions="{{ groupDecisions }}"
+
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
                                             my-payoffs="[[ myPayoffs ]]"
@@ -255,9 +247,6 @@ export class LeepsBimatrix extends PolymerElement {
             payoffMatrix: Array,
             initialDecision: {
                 type: Number,
-            },
-            gameType: {
-                type: String,
             },
             myPlannedDecision: {
                 type: Number,
@@ -371,11 +360,11 @@ export class LeepsBimatrix extends PolymerElement {
         this.myPayoffs = [];
         this.otherPayoffs = [];
 
-        for (i=0; i< this.payoffMatrix.length; i++) {
+        for (var i=0; i< this.payoffMatrix.length; i++) {
             this.myPayoffs[i] = []
             this.otherPayoffs[i] = [];
 
-            for(j = 0; j < this.payoffMatrix[0].length; j++) {
+            for(var j = 0; j < this.payoffMatrix[0].length; j++) {
                 this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex]
                 this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex]
             }
@@ -407,22 +396,12 @@ export class LeepsBimatrix extends PolymerElement {
         return list.slice().reverse();
     }
 
-    _isEqualTo(title, string) {
-        console.log(title == string);
-        return title == string;
-    }
-
     _arrayIndex(array) {
         var list = []
         for(var i = array.length - 1; i >= 0; i--) {
             list.push(i);
         }
         return list;
-    }
-
-    _game() {
-        console.log(this.gameType);
-        return this.gameType;
     }
 
     _array(a, i) {

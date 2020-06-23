@@ -79,9 +79,6 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
         self.group_randomly_in_silos(num_silos, fixed_id_in_group)
-    
-    def game_type(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
 
     def payoff_matrix(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
@@ -101,7 +98,7 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                     [[[0,100,0], [0,0,0]],
                      [[100,100,0], [100,0,300]]]
                 ]
-        elif game == 'BM':
+        else:
             payoff_matrix = [
                 [[100,100],[600,200]],
                 [[200,600],[500,500]]

@@ -77,9 +77,9 @@ export class PayoffGraph extends PolymerElement {
         let minPayoff = Infinity;
         let maxPayoff = -Infinity;
 
-        for (i=0; i< this.myPayoffs.length; i++) {
+        for (var i=0; i< this.myPayoffs.length; i++) {
             
-            for(j = 0; j < this.myPayoffs[0].length; j++) {
+            for(var j = 0; j < this.myPayoffs[0].length; j++) {
                 minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
                 maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
             }
@@ -205,10 +205,22 @@ export class PayoffGraph extends PolymerElement {
     _updateDataset() {
         // if graph hasn't been initialized, don't do anything
         if (!this.graph_obj) return;
+        let num_other_players = 0;
+
+        var my_flow_payoff = 0;
+        var other_flow_payoff = 0;
 
         // calculate the payoff with current decision values
-        var my_point_payoff = this.myPayoffs[this.myDecision][this.otherDecision];
-        var other_point_payoff = this.otherPayoffs[this.otherDecision][this.myDecision];
+        for (var player in this.groupDecisions) {
+            my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
+            other_flow_payoff += this.otherPayoffs[this.myDecision][this.otherDecision];
+            num_other_players++;
+        }
+
+        my_flow_payoff /= num_other_players;
+        other_flow_payoff /= num_other_players;
+        console.log(my_flow_payoff);
+        console.log(other_flow_payoff);s
 
         // calculate new decision's timestamp as a value between 0 and 1
         const xval = (
@@ -219,14 +231,14 @@ export class PayoffGraph extends PolymerElement {
         // add point for my payoff
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).remove();
-        dataset.addPoint([xval, my_point_payoff]);
-        dataset.addPoint([xval+Number.EPSILON, my_point_payoff]);
+        dataset.addPoint([xval, my_flow_payoff]);
+        dataset.addPoint([xval+Number.EPSILON, my_flow_payoff]);
 
         // add point for other payoff
         dataset = this.graph_obj.series[1]
         this._lastElem(dataset.data).remove()
-        dataset.addPoint([xval, other_point_payoff]);
-        dataset.addPoint([xval+Number.EPSILON, other_point_payoff]);
+        dataset.addPoint([xval, other_flow_payoff]);
+        dataset.addPoint([xval+Number.EPSILON, other_flow_payoff]);
     }
     // called every time a matrix transition occurs
     _addTransitionBand() {
