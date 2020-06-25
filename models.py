@@ -286,11 +286,24 @@ class Player(BasePlayer):
             flow_payoff = 0
             my_decision = d.value[self.participant.code]
 
-            for decision in other_role_decisions:
-                if self.role() == 'p1':
-                    flow_payoff += payoff_matrix[my_decision][decision][role_index]
-                else:
-                    flow_payoff += payoff_matrix[decision][my_decision][role_index]
+            num_players = parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
+
+            if(num_players % 2 == 0):
+                #If a 2 player game
+                for decision in other_role_decisions:
+                    if self.role() == 'p1':
+                        flow_payoff += payoff_matrix[my_decision][decision][role_index]
+                    else:
+                        flow_payoff += payoff_matrix[decision][my_decision][role_index]
+            elif(num_players % 3 == 0):
+                #If a 3 player game
+                for decision in other_role_decisions:
+                    for i in range(len(payoff_matrix)):
+                        if self.role() == 'p1':
+                            flow_payoff += payoff_matrix[i][my_decision][decision][role_index]
+                        else:
+                            flow_payoff += payoff_matrix[i][decision][my_decision][role_index]
+
 
             flow_payoff /= len(other_role_decisions)
 
