@@ -17,7 +17,7 @@ This is a configurable bimatrix game.
 
 class Constants(BaseConstants):
     name_in_url = 'correlated_equilibrium'
-    players_per_group = 2
+    players_per_group = None
     num_rounds = 50
     base_points = 0
 

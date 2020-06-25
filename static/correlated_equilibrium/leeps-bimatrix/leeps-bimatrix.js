@@ -171,8 +171,16 @@ export class LeepsBimatrix extends PolymerElement {
                                     </template>
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
-                                        <paper-radio-button name="1"></paper-radio-button>
-                                        <paper-radio-button name="0"></paper-radio-button>
+                                        <template is="dom-if" if="[[ _p3Role() ]]">
+                                            <paper-radio-button name="3"></paper-radio-button>
+                                            <paper-radio-button name="1"></paper-radio-button>
+                                            <paper-radio-button name="0"></paper-radio-button>
+                                        </template>
+
+                                        <template is="dom-if" if="[[ !_p3Role() ]]">
+                                            <paper-radio-button name="1"></paper-radio-button>
+                                            <paper-radio-button name="0"></paper-radio-button>
+                                        </template>
                                     </template>
                                 </paper-radio-group>
 
@@ -387,8 +395,14 @@ export class LeepsBimatrix extends PolymerElement {
         }
         this.otherPayoffIndex = 1 - this.payoffIndex;
 
+        //Get number of players
+        let num_players = 0;
+        for (let player of this.$.constants.group.players) {
+            num_players++;
+        }
+
         // transpose payoff and probability matrices if player controls vertical line
-        if (this.$.constants.role == 'p2') {
+        if (this.$.constants.idInGroup % num_players == 0) {
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
@@ -441,6 +455,10 @@ export class LeepsBimatrix extends PolymerElement {
             // only set decision string if we're not doing continuous strategy
             this._myPlannedDecisionString = new String(this.initialDecision);
         }
+    }
+
+    _p3Role() {
+        return this.$.constants.role == 'p3';
     }
 
     _reverse(list) {

@@ -16,3 +16,5 @@ dict(
         num_silos=1,
 ),
 ```
+
+Note: Must comment out lines 383-384 in file directory to avoid error: ...\oTree\venv\Lib\site-packages\otree\common.py
