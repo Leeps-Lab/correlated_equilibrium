@@ -75,10 +75,13 @@ export class LeepsBimatrix extends PolymerElement {
                     vertical-align: center;
                 }
 
-                #payoff-table.two {
+                #payoff-table.two{
                     margin-right: 30px;
                 }
-                                
+
+                #payoff-table.two tr td{
+                    width: 50%;
+                }
 
                 styled-range {
                     transform: rotate(270deg) translateX(-100%);
