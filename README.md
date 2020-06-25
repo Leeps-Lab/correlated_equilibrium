@@ -17,4 +17,4 @@ dict(
 ),
 ```
 
-Note: Must comment out lines 383-384 in file directory to avoid error: ...\oTree\venv\Lib\site-packages\otree\common.py
+Note: Must comment out lines 383-384 in file directory to avoid error for 3 player games: ...\oTree\venv\Lib\site-packages\otree\common.py
