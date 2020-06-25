@@ -1,8 +1,8 @@
-# oTree Bimatrix Experiments
+# oTree Correlated Equilibrium Experiments
 
-bimatrix is an oTree app for a realtime bimatrix experiment. It supports both discrete and mixed strategies, as well as continuous and discrete time games.
+Correlated Equilibrium is an oTree app for a realtime Correlated Equilibrium experiment. It supports both discrete and mixed strategies, as well as continuous and discrete time games.
 
-bimatrix was built using [otree-redwood](https://github.com/Leeps-Lab/otree-redwood).
+Correlated Equilibrium was built using [otree-redwood](https://github.com/Leeps-Lab/otree-redwood).
 
 ### Suggested session config:
 
