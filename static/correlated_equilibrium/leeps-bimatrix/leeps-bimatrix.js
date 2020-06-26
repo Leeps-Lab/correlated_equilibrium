@@ -227,15 +227,21 @@ export class LeepsBimatrix extends PolymerElement {
                                                         <tr>
                                                             <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
                                                                     <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                        <template is="dom-if" if="[[ _p1Role() ]]">
                                                                             <span class="your-payoff">
                                                                                 [[ _array(column, 0) ]]
-                                                                            </span>,
-                                                                            <span class="other-payoff">
+                                                                            </span>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ _p2Role() ]]">
+                                                                            <span class="your-payoff">
                                                                                 [[ _array(column, 1) ]]
-                                                                            </span>,
-                                                                            <span class="other-payoff">
+                                                                            </span>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ _p3Role() ]]">
+                                                                            <span class="your-payoff">
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
+                                                                        </template>
                                                                     </td>
                                                             </template>
                                                         </tr>
@@ -411,10 +417,10 @@ export class LeepsBimatrix extends PolymerElement {
 
             // Loop through every item in the outer array (height)
             for (i=0; i < this.payoffMatrix[0].length; i++) {
-                t[i] = []
+                t[i] = [];
 
                 for(j = 0; j < this.payoffMatrix.length; j++) {
-                    t[i][j] = this.payoffMatrix[j][i]
+                    t[i][j] = this.payoffMatrix[j][i];
                 }
             }
 
@@ -430,12 +436,12 @@ export class LeepsBimatrix extends PolymerElement {
         this.otherPayoffs = [];
 
         for (var i=0; i< this.payoffMatrix.length; i++) {
-            this.myPayoffs[i] = []
+            this.myPayoffs[i] = [];
             this.otherPayoffs[i] = [];
 
             for(var j = 0; j < this.payoffMatrix[0].length; j++) {
-                this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex]
-                this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex]
+                this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex];
+                this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex];
             }
         }
         
@@ -459,6 +465,14 @@ export class LeepsBimatrix extends PolymerElement {
             // only set decision string if we're not doing continuous strategy
             this._myPlannedDecisionString = new String(this.initialDecision);
         }
+    }
+
+    _p1Role() {
+        return this.$.constants.role == 'p1';
+    }
+
+    _p2Role() {
+        return this.$.constants.role == 'p2';
     }
 
     _p3Role() {

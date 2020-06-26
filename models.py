@@ -64,6 +64,7 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         config = parse_config(self.session.config['config_file'])
         if self.round_number > len(config):
             return
+
         
         num_silos = self.session.config['num_silos']
 
