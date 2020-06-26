@@ -279,33 +279,51 @@ class Player(BasePlayer):
 
         for i, d in enumerate(decisions):
             if not d.value: continue
+                
+            num_players = parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
 
-            other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if
-                                        p.role() != self.role()]
+            p1_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p1']
+            p2_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p2']
+            p3_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p3']
+            
+            other_role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() != self.role()]
             
             flow_payoff = 0
             my_decision = d.value[self.participant.code]
-
-            num_players = parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
-
+            
+            # update payoff conditional on player role
             if(num_players % 2 == 0):
                 #If a 2 player game
-                for decision in other_role_decisions:
-                    if self.role() == 'p1':
-                        flow_payoff += payoff_matrix[my_decision][decision][role_index]
-                    else:
-                        flow_payoff += payoff_matrix[decision][my_decision][role_index]
+                if self.role() == 'p1':
+                    for p2 in p2_decisions:
+                        flow_payoff += payoff_matrix[my_decision][p2][role_index]
+                elif self.role() == 'p2':
+                    for p1 in p1_decisions:
+                        flow_payoff += payoff_matrix[p1][my_decision][role_index]
+                        
             elif(num_players % 3 == 0):
                 #If a 3 player game
-                for decision in other_role_decisions:
-                    for i in range(len(payoff_matrix)):
-                        if self.role() == 'p1':
-                            flow_payoff += payoff_matrix[i][my_decision][decision][role_index]
-                        else:
-                            flow_payoff += payoff_matrix[i][decision][my_decision][role_index]
-
-
-            flow_payoff /= len(other_role_decisions)
+                if self.role() == 'p1':
+                    for p2 in p2_decisions:
+                        for p3 in p3_decisions:
+                            flow_payoff += payoff_matrix[p3][my_decision][p2][role_index]
+                elif self.role() == 'p2':
+                    for p1 in p1_decisions:
+                        for p3 in p3_decisions:
+                            flow_payoff += payoff_matrix[p3][p1][my_decision][role_index]
+                elif self.role() == 'p3':
+                    for p1 in p1_decisions:
+                        for p2 in p2_decisions:
+                            flow_payoff += payoff_matrix[my_decision][p1][p2][role_index]
+            
+            #take the average conditional on group size, 2/3 populations share equal sizes.
+            pop_size = len(p1_decisions)          
+            if(num_players % 2 == 0):
+                #If a 2 player game
+                flow_payoff /= pop_size               
+            elif(num_players % 3 == 0):
+                #If a 3 player game
+                flow_payoff /= (pop_size*pop_size)
 
             if self.group.num_subperiods():
                 if i == 0:
