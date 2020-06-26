@@ -287,6 +287,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-payoffs="[[ otherPayoffs ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
+                                            num-players="[[ numPlayers ]]"
                                         ></subperiod-payoff-graph>
                                     </template>
                                 </div>
@@ -304,6 +305,9 @@ export class LeepsBimatrix extends PolymerElement {
         return {
             payoffMatrix: Array,
             initialDecision: {
+                type: Number,
+            },
+            numPlayers: {
                 type: Number,
             },
             myPlannedDecision: {
@@ -399,10 +403,7 @@ export class LeepsBimatrix extends PolymerElement {
         this.otherPayoffIndex = 1 - this.payoffIndex;
 
         //Get number of players
-        let num_players = 0;
-        for (let player of this.$.constants.group.players) {
-            num_players++;
-        }
+        let num_players = this.numPlayers;
 
         // transpose payoff and probability matrices if player controls vertical line
         if (this.$.constants.idInGroup % num_players == 0) {

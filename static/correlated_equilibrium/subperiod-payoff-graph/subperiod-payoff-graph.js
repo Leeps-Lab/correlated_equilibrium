@@ -72,10 +72,19 @@ export class SubperiodPayoffGraph extends PolymerElement {
         let maxPayoff = -Infinity;
 
         for (var i=0; i< this.myPayoffs.length; i++) {
-            
             for(var j = 0; j < this.myPayoffs[0].length; j++) {
-                minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
-                maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                console.log(this.myPayoffs[i][j]);
+                console.log(this.otherPayoffs);
+                if(this.numPlayers % 2 == 0) {
+                    minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                    maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                }
+                else if(this.numPlayers % 3 == 0) {
+                    for(var z = 0; z < this.myPayoffs[0][0].length; z++) {
+                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j][z], this.otherPayoffs[i][j][z]);
+                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j][z], this.otherPayoffs[i][j][z]);
+                    }
+                }
             }
         }
 
@@ -168,6 +177,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
     _handleGroupDecisionsEvent(event) {
         const groupDecisions = event.detail.payload;
         const myDecision = groupDecisions[this.$.constants.participantCode];
+        console.log(this.$.constants.participantCode);
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
         
@@ -176,17 +186,60 @@ export class SubperiodPayoffGraph extends PolymerElement {
         //Get payoffs
         let num_other_players = 0;
 
-        for (const player of this.$.constants.group.players) {
-            let otherDecision = groupDecisions[player.participantCode];
-            if (player.role != this.$.constants.role) {
-                my_flow_payoff += this.myPayoffs[myDecision][otherDecision];
-                other_flow_payoff += this.otherPayoffs[myDecision][otherDecision];
-                num_other_players++;
+        if(this.numPlayers % 2 == 0) {
+
+            for (const player of this.$.constants.group.players) {
+                console.log(player);
+                let otherDecision = groupDecisions[player.participantCode];
+                console.log(groupDecisions);
+                if (player.role != this.$.constants.role) {
+                    my_flow_payoff += this.myPayoffs[myDecision][otherDecision];
+                    other_flow_payoff += this.otherPayoffs[myDecision][otherDecision];
+                }
+                    
+                    num_other_players++;
             }
+
+            my_flow_payoff /= num_other_players;
+            other_flow_payoff /= num_other_players;
+        }
+        else if(this.numPlayers % 3 == 0) {
+            var p1Decision, p2Decision, p3Decision;
+            var p1ID, p2ID, p3ID;
+            
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+                else if(player.role == "p3") { 
+                    p3Decision = groupDecisions[player.participantCode];
+                    p3ID = player.participantCode;
+                }
+            }
+
+            if(this.$.constants.participantCode == p1ID) {
+                my_flow_payoff += this.myPayoffs[p3Decision][myDecision][p2Decision][0];
+                other_flow_payoff += this.otherPayoffs[p3Decision][myDecision][p2Decision][0];
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                my_flow_payoff += this.myPayoffs[p3Decision][p1Decision][myDecision][1];
+                other_flow_payoff += this.otherPayoffs[p3Decision][p1Decision][myDecision][1];
+            }
+            else if(this.$.constants.participantCode == p3ID) {
+                my_flow_payoff += this.myPayoffs[myDecision][p1Decision][p2Decision][2];
+                other_flow_payoff += this.otherPayoffs[myDecision][p1Decision][p2Decision][2];
+            }
+            my_flow_payoff /= 2;
+            other_flow_payoff /= 2;
+
         }
 
-        my_flow_payoff /= num_other_players;
-        other_flow_payoff /= num_other_players;
+        
 
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).update({y: my_flow_payoff});

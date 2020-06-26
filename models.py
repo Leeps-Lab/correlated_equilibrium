@@ -243,6 +243,10 @@ class Player(BasePlayer):
         self.save(update_fields=['_initial_decision'])
         return self._initial_decision
 
+    def num_players(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
+
+
     def other_player(self):
         return self.get_others_in_group()
 
@@ -280,7 +284,7 @@ class Player(BasePlayer):
         for i, d in enumerate(decisions):
             if not d.value: continue
                 
-            num_players = parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
+            num_players = self.num_players()
 
             p1_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p1']
             p2_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p2']
