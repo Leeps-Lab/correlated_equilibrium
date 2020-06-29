@@ -64,22 +64,26 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         config = parse_config(self.session.config['config_file'])
         if self.round_number > len(config):
             return
-
         
-        num_silos = self.session.config['num_silos']
+        #num_silos = self.session.config['num_silos']
 
         # if mean matching is enabled, put everyone in the same silo in the same group
         if config[self.round_number-1]['mean_matching']:
             players = self.get_players()
-            players_per_silo = math.ceil(len(players) / num_silos)
+            #players_per_silo = math.ceil(len(players) / num_silos)
             group_matrix = []
+            for i in range(0, len(players)):
+                group_matrix.append(players[i:i])
+            self.set_group_matrix(group_matrix)
+            '''
             for i in range(0, len(players), players_per_silo):
                 group_matrix.append(players[i:i+players_per_silo])
             self.set_group_matrix(group_matrix)
+            '''
 
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
-        self.group_randomly_in_silos(num_silos, fixed_id_in_group)
+        #self.group_randomly_in_silos(num_silos, fixed_id_in_group)
 
     def payoff_matrix(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
@@ -127,32 +131,41 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
         if self.round_number > len(config):
             return
         
-        num_silos = self.session.config['num_silos']
+        #num_silos = self.session.config['num_silos']
 
         # if mean matching is enabled, put everyone in the same silo in the same group
         if config[self.round_number-1]['mean_matching']:
             players = self.get_players()
-            players_per_silo = math.ceil(len(players) / num_silos)
+            #players_per_silo = math.ceil(len(players) / num_silos)
             group_matrix = []
+
+            for i in range(0, len(players)):
+                group_matrix.append(players[i:i])
+            '''
             for i in range(0, len(players), players_per_silo):
                 group_matrix.append(players[i:i+players_per_silo])
+            '''
             self.set_group_matrix(group_matrix)
 
         # if pairwise matching, set group size based on config
         else:
             players = self.get_players()
-            players_per_silo = math.ceil(len(players) / num_silos)
+            #players_per_silo = math.ceil(len(players) / num_silos)
             group_matrix = []
             ppg = config[self.round_number-1]['players_per_group']
+            for i in range(0, len(players), ppg):
+                group_matrix.append(players[i:i+ppg])
+            '''
             for i in range(0, players_per_silo, ppg):
                 group_matrix.append(players[i:i+ppg])
+            '''
             self.set_group_matrix(group_matrix)
 
         # randomize player id each period if not fixed id
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
 
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
-        self.group_randomly_in_silos(num_silos, fixed_id_in_group)
+        #self.group_randomly_in_silos(num_silos, fixed_id_in_group)
 
         '''
         group_matrix = []
