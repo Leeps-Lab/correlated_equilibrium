@@ -141,6 +141,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
         dataset = this.graph_obj.series[1];
         this._lastElem(dataset.data).update({y: this.otherDecision});
         dataset.addPoint([this._currSubperiod, this.otherDecision]);
+        
     }
 }
 

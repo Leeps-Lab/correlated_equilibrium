@@ -289,8 +289,11 @@ export class LeepsBimatrix extends PolymerElement {
                                             num-subperiods="[[ numSubperiods ]]"
                                         ></subperiod-strategy-graph>
                                         <subperiod-payoff-graph
+                                            group-decisions="{{ groupDecisions }}"
                                             my-payoffs="[[ myPayoffs ]]"
                                             other-payoffs="[[ otherPayoffs ]]"
+                                            third-payoffs="[[ thirdPayoffs ]]"
+                                            payoff-matrix="[[ payoffMatrix ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
@@ -407,6 +410,7 @@ export class LeepsBimatrix extends PolymerElement {
             this.payoffIndex = (this.$.constants.idInGroup - 1) % 3;
         }
         this.otherPayoffIndex = 1 - this.payoffIndex;
+        this.thirdPayoffIndex = 2 - this.payoffIndex;   
 
         //Get number of players
         let num_players = this.numPlayers;
@@ -434,17 +438,29 @@ export class LeepsBimatrix extends PolymerElement {
         // separate each player's payoffs into two separate arrays
         this.myPayoffs = [];
         this.otherPayoffs = [];
+        this.thirdPayoffs = [];
+
 
         for (var i=0; i< this.payoffMatrix.length; i++) {
             this.myPayoffs[i] = [];
             this.otherPayoffs[i] = [];
+            this.thirdPayoffs[i] = [];
 
             for(var j = 0; j < this.payoffMatrix[0].length; j++) {
-                this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex];
-                this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex];
+                if(this.isMultiDim == false) {
+                    this.myPayoffs[i][j] = this.payoffMatrix[i][j][this.payoffIndex];
+                    this.otherPayoffs[i][j] = this.payoffMatrix[i][j][this.otherPayoffIndex];
+                }
+                else {
+                    //If there are 3 players
+                    for(var z = 0; z < this.payoffMatrix[0][0].length; z++) {
+                        this.myPayoffs[i][j] = this.payoffMatrix[i][j][z][this.payoffIndex];
+                        this.otherPayoffs[i][j] = this.payoffMatrix[i][j][z][this.otherPayoffIndex];
+                        this.thirdPayoffs[i][j] = this.payoffMatrix[i][j][z][this.thirdPayoffIndex];
+                    }
+                }
             }
         }
-        
 
         this.$.bot.payoffFunction = (myDecision, otherDecision) => {
             console.log("p");
