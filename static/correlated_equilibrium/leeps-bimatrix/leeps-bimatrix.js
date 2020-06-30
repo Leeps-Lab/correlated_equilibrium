@@ -283,8 +283,11 @@ export class LeepsBimatrix extends PolymerElement {
                                     </template>
                                     <template is="dom-if" if="[[ numSubperiods ]]">
                                         <subperiod-strategy-graph
+                                            num-players="[[ numPlayers ]]"
+                                            group-decisions="{{ groupDecisions }}"
                                             my-decision="[[ myDecision ]]"
                                             other-decision="[[ otherDecision ]]"
+                                            other-decision-array="[[ otherDecisionArray ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                         ></subperiod-strategy-graph>
@@ -332,6 +335,10 @@ export class LeepsBimatrix extends PolymerElement {
             otherDecision: {
                 type: Number,
                 computed: '_computeOtherDecision(groupDecisions)',
+            },
+            otherDecisionArray: {
+                type: Array,
+                computed: '_otherDecisionArray(groupDecisions)',
             },
             periodLength: Number,
             numSubperiods: {
@@ -553,6 +560,15 @@ export class LeepsBimatrix extends PolymerElement {
             }
         }
         return sum_avg_strategy / num_other_players;
+    }
+    _otherDecisionArray(groupDecisions) {
+        let otherDecisionArray = [];
+        for (let player of this.$.constants.group.players) {
+            if (player.role != this.$.constants.role) {
+                otherDecisionArray.push(groupDecisions[player.participantCode]);
+            }
+        }
+        return otherDecisionArray;
     }
     // return true if thermometer is to be shown
     _showThermometer(pureStrategy, meanMatching) {
