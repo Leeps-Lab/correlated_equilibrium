@@ -70,7 +70,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
         let minPayoff = Infinity;
         let maxPayoff = -Infinity;
-
+        
         for (var i=0; i< this.myPayoffs.length; i++) {
             for(var j = 0; j < this.myPayoffs[0].length; j++) {
                 if(this.numPlayers % 2 == 0) {
