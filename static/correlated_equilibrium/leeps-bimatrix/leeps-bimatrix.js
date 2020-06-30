@@ -454,8 +454,6 @@ export class LeepsBimatrix extends PolymerElement {
                 else {
                     //If there are 3 players
                     for(var z = 0; z < this.payoffMatrix[0][0].length; z++) {
-                        console.log(this.otherPayoffIndex);
-                        console.log(this.thirdPayoffIndex);
                         this.myPayoffs[i][j] = this.payoffMatrix[i][j][z][this.payoffIndex];
                         this.otherPayoffs[i][j] = this.payoffMatrix[i][j][z][this.otherPayoffIndex];
                         this.thirdPayoffs[i][j] = this.payoffMatrix[i][j][z][this.thirdPayoffIndex];
@@ -463,9 +461,6 @@ export class LeepsBimatrix extends PolymerElement {
                 }
             }
         }
-        console.log(this.myPayoffs);
-        console.log(this.otherPayoffs);
-        console.log(this.thirdPayoffs);
         this.$.bot.payoffFunction = (myDecision, otherDecision) => {
             console.log("p");
             const m = this.myPayoffs;
