@@ -1,6 +1,7 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
 import '/static/otree-redwood/src/redwood-channel/redwood-channel.js';
 
+
 export class SubperiodStrategyGraph extends PolymerElement {
 
     static get template() {
@@ -122,6 +123,12 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 type: "line",
                 data: [[0, 0]],
                 step: "left"
+            },
+            {
+                name: 'Other Other Choice',
+                type: "line",
+                data: [[0, 0]],
+                step: "left"
             }],
             legend: {
                 align: 'right',
@@ -137,10 +144,30 @@ export class SubperiodStrategyGraph extends PolymerElement {
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).update({y: this.myDecision});
         dataset.addPoint([this._currSubperiod, this.myDecision]);
-
+        
         dataset = this.graph_obj.series[1];
-        this._lastElem(dataset.data).update({y: this.otherDecision});
-        dataset.addPoint([this._currSubperiod, this.otherDecision]);
+            this._lastElem(dataset.data).update({y: this.otherDecision});
+            dataset.addPoint([this._currSubperiod, this.otherDecision]); 
+            
+        if(this.numPlayers % 2 == 0) {
+            dataset = this.graph_obj.series[1];
+            this._lastElem(dataset.data).update({y: this.otherDecision});
+            dataset.addPoint([this._currSubperiod, this.otherDecision]);            
+        }
+
+        
+        if(this.numPlayers % 3 == 0) {
+            let i = 1;
+            console.log("Other player decisions: " + this.otherDecisionArray);
+            for( let decision of this.otherDecisionArray ) {
+                dataset = this.graph_obj.series[i];
+                this._lastElem(dataset.data).update({y: decision});
+                dataset.addPoint([this._currSubperiod, decision]);
+                i++;
+            }
+        }
+
+            
         
     }
 }
