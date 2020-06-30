@@ -91,7 +91,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             yAxis: {
                 title: { text: 'Choice' },
                 min: 0,
-                max: 1
+                max: 2
             },
             plotOptions: {
                 line: {marker: {enabled: false}},
@@ -145,16 +145,12 @@ export class SubperiodStrategyGraph extends PolymerElement {
         this._lastElem(dataset.data).update({y: this.myDecision});
         dataset.addPoint([this._currSubperiod, this.myDecision]);
         
-        dataset = this.graph_obj.series[1];
-            this._lastElem(dataset.data).update({y: this.otherDecision});
-            dataset.addPoint([this._currSubperiod, this.otherDecision]); 
-            
+        
         if(this.numPlayers % 2 == 0) {
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).update({y: this.otherDecision});
             dataset.addPoint([this._currSubperiod, this.otherDecision]);            
         }
-
         
         if(this.numPlayers % 3 == 0) {
             let i = 1;
