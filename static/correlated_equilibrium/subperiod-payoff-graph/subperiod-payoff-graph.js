@@ -266,9 +266,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
             */
 
             //Fix
-            my_flow_payoff /= 3;
-            other_flow_payoff /= 3;
-            third_flow_payoff /= 3;
+            my_flow_payoff /= 2;
+            other_flow_payoff /= 2;
+            third_flow_payoff /= 2;
 
         }
 
