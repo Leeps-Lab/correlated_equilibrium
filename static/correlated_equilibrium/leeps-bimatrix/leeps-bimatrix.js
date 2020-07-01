@@ -125,7 +125,7 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 .dark-blue {
-                    background-color: #00008b;
+                    background-color: #2a22c9;
                 }
 
             </style>
