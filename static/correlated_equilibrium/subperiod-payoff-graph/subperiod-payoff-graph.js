@@ -60,7 +60,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
     }
     // sets up payoff over time graph
     _initHighchart() {
-        
+
         // readability is overrated
         // just sums each set of payoffs and divides by 4
         const myInitialPayoff = this.myPayoffs.reduce(
@@ -145,7 +145,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     }
                 }
             },
-            series: [
+            series:
+            (this.numPlayers % 3 == 0) ?
+              [
                 {
                     name: 'Your Payoff',
                     type: "area",
@@ -153,18 +155,34 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'Other Payoff',
+                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Payoff' : 'P2 Payoff',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
                 },
+                
                 {
-                    name: 'Other Other Payoff',
+                    name: (this.$.constants.role == "p3" ) ? 'P2 Payoff' : 'P3 Payoff',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
-                }
-            ],
+                } 
+            ]
+            : [
+                {
+                    name: 'Your Payoff',
+                    type: "area",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Payoff' : 'P2 Payoff',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                
+            ] ,
             legend: {
                 align: 'right',
                 verticalAlign: 'top',

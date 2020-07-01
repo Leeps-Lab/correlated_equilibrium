@@ -1,6 +1,6 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
 import '/static/otree-redwood/src/redwood-channel/redwood-channel.js';
-
+import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 
 export class SubperiodStrategyGraph extends PolymerElement {
 
@@ -13,7 +13,8 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 }
 
             </style>
-
+            
+            <otree-constants id="constants"></otree-constants>
             <redwood-channel
                 channel="group_decisions"
                 on-event="_handleGroupDecisionsEvent">
@@ -112,24 +113,41 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: [{
-                name: 'Your Choice',
-                type: "line",
-                data: [[0, 0]],
-                step: "left"
-            },
-            {
-                name: 'Other Choice',
-                type: "line",
-                data: [[0, 0]],
-                step: "left"
-            },
-            {
-                name: 'Other Other Choice',
-                type: "line",
-                data: [[0, 0]],
-                step: "left"
-            }],
+            series: (this.numPlayers % 3 == 0) ? [
+                {
+                    name: 'Your Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+            ] : 
+            [
+                {
+                    name: 'Your Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                
+            ] ,
             legend: {
                 align: 'right',
                 verticalAlign: 'top',
