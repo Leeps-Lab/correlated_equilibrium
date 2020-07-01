@@ -113,7 +113,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: [
+            series: (this.numPlayers % 3 == 0) ? [
                 {
                     name: 'Your Choice',
                     type: "line",
@@ -131,8 +131,23 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
-                }
-            ],
+                },
+            ] : 
+            [
+                {
+                    name: 'Your Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                
+            ] ,
             legend: {
                 align: 'right',
                 verticalAlign: 'top',
