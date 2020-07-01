@@ -527,7 +527,8 @@ export class LeepsBimatrix extends PolymerElement {
     _payoffMatrixClass3(myDecision, otherDecisionArray, i, j, m, payoffMatrix) {
         let otherDecision = otherDecisionArray[0];
         let thirdDecision = otherDecisionArray[1];
-
+        
+        // this takes care of reversed i-indices 
         if (payoffMatrix.length == 3){
            if(i == 0)   i = 1; 
            else if (i == 1) i = 0; 
