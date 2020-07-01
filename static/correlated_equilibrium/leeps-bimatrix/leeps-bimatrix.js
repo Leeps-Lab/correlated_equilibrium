@@ -305,6 +305,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-payoffs="[[ otherPayoffs ]]"
                                             third-payoffs="[[ thirdPayoffs ]]"
                                             payoff-matrix="[[ payoffMatrix ]]"
+                                            original-payoff-matrix="[[ originalPayoffMatrix ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
@@ -324,6 +325,7 @@ export class LeepsBimatrix extends PolymerElement {
     static get properties() {
         return {
             payoffMatrix: Array,
+            originalPayoffMatrix: Array,
             initialDecision: {
                 type: Number,
             },
