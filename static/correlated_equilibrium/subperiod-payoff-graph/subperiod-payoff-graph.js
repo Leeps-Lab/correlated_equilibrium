@@ -153,13 +153,13 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'Other Payoff',
+                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Payoff' : 'P2 Payoff',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
-                    name: 'Other Other Payoff',
+                    name: (this.$.constants.role == "p3" ) ? 'P2 Payoff' : 'P3 Payoff',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
