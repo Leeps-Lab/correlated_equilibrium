@@ -238,9 +238,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
             }
             else if(this.$.constants.participantCode == p3ID) {
-                my_flow_payoff += this.payoffMatrix[myDecision][p1Decision][p2Decision][2];
-                other_flow_payoff += this.payoffMatrix[myDecision][p1Decision][p2Decision][0];
-                third_flow_payoff += this.payoffMatrix[myDecision][p1Decision][p2Decision][1];
+                my_flow_payoff += this.originalPayoffMatrix[myDecision][p1Decision][p2Decision][2];
+                other_flow_payoff += this.originalPayoffMatrix[myDecision][p1Decision][p2Decision][0];
+                third_flow_payoff += this.originalPayoffMatrix[myDecision][p1Decision][p2Decision][1];
 
             }
 
@@ -266,9 +266,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
             */
 
             //Fix
-            my_flow_payoff /= 3;
-            other_flow_payoff /= 3;
-            third_flow_payoff /= 3;
+            my_flow_payoff /= 2;
+            other_flow_payoff /= 2;
+            third_flow_payoff /= 2;
 
         }
 
