@@ -124,6 +124,10 @@ export class LeepsBimatrix extends PolymerElement {
                     background-color: #39f;
                 }
 
+                .dark-blue {
+                    background-color: #00008b;
+                }
+
             </style>
 
             <otree-constants id="constants"></otree-constants>
@@ -175,7 +179,7 @@ export class LeepsBimatrix extends PolymerElement {
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
                                         <template is="dom-if" if="[[ _p3Role() ]]">
-                                            <paper-radio-button name="3"></paper-radio-button>
+                                            <paper-radio-button name="2"></paper-radio-button>
                                             <paper-radio-button name="1"></paper-radio-button>
                                             <paper-radio-button name="0"></paper-radio-button>
                                         </template>
@@ -226,11 +230,12 @@ export class LeepsBimatrix extends PolymerElement {
                                                     <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
                                                         <tr>
                                                             <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                                    <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                    <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
                                                                         <template is="dom-if" if="[[ _p1Role() ]]">
                                                                             <span class="your-payoff">
                                                                                 [[ _array(column, 0) ]]
                                                                             </span>
+                                                                            
                                                                         </template>
                                                                         <template is="dom-if" if="[[ _p2Role() ]]">
                                                                             <span class="your-payoff">
@@ -242,6 +247,9 @@ export class LeepsBimatrix extends PolymerElement {
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
                                                                         </template>
+                                                                        <br>
+                                                                        <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
+                                                                        </span>
                                                                     </td>
                                                             </template>
                                                         </tr>
@@ -516,12 +524,52 @@ export class LeepsBimatrix extends PolymerElement {
     _array(a, i) {
         return a[i];
     }
+    _payoffMatrixClass3(myDecision, otherDecisionArray, i, j, m, payoffMatrix) {
+        let otherDecision = otherDecisionArray[0];
+        let thirdDecision = otherDecisionArray[1];
+
+        if (payoffMatrix.length == 3){
+           if(i == 0)   i = 1; 
+           else if (i == 1) i = 0; 
+        } else if (payoffMatrix.length == 2){
+           if(i == 0)  i = 2; 
+           else if (i == 2) i= 0; 
+        }
+
+        let color = 0;
+         
+        // player's own decision
+        if (myDecision == i) 
+            color++;
+        
+        // 1st/2nd player's decision on 2nd/1st player's matrices
+        if ("p3" != this.$.constants.role && otherDecision == j) 
+            color++;
+        
+        // show third player's decision on first and second player's matrices  
+        if ("p3" != this.$.constants.role && thirdDecision == m ){
+             color++;
+        } 
+           
+        // show first and second player's decisions on third player's matrices
+        if ("p3" == this.$.constants.role){
+            if (otherDecision == j && m == 0)
+                color++;
+            else if (thirdDecision == j && m == 1)
+                color++;
+        }
+            
+        if (color == 1) return 'light-blue';
+        else if (color == 2) return 'blue';
+        else if (color == 3) return 'dark-blue';
+        else return '';
+    }
     _payoffMatrixClass(myDecision, otherDecision, i, j, payoffMatrix) {
         if (myDecision === (payoffMatrix.length - 1 - i) && otherDecision === (payoffMatrix[0].length - 1 - j)) {
             return 'blue';
         } else if (myDecision === (payoffMatrix.length - 1 - i) || otherDecision === (payoffMatrix[0].length - 1 - j)) {
             return 'light-blue';
-        }
+        } 
         return '';
     }
     _syncMyPlannedDecision() {
@@ -568,6 +616,7 @@ export class LeepsBimatrix extends PolymerElement {
                 otherDecisionArray.push(groupDecisions[player.participantCode]);
             }
         }
+        console.log("Other player decisions: " + otherDecisionArray);
         return otherDecisionArray;
     }
     // return true if thermometer is to be shown
