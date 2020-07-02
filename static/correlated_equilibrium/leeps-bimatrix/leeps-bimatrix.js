@@ -305,6 +305,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-payoffs="[[ otherPayoffs ]]"
                                             third-payoffs="[[ thirdPayoffs ]]"
                                             payoff-matrix="[[ payoffMatrix ]]"
+                                            original-payoff-matrix="[[ originalPayoffMatrix ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
@@ -324,6 +325,7 @@ export class LeepsBimatrix extends PolymerElement {
     static get properties() {
         return {
             payoffMatrix: Array,
+            originalPayoffMatrix: Array,
             initialDecision: {
                 type: Number,
             },
@@ -554,9 +556,9 @@ export class LeepsBimatrix extends PolymerElement {
            
         // show first and second player's decisions on third player's matrices
         if ("p3" == this.$.constants.role){
-            if (otherDecision == j )
+            if (otherDecision == j && m == 0)
                 color++;
-            if (thirdDecision == m)
+            else if (thirdDecision == j && m == 1)
                 color++;
         }
             
