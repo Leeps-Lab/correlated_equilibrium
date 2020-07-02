@@ -556,9 +556,9 @@ export class LeepsBimatrix extends PolymerElement {
            
         // show first and second player's decisions on third player's matrices
         if ("p3" == this.$.constants.role){
-            if (otherDecision == j && m == 0)
+            if (otherDecision == j)
                 color++;
-            else if (thirdDecision == j && m == 1)
+            if (thirdDecision == m )
                 color++;
         }
             
