@@ -224,12 +224,12 @@ export class LeepsBimatrix extends PolymerElement {
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
 
-                                        <template is="dom-repeat" index-as="matrixIndex" items="{{_reverse(payoffMatrix)}}" as="matrix">
+                                        <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
                                             <table id="payoff-table" class="self-center two" >
                                                     <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
                                                         <tr>
-                                                            <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                            <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
                                                                     <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
                                                                         <template is="dom-if" if="[[ _p1Role() ]]">
                                                                             <span class="your-payoff">
@@ -434,6 +434,7 @@ export class LeepsBimatrix extends PolymerElement {
 
         // transpose payoff and probability matrices if player controls vertical line
         if (this.$.constants.idInGroup % num_players == 0) {
+            /*
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
@@ -443,10 +444,47 @@ export class LeepsBimatrix extends PolymerElement {
                 for(j = 0; j < this.payoffMatrix.length; j++) {
                     t[i][j] = this.payoffMatrix[j][i];
                 }
+            }*/
+
+            var p1, p2, p3, t = [];
+
+            for (p2=0; p2 < this.payoffMatrix[0][0].length; p2++) {
+                t[p2] = [];
+
+                for (p3=0; p3 < this.payoffMatrix.length; p3++) {
+                    t[p2][p3] = [];
+
+                    for (p1=0; p1 < this.payoffMatrix[0].length; p1++) {
+
+                        t[p2][p3][p1] = this.payoffMatrix[p3][p1][p2];
+                    }
+                }
             }
 
             this.set("payoffMatrix", t);
         }
+
+        console.log(this.payoffMatrix);
+
+        // transpose payoff and probability matrices if player 2
+        if (this.$.constants.idInGroup == 2 && num_players % 3 == 0) {
+            var p1, p2, p3, t = [];
+
+            for (p3=0; p3 < this.payoffMatrix.length; p3++) {
+                t[p3] = [];
+
+                for (p2=0; p2 < this.payoffMatrix[0][0].length; p2++) {
+                    t[p3][p2] = [];
+
+                    for (p1=0; p1 < this.payoffMatrix[0].length; p1++) {
+
+                        t[p3][p2][p1] = this.payoffMatrix[p3][p1][p2];
+                    }
+                }
+            }
+            this.set("payoffMatrix", t);
+        }
+        
 
         // color schemes for each player's heatmaps
         this.myColor = 'rainbow';
