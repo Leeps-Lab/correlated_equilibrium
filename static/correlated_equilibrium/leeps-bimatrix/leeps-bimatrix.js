@@ -596,7 +596,7 @@ export class LeepsBimatrix extends PolymerElement {
         if ("p3" == this.$.constants.role){
             if (otherDecision == j)
                 color++;
-            else if (thirdDecision == m)
+            if (thirdDecision == m)
                 color++;
         }
             
