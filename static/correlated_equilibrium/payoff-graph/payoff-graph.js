@@ -63,6 +63,12 @@ export class PayoffGraph extends PolymerElement {
                 value: () => {
                     return [[0, 0], [Number.EPSILON, 0]];
                 }
+            },
+            otherOtherPayoffSeries: {
+                type: Array,
+                value: () => {
+                    return [[0, 0], [Number.EPSILON, 0]];
+                }
             }
         }
     }
