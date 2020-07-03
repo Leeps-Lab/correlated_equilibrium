@@ -211,10 +211,12 @@ export class LeepsBimatrix extends PolymerElement {
                                                             <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
                                                                     <span class="your-payoff">
                                                                         [[ _array(column, payoffIndex) ]]
-                                                                    </span>,
+                                                                    </span>
+                                                                    <!--
                                                                     <span class="other-payoff">
                                                                         [[ _array(column, otherPayoffIndex) ]]
                                                                     </span>
+                                                                    <-->
                                                             </td>
                                                     </template>
                                                 </tr>
