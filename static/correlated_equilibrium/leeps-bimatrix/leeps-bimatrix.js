@@ -451,8 +451,24 @@ export class LeepsBimatrix extends PolymerElement {
         //Get number of players
         let num_players = this.numPlayers;
 
-        // transpose payoff and probability matrices if player controls vertical line
-        if (this.$.constants.idInGroup % num_players == 0) {
+         // transpose payoff and probability matrices if player controls vertical line in a 2 player game
+         if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+            var i, j, t = [];
+
+            // Loop through every item in the outer array (height)
+            for (i=0; i < this.payoffMatrix.length; i++ ) {
+                t[i] = [];
+
+                for(j = 0; j < this.payoffMatrix[0].length; j++) {
+                    t[i][j] = this.payoffMatrix[j][i];
+                }
+            }
+
+            this.set("payoffMatrix", t);
+        }
+
+        // transpose payoff and probability matrices if player controls vertical line in a 3 player game
+        if (this.$.constants.idInGroup % num_players == 0 && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
 
             for (p2=0; p2 < this.payoffMatrix[0][0].length; p2++) {
