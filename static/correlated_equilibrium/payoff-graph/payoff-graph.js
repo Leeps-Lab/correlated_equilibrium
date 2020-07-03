@@ -1,5 +1,7 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
 import '/static/otree-redwood/src/redwood-period/redwood-period.js';
+import '/static/otree-redwood/src/otree-constants/otree-constants.js';
+
 
 export class PayoffGraph extends PolymerElement {
 
@@ -13,6 +15,8 @@ export class PayoffGraph extends PolymerElement {
 
             </style>
 
+
+            <otree-constants id="constants"></otree-constants>
             <redwood-period
                 on-period-start="_handlePeriodStart"
                 on-period-end="_handlePeriodEnd">
@@ -159,6 +163,44 @@ export class PayoffGraph extends PolymerElement {
                     step: "left"
                 }
             ],
+            series:
+            (this.numPlayers % 3 == 0) ?
+              [
+                {
+                    name: 'Your Payoff',
+                    type: "area",
+                    data: this.myPayoffSeries,
+                    step: "left"
+                },
+                {
+                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Payoff' : 'P2 Payoff',
+                    type: "line",
+                    data: this.otherPayoffSeries,
+                    step: "left"
+                },
+                
+                {
+                    name: (this.$.constants.role == "p3" ) ? 'P2 Payoff' : 'P3 Payoff',
+                    type: "line",
+                    data: this.otherOtherPayoffSeries,
+                    step: "left"
+                } 
+            ]
+            : [
+                {
+                    name: 'Your Payoff',
+                    type: "area",
+                    data: this.myPayoffSeries,
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Payoff' : 'P2 Payoff',
+                    type: "line",
+                    data: otherPayoffSeries,
+                    step: "left"
+                },
+                
+            ] ,
             legend: {
                 align: 'right',
                 verticalAlign: 'top',
@@ -209,7 +251,9 @@ export class PayoffGraph extends PolymerElement {
 
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
-
+        var third_flow_payoff = 0;
+        
+        /*
         // calculate the payoff with current decision values
         for (var player in this.groupDecisions) {
             my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
@@ -219,8 +263,67 @@ export class PayoffGraph extends PolymerElement {
 
         my_flow_payoff /= num_other_players;
         other_flow_payoff /= num_other_players;
-        console.log(my_flow_payoff);
-        console.log(other_flow_payoff);s
+        */
+
+        if(this.numPlayers % 2 == 0) {
+
+            for (const player of this.$.constants.group.players) {
+                let otherDecision = this.groupDecisions[player.participantCode];
+                if (player.role != this.$.constants.role) {
+                    my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
+                    other_flow_payoff += this.otherPayoffs[this.myDecision][this.otherDecision];
+                }
+                    
+                    num_other_players++;
+            }
+
+            my_flow_payoff /= num_other_players;
+            other_flow_payoff /= num_other_players;
+        }
+        else if(this.numPlayers % 3 == 0) {
+            var p1Decision, p2Decision, p3Decision;
+            var p1ID, p2ID, p3ID;
+            
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = this.groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = this.groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+                else if(player.role == "p3") { 
+                    p3Decision = this.groupDecisions[player.participantCode];
+                    p3ID = player.participantCode;
+                }
+            }
+
+            if(this.$.constants.participantCode == p1ID) {
+                my_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][0];
+                other_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][1];
+                third_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][2];
+
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                my_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][1];
+                other_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][0];
+                third_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][2];
+
+            }
+            else if(this.$.constants.participantCode == p3ID) {
+                my_flow_payoff += this.originalPayoffMatrix[this.myDecision][p1Decision][p2Decision][2];
+                other_flow_payoff += this.originalPayoffMatrix[this.myDecision][p1Decision][p2Decision][0];
+                third_flow_payoff += this.originalPayoffMatrix[this.myDecision][p1Decision][p2Decision][1];
+
+            }
+
+            //Fix
+            my_flow_payoff /= 2;
+            other_flow_payoff /= 2;
+            third_flow_payoff /= 2;
+
+        }
 
         // calculate new decision's timestamp as a value between 0 and 1
         const xval = (
@@ -239,6 +342,13 @@ export class PayoffGraph extends PolymerElement {
         this._lastElem(dataset.data).remove()
         dataset.addPoint([xval, other_flow_payoff]);
         dataset.addPoint([xval+Number.EPSILON, other_flow_payoff]);
+
+        if(this.numPlayers % 3 == 0) {
+            dataset = this.graph_obj.series[2];
+            this._lastElem(dataset.data).remove()
+            dataset.addPoint([xval, third_flow_payoff]);
+            dataset.addPoint([xval+Number.EPSILON, third_flow_payoff]);
+        }
     }
     // called every time a matrix transition occurs
     _addTransitionBand() {

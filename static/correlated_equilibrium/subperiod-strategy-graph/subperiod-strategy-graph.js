@@ -170,6 +170,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             dataset.addPoint([this._currSubperiod, this.otherDecision]);            
         }
         
+        
         if(this.numPlayers % 3 == 0) {
             let i = 1;
             console.log("Other player decisions: " + this.otherDecisionArray);

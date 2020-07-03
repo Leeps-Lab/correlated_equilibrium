@@ -210,9 +210,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         if(this.numPlayers % 2 == 0) {
 
             for (const player of this.$.constants.group.players) {
-                console.log(player);
                 let otherDecision = groupDecisions[player.participantCode];
-                console.log(groupDecisions);
                 if (player.role != this.$.constants.role) {
                     my_flow_payoff += this.myPayoffs[myDecision][otherDecision];
                     other_flow_payoff += this.otherPayoffs[myDecision][otherDecision];
@@ -261,27 +259,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
                 third_flow_payoff += this.originalPayoffMatrix[myDecision][p1Decision][p2Decision][1];
 
             }
-
-            /*
-            if(this.$.constants.participantCode == p1ID) {
-                my_flow_payoff += this.myPayoffs[p3Decision][myDecision][p2Decision];
-                other_flow_payoff += this.otherPayoffs[p3Decision][myDecision][p2Decision];
-                //third_flow_payoff += this.thirdPayoffs[p3Decision][myDecision][p2Decision];
-
-            }
-            else if(this.$.constants.participantCode == p2ID) {
-                my_flow_payoff += this.myPayoffs[p3Decision][p1Decision][myDecision];
-                other_flow_payoff += this.otherPayoffs[p3Decision][p1Decision][myDecision];
-                //third_flow_payoff += this.thirdPayoffs[p3Decision][p1Decision][myDecision];
-
-            }
-            else if(this.$.constants.participantCode == p3ID) {
-                my_flow_payoff += this.myPayoffs[myDecision][p1Decision][p2Decision];
-                other_flow_payoff += this.otherPayoffs[myDecision][p1Decision][p2Decision];
-                //third_flow_payoff += this.thirdPayoffs[myDecision][p1Decision][p2Decision];
-
-            }
-            */
 
             //Fix
             my_flow_payoff /= 2;
