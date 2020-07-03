@@ -1,5 +1,7 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
 import '/static/otree-redwood/src/redwood-period/redwood-period.js';
+import '/static/otree-redwood/src/otree-constants/otree-constants.js';
+
 
 export class StrategyGraph extends PolymerElement {
 
@@ -13,6 +15,7 @@ export class StrategyGraph extends PolymerElement {
 
             </style>
 
+            <otree-constants id="constants"></otree-constants>
             <redwood-period
                 on-period-start="_handlePeriodStart"
                 on-period-end="_handlePeriodEnd">
@@ -38,6 +41,12 @@ export class StrategyGraph extends PolymerElement {
                 }
             },
             otherChoiceSeries: {
+                type: Array,
+                value: () => {
+                    return [[0, 0], [Number.EPSILON, 0]];
+                }
+            },
+            otherOtherChoiceSeries: {
                 type: Array,
                 value: () => {
                     return [[0, 0], [Number.EPSILON, 0]];
@@ -97,7 +106,7 @@ export class StrategyGraph extends PolymerElement {
             yAxis: {
                 title: { text: 'Choice' },
                 min: 0,
-                max: 1
+                max: 2
             },
             plotOptions: {
                 line: {marker: {enabled: false}},
@@ -118,16 +127,36 @@ export class StrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: [{
-                name: 'Your Choice',
-                data: this.myChoiceSeries,
-                step: "left"
-            },
-            {
-                name: 'Other Choice',
-                data: this.otherChoiceSeries,
-                step: "left"
-            }],
+            series: (this.numPlayers % 3 == 0) ? [
+                {
+                    name: 'Your Choice',
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    data: this.otherChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                    data: this.otherOtherChoiceSeries,
+                    step: "left"
+                },
+            ] : 
+            [
+                {
+                    name: 'Your Choice',
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    data: this.otherChoiceSeries,
+                    step: "left"
+                },
+                
+            ] ,
             legend: {
                 align: 'right',
                 verticalAlign: 'top',
@@ -185,6 +214,27 @@ export class StrategyGraph extends PolymerElement {
         this._lastElem(dataset.data).remove();
         dataset.addPoint([xval, this.otherDecision]);
         dataset.addPoint([xval, this.otherDecision]);
+
+
+        if(this.numPlayers % 2 == 0) {
+            dataset = this.graph_obj.series[1];
+            this._lastElem(dataset.data).remove();
+            dataset.addPoint([xval, this.otherDecision]);
+            dataset.addPoint([xval, this.otherDecision]);        
+        }
+        
+        
+        if(this.numPlayers % 3 == 0) {
+            console.log(this.otherDecisionArray);
+            let i = 1;
+            for(let decision of this.otherDecisionArray ) {
+                dataset = this.graph_obj.series[i];
+                this._lastElem(dataset.data).remove();
+                dataset.addPoint([xval, decision]);
+                dataset.addPoint([xval, decision]);
+                i++;
+            }
+        }
     }
 }
 

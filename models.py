@@ -314,25 +314,25 @@ class Player(BasePlayer):
                 #If a 2 player game
                 if self.role() == 'p1':
                     for p2 in p2_decisions:
-                        flow_payoff += payoff_matrix[my_decision][p2][role_index]
+                        flow_payoff += payoff_matrix[int(my_decision)][int(p2)][int(role_index)]
                 elif self.role() == 'p2':
                     for p1 in p1_decisions:
-                        flow_payoff += payoff_matrix[p1][my_decision][role_index]
+                        flow_payoff += payoff_matrix[int(p1)][int(my_decision)][int(role_index)]
                         
             elif(num_players % 3 == 0):
                 #If a 3 player game
                 if self.role() == 'p1':
                     for p2 in p2_decisions:
                         for p3 in p3_decisions:
-                            flow_payoff += payoff_matrix[p3][my_decision][p2][role_index]
+                            flow_payoff += payoff_matrix[int(p3)][int(my_decision)][int(p2)][int(role_index)]
                 elif self.role() == 'p2':
                     for p1 in p1_decisions:
                         for p3 in p3_decisions:
-                            flow_payoff += payoff_matrix[p3][p1][my_decision][role_index]
+                            flow_payoff += payoff_matrix[int(p3)][int(p1)][int(my_decision)][int(role_index)]
                 elif self.role() == 'p3':
                     for p1 in p1_decisions:
                         for p2 in p2_decisions:
-                            flow_payoff += payoff_matrix[my_decision][p1][p2][role_index]
+                            flow_payoff += payoff_matrix[int(my_decision)][int(p1)][int(p2)][int(role_index)]
             
             #take the average conditional on group size, 2/3 populations share equal sizes.
             pop_size = len(p1_decisions)          
