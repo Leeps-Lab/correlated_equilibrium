@@ -146,7 +146,12 @@ export class SubperiodPayoffGraph extends PolymerElement {
                 }
             },
             series:
-            (this.numPlayers % 3 == 0) ?
+            (!this.maxInfo) ? [{
+                name: 'Your Payoff',
+                type: "area",
+                data: [[0, 0]],
+                step: "left"
+            }] : (this.numPlayers % 3 == 0) ?
               [
                 {
                     name: 'Your Payoff',
@@ -270,18 +275,19 @@ export class SubperiodPayoffGraph extends PolymerElement {
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).update({y: my_flow_payoff});
         dataset.addPoint([this._currSubperiod, my_flow_payoff]);
-
-        dataset = this.graph_obj.series[1];
-        this._lastElem(dataset.data).update({y: other_flow_payoff});
-        dataset.addPoint([this._currSubperiod, other_flow_payoff]);
-
         
-        if(this.numPlayers % 3 == 0) {
-            dataset = this.graph_obj.series[2];
-            this._lastElem(dataset.data).update({y: third_flow_payoff});
-            dataset.addPoint([this._currSubperiod, third_flow_payoff]);
-        }
+        if(this.maxInfo){
+            dataset = this.graph_obj.series[1];
+            this._lastElem(dataset.data).update({y: other_flow_payoff});
+            dataset.addPoint([this._currSubperiod, other_flow_payoff]);
 
+            
+            if(this.numPlayers % 3 == 0) {
+                dataset = this.graph_obj.series[2];
+                this._lastElem(dataset.data).update({y: third_flow_payoff});
+                dataset.addPoint([this._currSubperiod, third_flow_payoff]);
+            }
+        }
     }
 }
 

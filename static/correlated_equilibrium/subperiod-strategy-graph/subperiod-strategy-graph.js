@@ -113,7 +113,12 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (this.numPlayers % 3 == 0) ? [
+            series: (!this.maxInfo) ? [{
+                name: 'Your Choice',
+                type: "line",
+                data: [[0, 0]],
+                step: "left"
+            }] : (this.numPlayers % 3 == 0) ? [
                 {
                     name: 'Your Choice',
                     type: "line",
@@ -164,14 +169,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
         dataset.addPoint([this._currSubperiod, this.myDecision]);
         
         
-        if(this.numPlayers % 2 == 0) {
+        if(this.numPlayers % 2 == 0  && this.maxInfo) {
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).update({y: this.otherDecision});
             dataset.addPoint([this._currSubperiod, this.otherDecision]);            
         }
         
         
-        if(this.numPlayers % 3 == 0) {
+        if(this.numPlayers % 3 == 0 && this.maxInfo) {
             let i = 1;
             console.log("Other player decisions: " + this.otherDecisionArray);
             for( let decision of this.otherDecisionArray ) {

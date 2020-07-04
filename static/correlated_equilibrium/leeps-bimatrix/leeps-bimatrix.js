@@ -179,14 +179,14 @@ export class LeepsBimatrix extends PolymerElement {
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
                                         <template is="dom-if" if="[[ _p3Role() ]]">
-                                            <paper-radio-button name="2"></paper-radio-button>
-                                            <paper-radio-button name="1"></paper-radio-button>
-                                            <paper-radio-button name="0"></paper-radio-button>
+                                            <paper-radio-button name="2"><p is="dom-if" if="[[ !maxInfo ]]"> U </p></paper-radio-button>
+                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
                                         </template>
 
                                         <template is="dom-if" if="[[ !_p3Role() ]]">
-                                            <paper-radio-button name="1"></paper-radio-button>
-                                            <paper-radio-button name="0"></paper-radio-button>
+                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
                                         </template>
                                     </template>
                                 </paper-radio-group>
@@ -221,42 +221,44 @@ export class LeepsBimatrix extends PolymerElement {
                                             </template>
                                         </table>
                                     </template>
+                                    <template is="dom-if" if="[[ maxInfo ]]">
 
-                                    <template is="dom-if" if="[[ isMultiDim ]]">
+                                        <template is="dom-if" if="[[ isMultiDim ]]">
 
-                                        <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
+                                            <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
-                                            <table id="payoff-table" class="self-center two" >
-                                                    <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
-                                                        <tr>
-                                                            <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                    <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
-                                                                        <template is="dom-if" if="[[ _p1Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 0) ]]
+                                                <table id="payoff-table" class="self-center two" >
+                                                        <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                            <tr>
+                                                                <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
+                                                                        <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
+                                                                            <template is="dom-if" if="[[ _p1Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 0) ]]
+                                                                                </span>
+                                                                                
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _p2Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 1) ]]
+                                                                                </span>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _p3Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 2) ]]
+                                                                                </span>
+                                                                            </template>
+                                                                            <br>
+                                                                            <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
                                                                             </span>
-                                                                            
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ _p2Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 1) ]]
-                                                                            </span>
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ _p3Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 2) ]]
-                                                                            </span>
-                                                                        </template>
-                                                                        <br>
-                                                                        <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
-                                                                        </span>
-                                                                    </td>
-                                                            </template>
-                                                        </tr>
-                                                    </template>
-                                            </table>
+                                                                        </td>
+                                                                </template>
+                                                            </tr>
+                                                        </template>
+                                                </table>
+                                            </template>  
                                         </template>  
-                                    </template>  
+                                    </template>
                                 </template>
                             </template>
                         </div>
@@ -305,6 +307,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-decision-array="[[ otherDecisionArray ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
+                                            max-info="[[ maxInfo ]]"
                                         ></subperiod-strategy-graph>
                                         <subperiod-payoff-graph
                                             group-decisions="{{ groupDecisions }}"
@@ -316,6 +319,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
+                                            max-info="[[ maxInfo ]]"
                                         ></subperiod-payoff-graph>
                                     </template>
                                 </div>
@@ -347,6 +351,10 @@ export class LeepsBimatrix extends PolymerElement {
             },
             myDecision: {
                 type: Number,
+            },
+            maxInfo: {
+                type: Boolean,
+                value: false,
             },
             // can't use otherDecision from redwood-decision because of mean matching special case
             otherDecision: {
