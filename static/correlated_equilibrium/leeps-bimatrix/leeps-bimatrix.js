@@ -179,17 +179,21 @@ export class LeepsBimatrix extends PolymerElement {
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
                                         <template is="dom-if" if="[[ _p3Role() ]]">
-                                            <paper-radio-button name="2"></paper-radio-button>
-                                            <paper-radio-button name="1"></paper-radio-button>
-                                            <paper-radio-button name="0"></paper-radio-button>
+                                            <paper-radio-button name="2"><p is="dom-if" if="[[ !maxInfo ]]"> U </p></paper-radio-button>
+                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
                                         </template>
 
                                         <template is="dom-if" if="[[ !_p3Role() ]]">
-                                            <paper-radio-button name="1"></paper-radio-button>
-                                            <paper-radio-button name="0"></paper-radio-button>
+                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
                                         </template>
                                     </template>
                                 </paper-radio-group>
+
+                                <template is="dom-if" if="[[ maxInfo ]]">MAX INFO</template>
+                                
+                                <template is="dom-if" if="[[ !maxInfo ]]">MIN INFO</template>
 
                                 <template is="dom-if" if="[[ meanMatching ]]">
                                     <discrete-mean-matching-heatmap
@@ -221,42 +225,44 @@ export class LeepsBimatrix extends PolymerElement {
                                             </template>
                                         </table>
                                     </template>
+                                    <template is="dom-if" if="[[ maxInfo ]]">
 
-                                    <template is="dom-if" if="[[ isMultiDim ]]">
+                                        <template is="dom-if" if="[[ isMultiDim ]]">
 
-                                        <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
+                                            <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
-                                            <table id="payoff-table" class="self-center two" >
-                                                    <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
-                                                        <tr>
-                                                            <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                    <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
-                                                                        <template is="dom-if" if="[[ _p1Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 0) ]]
+                                                <table id="payoff-table" class="self-center two" >
+                                                        <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                            <tr>
+                                                                <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
+                                                                        <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
+                                                                            <template is="dom-if" if="[[ _p1Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 0) ]]
+                                                                                </span>
+                                                                                
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _p2Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 1) ]]
+                                                                                </span>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _p3Role() ]]">
+                                                                                <span class="your-payoff">
+                                                                                    [[ _array(column, 2) ]]
+                                                                                </span>
+                                                                            </template>
+                                                                            <br>
+                                                                            <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
                                                                             </span>
-                                                                            
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ _p2Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 1) ]]
-                                                                            </span>
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ _p3Role() ]]">
-                                                                            <span class="your-payoff">
-                                                                                [[ _array(column, 2) ]]
-                                                                            </span>
-                                                                        </template>
-                                                                        <br>
-                                                                        <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
-                                                                        </span>
-                                                                    </td>
-                                                            </template>
-                                                        </tr>
-                                                    </template>
-                                            </table>
+                                                                        </td>
+                                                                </template>
+                                                            </tr>
+                                                        </template>
+                                                </table>
+                                            </template>  
                                         </template>  
-                                    </template>  
+                                    </template>
                                 </template>
                             </template>
                         </div>
@@ -272,28 +278,21 @@ export class LeepsBimatrix extends PolymerElement {
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
                                         <strategy-graph
-                                            num-players="[[ numPlayers ]]"
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
                                             period-length="[[ periodLength ]]"
                                             my-choice-series="[[ myChoiceSeries ]]"
-                                            other-decision-array="[[ otherDecisionArray ]]"
                                             other-choice-series="[[ otherChoiceSeries ]]"
-                                            other-other-choice-series="[[ otherOtherChoiceSeries ]]"
                                         ></strategy-graph>
                                         <payoff-graph
-                                            num-players="[[ numPlayers ]]"
                                             group-decisions="{{ groupDecisions }}"
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
-                                            original-payoff-matrix="[[ originalPayoffMatrix ]]"
-                                            payoff-matrix="[[ payoffMatrix ]]"
                                             my-payoffs="[[ myPayoffs ]]"
                                             other-payoffs="[[ otherPayoffs ]]"
                                             period-length="[[ periodLength ]]"
                                             my-payoff-series="[[ myPayoffSeries ]]"
                                             other-payoff-series="[[ otherPayoffSeries ]]"
-                                            other-other-payoff-series="[[ otherOtherPayoffSeries ]]"
                                         ></payoff-graph>
                                     </template>
                                     <template is="dom-if" if="[[ numSubperiods ]]">
@@ -305,6 +304,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-decision-array="[[ otherDecisionArray ]]"
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
+                                            max-info="[[ maxInfo ]]"
                                         ></subperiod-strategy-graph>
                                         <subperiod-payoff-graph
                                             group-decisions="{{ groupDecisions }}"
@@ -316,6 +316,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
+                                            max-info="[[ maxInfo ]]"
                                         ></subperiod-payoff-graph>
                                     </template>
                                 </div>
@@ -347,6 +348,10 @@ export class LeepsBimatrix extends PolymerElement {
             },
             myDecision: {
                 type: Number,
+            },
+            maxInfo: {
+                type: Boolean,
+                value: false,
             },
             // can't use otherDecision from redwood-decision because of mean matching special case
             otherDecision: {
@@ -397,12 +402,6 @@ export class LeepsBimatrix extends PolymerElement {
                     return [[0, 0], [Number.EPSILON, 0]];
                 }
             },
-            otherOtherChoiceSeries: {
-                type: Array,
-                value: () => {
-                    return [[0, 0], [Number.EPSILON, 0]];
-                }
-            },
             myPayoffSeries: {
                 type: Array,
                 value: () => {
@@ -410,12 +409,6 @@ export class LeepsBimatrix extends PolymerElement {
                 }
             },
             otherPayoffSeries: {
-                type: Array,
-                value: () => {
-                    return [[0, 0], [Number.EPSILON, 0]];
-                }
-            },
-            otherOtherPayoffSeries: {
                 type: Array,
                 value: () => {
                     return [[0, 0], [Number.EPSILON, 0]];
@@ -438,6 +431,7 @@ export class LeepsBimatrix extends PolymerElement {
 
     ready() {
         super.ready()
+        console.log("maxInfo: " + this.maxInfo);
         // set payoff indices
         if (this.$.constants.idInGroup === undefined) {
             console.log('Not in game, manually setting payoffIndex');
@@ -451,24 +445,20 @@ export class LeepsBimatrix extends PolymerElement {
         //Get number of players
         let num_players = this.numPlayers;
 
-         // transpose payoff and probability matrices if player controls vertical line in a 2 player game
-         if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+        // transpose payoff and probability matrices if player controls vertical line
+        if (this.$.constants.idInGroup % num_players == 0) {
+            /*
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
-            for (i=0; i < this.payoffMatrix.length; i++ ) {
+            for (i=0; i < this.payoffMatrix[0].length; i++) {
                 t[i] = [];
 
-                for(j = 0; j < this.payoffMatrix[0].length; j++) {
+                for(j = 0; j < this.payoffMatrix.length; j++) {
                     t[i][j] = this.payoffMatrix[j][i];
                 }
-            }
+            }*/
 
-            this.set("payoffMatrix", t);
-        }
-
-        // transpose payoff and probability matrices if player controls vertical line in a 3 player game
-        if (this.$.constants.idInGroup % num_players == 0 && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
 
             for (p2=0; p2 < this.payoffMatrix[0][0].length; p2++) {
@@ -487,7 +477,9 @@ export class LeepsBimatrix extends PolymerElement {
             this.set("payoffMatrix", t);
         }
 
-        // transpose payoff and probability matrices if player 2 and there are 3 players
+        console.log(this.payoffMatrix);
+
+        // transpose payoff and probability matrices if player 2
         if (this.$.constants.idInGroup == 2 && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
 
