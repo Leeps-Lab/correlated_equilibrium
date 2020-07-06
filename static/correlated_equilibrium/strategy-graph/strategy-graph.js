@@ -26,6 +26,9 @@ export class StrategyGraph extends PolymerElement {
 
     static get properties() {
         return {
+            choice: {
+                type: Number
+            },
             myDecision: {
                 type: Number,
                 observer: '_updateDataset'
@@ -81,7 +84,7 @@ export class StrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: 'Choice vs. Time' },
+            title: { text: this.choice.toString() },
             exporting: { enabled: false },
             tooltip: { enabled: false },
             legend: { enabled: false },
@@ -106,7 +109,7 @@ export class StrategyGraph extends PolymerElement {
             yAxis: {
                 title: { text: 'Choice' },
                 min: 0,
-                max: 2
+                max: 1
             },
             plotOptions: {
                 line: {marker: {enabled: false}},
@@ -211,15 +214,15 @@ export class StrategyGraph extends PolymerElement {
         // add point for my new decision
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).remove();
-        dataset.addPoint([xval, this.myDecision]);
-        dataset.addPoint([xval, this.myDecision]);
+        dataset.addPoint([xval, (this.myDecision == this.choice) ? 1 : 0]);
+        dataset.addPoint([xval, (this.myDecision == this.choice) ? 1 : 0]);
 
         // add point for others' new decision
         if(this.numPlayers % 2 == 0 && this.maxInfo) {
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).remove();
-            dataset.addPoint([xval, this.otherDecision]);
-            dataset.addPoint([xval, this.otherDecision]);        
+            dataset.addPoint([xval, (this.otherDecision == this.choice) ? 1 : 0]);
+            dataset.addPoint([xval, (this.otherDecision == this.choice) ? 1 : 0]);        
         }
         
         
@@ -229,8 +232,8 @@ export class StrategyGraph extends PolymerElement {
             for(let decision of this.otherDecisionArray ) {
                 dataset = this.graph_obj.series[i];
                 this._lastElem(dataset.data).remove();
-                dataset.addPoint([xval, decision]);
-                dataset.addPoint([xval, decision]);
+                dataset.addPoint([xval, (decision == this.choice) ? 1 : 0]);
+                dataset.addPoint([xval, (decision == this.choice) ? 1 : 0]);
                 i++;
             }
         }
