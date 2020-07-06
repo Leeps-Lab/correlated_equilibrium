@@ -127,7 +127,12 @@ export class StrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (this.numPlayers % 3 == 0) ? [
+            series: (!this.maxInfo) ? [{
+                name: 'Your Choice',
+                type: "line",
+                data: [[0, 0]],
+                step: "left"
+            }] : (this.numPlayers % 3 == 0) ? [
                 {
                     name: 'Your Choice',
                     data: this.myChoiceSeries,
@@ -210,13 +215,7 @@ export class StrategyGraph extends PolymerElement {
         dataset.addPoint([xval, this.myDecision]);
 
         // add point for others' new decision
-        dataset = this.graph_obj.series[1];
-        this._lastElem(dataset.data).remove();
-        dataset.addPoint([xval, this.otherDecision]);
-        dataset.addPoint([xval, this.otherDecision]);
-
-
-        if(this.numPlayers % 2 == 0) {
+        if(this.numPlayers % 2 == 0 && this.maxInfo) {
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).remove();
             dataset.addPoint([xval, this.otherDecision]);
@@ -224,7 +223,7 @@ export class StrategyGraph extends PolymerElement {
         }
         
         
-        if(this.numPlayers % 3 == 0) {
+        if(this.numPlayers % 3 == 0 && this.maxInfo) {
             console.log(this.otherDecisionArray);
             let i = 1;
             for(let decision of this.otherDecisionArray ) {
