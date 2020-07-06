@@ -172,9 +172,10 @@ export class LeepsBimatrix extends PolymerElement {
                                     selected="{{ _myPlannedDecisionString }}">
                                     
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
+                                        
                                         <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
-                                            <paper-radio-button name="[[item]]"></paper-radio-button>
-                                        </template>
+                                            <paper-radio-button name="[[item]]">[[item]]</paper-radio-button>
+                                        </template>                                        
                                     </template>
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
@@ -201,27 +202,29 @@ export class LeepsBimatrix extends PolymerElement {
                                         color="[[ myColor ]]">
                                     </discrete-mean-matching-heatmap>
                                 </template>
-                                <template is="dom-if" if="[[ !meanMatching ]]">
-                                    <template is="dom-if" if="[[ !isMultiDim ]]">
 
-                                        <table id="payoff-table" class="self-center" >
-                                            <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
-                                                <tr>
-                                                    <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
-                                                                    <span class="your-payoff">
-                                                                        [[ _array(column, payoffIndex) ]]
-                                                                    </span>,
-                                                                    <span class="other-payoff">
-                                                                        [[ _array(column, otherPayoffIndex) ]]
-                                                                    </span>
-                                                            </td>
-                                                    </template>
-                                                </tr>
-                                            </template>
-                                        </table>
-                                    </template>
-                                    <template is="dom-if" if="[[ maxInfo ]]">
+                                <template is="dom-if" if="[[ maxInfo ]]">
+                                    <template is="dom-if" if="[[ !meanMatching ]]">
+                                        <template is="dom-if" if="[[ !isMultiDim ]]">
+
+                                            <table id="payoff-table" class="self-center" >
+                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
+                                                    <tr>
+                                                        <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                                <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                        <span class="your-payoff">
+                                                                            [[ _array(column, payoffIndex) ]]
+                                                                        </span>,
+                                                                        <span class="other-payoff">
+                                                                            [[ _array(column, otherPayoffIndex) ]]
+                                                                        </span>
+                                                                </td>
+                                                        </template>
+                                                    </tr>
+                                                </template>
+                                            </table>
+                                        </template>
+                                        
 
                                         <template is="dom-if" if="[[ isMultiDim ]]">
 
@@ -256,7 +259,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                             </tr>
                                                         </template>
                                                 </table>
-                                            </template>  
+                                        </template>  
                                         </template>  
                                     </template>
                                 </template>
@@ -299,6 +302,19 @@ export class LeepsBimatrix extends PolymerElement {
                                         ></payoff-graph>
                                     </template>
                                     <template is="dom-if" if="[[ numSubperiods ]]">
+                                        <template is="dom-if" if="[[ _p3Role() ]]">
+                                            <subperiod-strategy-graph
+                                                num-players="[[ numPlayers ]]"
+                                                group-decisions="{{ groupDecisions }}"
+                                                my-decision="[[ myDecision ]]"
+                                                other-decision="[[ otherDecision ]]"
+                                                other-decision-array="[[ otherDecisionArray ]]"
+                                                period-length="[[ periodLength ]]"
+                                                num-subperiods="[[ numSubperiods ]]"
+                                                max-info="[[ maxInfo ]]"
+                                                choice="2"
+                                            ></subperiod-strategy-graph>
+                                        </template>
                                         <subperiod-strategy-graph
                                             num-players="[[ numPlayers ]]"
                                             group-decisions="{{ groupDecisions }}"
@@ -308,6 +324,18 @@ export class LeepsBimatrix extends PolymerElement {
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             max-info="[[ maxInfo ]]"
+                                            choice="1"
+                                        ></subperiod-strategy-graph>
+                                        <subperiod-strategy-graph
+                                            num-players="[[ numPlayers ]]"
+                                            group-decisions="{{ groupDecisions }}"
+                                            my-decision="[[ myDecision ]]"
+                                            other-decision="[[ otherDecision ]]"
+                                            other-decision-array="[[ otherDecisionArray ]]"
+                                            period-length="[[ periodLength ]]"
+                                            num-subperiods="[[ numSubperiods ]]"
+                                            max-info="[[ maxInfo ]]"
+                                            choice="0"
                                         ></subperiod-strategy-graph>
                                         <subperiod-payoff-graph
                                             group-decisions="{{ groupDecisions }}"
@@ -341,6 +369,9 @@ export class LeepsBimatrix extends PolymerElement {
                 type: Number,
             },
             numPlayers: {
+                type: Number,
+            },
+            choice: {
                 type: Number,
             },
             myPlannedDecision: {
