@@ -26,6 +26,9 @@ export class SubperiodStrategyGraph extends PolymerElement {
 
     static get properties() {
         return {
+            choice: {
+                type: Number,
+            },
             myDecision: {
                 type: Number,
             },
@@ -65,7 +68,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: 'Choice vs. Time' },
+            title: { text: this.choice.toString() },
             exporting: { enabled: false },
             tooltip: { enabled: false },
             legend: { enabled: false },
@@ -90,9 +93,9 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 }],
             },
             yAxis: {
-                title: { text: 'Choice' },
+                title: { text: 'Chosen?' },
                 min: 0,
-                max: 2
+                max: 1
             },
             plotOptions: {
                 line: {marker: {enabled: false}},
@@ -165,14 +168,13 @@ export class SubperiodStrategyGraph extends PolymerElement {
         this._currSubperiod += 1;
 
         let dataset = this.graph_obj.series[0];
-        this._lastElem(dataset.data).update({y: this.myDecision});
-        dataset.addPoint([this._currSubperiod, this.myDecision]);
-        
+        this._lastElem(dataset.data).update({y: (this.myDecision == this.choice)? 1 : 0});
+        dataset.addPoint([this._currSubperiod, (this.myDecision == this.choice)? 1 : 0]);
         
         if(this.numPlayers % 2 == 0  && this.maxInfo) {
             dataset = this.graph_obj.series[1];
-            this._lastElem(dataset.data).update({y: this.otherDecision});
-            dataset.addPoint([this._currSubperiod, this.otherDecision]);            
+            this._lastElem(dataset.data).update({y: (this.otherDecision == this.choice)? 1 : 0});
+            dataset.addPoint([this._currSubperiod, (this.otherDecision == this.choice)? 1 : 0]);            
         }
         
         
@@ -181,13 +183,12 @@ export class SubperiodStrategyGraph extends PolymerElement {
             console.log("Other player decisions: " + this.otherDecisionArray);
             for( let decision of this.otherDecisionArray ) {
                 dataset = this.graph_obj.series[i];
-                this._lastElem(dataset.data).update({y: decision});
-                dataset.addPoint([this._currSubperiod, decision]);
+                this._lastElem(dataset.data).update({y: (decision == this.choice)? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (decision == this.choice)? 1 : 0]);
                 i++;
             }
         }
 
-            
         
     }
 }
