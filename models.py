@@ -59,6 +59,8 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
                 p.set_payoff()
             sum_payoffs += p.payoff
         return sum_payoffs / len(players)
+
+    '''
     
     def before_session_starts(self):
         config = parse_config(self.session.config['config_file'])
@@ -75,15 +77,16 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
             for i in range(0, len(players)):
                 group_matrix.append(players[i:i])
             self.set_group_matrix(group_matrix)
-            '''
+            
             for i in range(0, len(players), players_per_silo):
                 group_matrix.append(players[i:i+players_per_silo])
             self.set_group_matrix(group_matrix)
-            '''
+        
 
         fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
         # use otree-redwood's SubsessionSilosMixin to organize the session into silos
         #self.group_randomly_in_silos(num_silos, fixed_id_in_group)
+    '''
 
     def payoff_matrix(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
@@ -128,54 +131,23 @@ class Subsession(BaseSubsession, SubsessionSilosMixin):
 
     def creating_session(self):
         config = parse_config(self.session.config['config_file'])
+        
         if self.round_number > len(config):
             return
         
-        #num_silos = self.session.config['num_silos']
+        group_matrix = []
+        players = self.get_players()
 
         # if mean matching is enabled, put everyone in the same silo in the same group
         if config[self.round_number-1]['mean_matching']:
-            players = self.get_players()
-            #players_per_silo = math.ceil(len(players) / num_silos)
-            group_matrix = []
-
-            for i in range(0, len(players)):
-                group_matrix.append(players[i:i])
-            '''
-            for i in range(0, len(players), players_per_silo):
-                group_matrix.append(players[i:i+players_per_silo])
-            '''
-            self.set_group_matrix(group_matrix)
-
+            ppg = len(players)
         # if pairwise matching, set group size based on config
         else:
-            players = self.get_players()
-            #players_per_silo = math.ceil(len(players) / num_silos)
-            group_matrix = []
             ppg = config[self.round_number-1]['players_per_group']
-            for i in range(0, len(players), ppg):
-                group_matrix.append(players[i:i+ppg])
-            '''
-            for i in range(0, players_per_silo, ppg):
-                group_matrix.append(players[i:i+ppg])
-            '''
-            self.set_group_matrix(group_matrix)
 
-        # randomize player id each period if not fixed id
-        fixed_id_in_group = not config[self.round_number-1]['shuffle_role']
-
-        # use otree-redwood's SubsessionSilosMixin to organize the session into silos
-        #self.group_randomly_in_silos(num_silos, fixed_id_in_group)
-
-        '''
-        group_matrix = []
-        players = self.get_players()
-        ppg = self.session.config['players_per_group']
         for i in range(0, len(players), ppg):
             group_matrix.append(players[i:i+ppg])
         self.set_group_matrix(group_matrix)
-        '''
-
 
 class Group(DecisionGroup, GroupSilosMixin):
 
@@ -357,4 +329,26 @@ class Player(BasePlayer):
                 decision_length = (next_change_time - d.timestamp).total_seconds()
             payoff += decision_length * flow_payoff
         return payoff / period_duration.total_seconds()
+
+    def player_history(self):
+
+        print(self.history)
+        '''
+        decisions = list(Event.objects.filter(
+                channel='group_decisions',
+                content_type=ContentType.objects.get_for_model(self.group),
+                group_pk=self.group.pk).order_by("timestamp"))
+
+        for i, d in enumerate(decisions):
+            if not d.value: continue
+
+            p1_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p1']
+            p2_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p2']
+            p3_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == 'p3']
+
+
+        history.setdefault(self.participant.code, [])
+        history[self.participant.code].append('mynewvalue')
+        '''
+
     
