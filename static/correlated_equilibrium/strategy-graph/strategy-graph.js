@@ -225,7 +225,7 @@ export class StrategyGraph extends PolymerElement {
         
         
         if(this.numPlayers % 3 == 0) {
-            console.log(this.otherDecisionArray);
+            //console.log(this.otherDecisionArray);
             let i = 1;
             for(let decision of this.otherDecisionArray ) {
                 dataset = this.graph_obj.series[i];

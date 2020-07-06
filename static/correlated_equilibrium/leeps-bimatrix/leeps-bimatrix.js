@@ -70,6 +70,10 @@ export class LeepsBimatrix extends PolymerElement {
                     height: 300px;
                 }
 
+                regret-bar {
+                    height: 300px;
+                }
+
                 #payoff-table td {
                     border: 1px solid black;
                     text-align: center;
@@ -169,7 +173,7 @@ export class LeepsBimatrix extends PolymerElement {
                         <div id="heatmap-column" class="layout horizontal">
                             <template is="dom-if" if="[[ pureStrategy ]]">
 
-                                <div class="layout vertical around-justified self-center">
+                                <div class="regret-bar">
                                     <regret-bar
                                         payoff-matrix="[[ payoffMatrix ]]"
                                         my-payoffs="[[ myPayoffs ]]"
@@ -698,7 +702,7 @@ export class LeepsBimatrix extends PolymerElement {
                 otherDecisionArray.push(groupDecisions[player.participantCode]);
             }
         }
-        console.log("Other player decisions: " + otherDecisionArray);
+        //console.log("Other player decisions: " + otherDecisionArray);
         return otherDecisionArray;
     }
     // return true if thermometer is to be shown

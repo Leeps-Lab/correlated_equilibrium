@@ -1,6 +1,7 @@
 import {html,PolymerElement} from '/static/otree-redwood/node_modules/@polymer/polymer/polymer-element.js';
 import '/static/otree-redwood/src/redwood-channel/redwood-channel.js';
 import '/static/otree-redwood/src/otree-constants/otree-constants.js';
+import '../polymer-elements/iron-flex-layout-classes.js';
 
 var history = [];
 
@@ -12,6 +13,10 @@ export class RegretBar extends PolymerElement {
 
                 :host {
                     display: block;
+                }
+
+                #progress-container {
+                    height: 100%;
                 }
 
                 #myProgress {
@@ -29,7 +34,7 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    margin-bottom: 150px;
+                    /* margin-bottom: 25px; */
                 }
 
                 #myBar1 {
@@ -39,7 +44,7 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    margin-bottom: 25px;
+                    /* margin-bottom: 25px; */
                 }
 
                 #myBar2 {
@@ -49,7 +54,7 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    margin-bottom: 25px;
+                    /* margin-bottom: 25px; */
                 }
 
             </style>
@@ -60,19 +65,21 @@ export class RegretBar extends PolymerElement {
                 on-event="_handleGroupDecisionsEvent">
             </redwood-channel>
 
-            <div id="myProgress">
-                <div id="myBar0"></div>
-            </div>
-
-            <div id="myProgress">
-                <div id="myBar1"></div>
-            </div>
-
-            <template is="dom-if" if="[[ _p3Role() ]]">
+            <div class="layout vertical around-justified self-center" id=progress-container>
                 <div id="myProgress">
-                    <div id="myBar2" ></div>
+                    <div id="myBar0"></div>
                 </div>
-            </template>
+
+                <div id="myProgress">
+                    <div id="myBar1"></div>
+                </div>
+
+                <template is="dom-if" if="[[ _p3Role() ]]">
+                    <div id="myProgress">
+                        <div id="myBar2" ></div>
+                    </div>
+                </template>
+            </div>
         `
     }
 
@@ -136,7 +143,7 @@ export class RegretBar extends PolymerElement {
 
 
 
-            if(_p3Role()) {
+            if(this.$.constants.role == 'p3') {
                 elem3 = document.getElementById("myBar2");
             }
 
@@ -144,17 +151,10 @@ export class RegretBar extends PolymerElement {
             width1 = 1;
             width2 = 1;
             
-            elem0.style.width = width1 + '%';
-            
-            elem1.style.width = width2 + '%';
-
-            elem2.style.width = width3 + '%';
         }  
     }
 
-    _p3Role() {
-        return this.$.constants.role == 'p3';
-    }
+   
 }
 
 window.customElements.define('regret-bar', RegretBar);
