@@ -170,7 +170,12 @@ export class PayoffGraph extends PolymerElement {
                 }
             ],
             series:
-            (this.numPlayers % 3 == 0) ?
+            (!this.maxInfo) ? [{
+                name: 'Your Payoff',
+                type: "area",
+                data: [[0, 0]],
+                step: "left"
+            }] : (this.numPlayers % 3 == 0) ?
               [
                 {
                     name: 'Your Payoff',
@@ -344,12 +349,14 @@ export class PayoffGraph extends PolymerElement {
         dataset.addPoint([xval+Number.EPSILON, my_flow_payoff]);
 
         // add point for other payoff
-        dataset = this.graph_obj.series[1]
-        this._lastElem(dataset.data).remove()
-        dataset.addPoint([xval, other_flow_payoff]);
-        dataset.addPoint([xval+Number.EPSILON, other_flow_payoff]);
+        if(this.maxInfo){
+            dataset = this.graph_obj.series[1]
+            this._lastElem(dataset.data).remove()
+            dataset.addPoint([xval, other_flow_payoff]);
+            dataset.addPoint([xval+Number.EPSILON, other_flow_payoff]);
+        }
 
-        if(this.numPlayers % 3 == 0) {
+        if(this.numPlayers % 3 == 0 && this.maxInfo) {
             dataset = this.graph_obj.series[2];
             this._lastElem(dataset.data).remove()
             dataset.addPoint([xval, third_flow_payoff]);
