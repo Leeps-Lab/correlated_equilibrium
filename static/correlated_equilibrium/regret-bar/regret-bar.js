@@ -24,6 +24,7 @@ export class RegretBar extends PolymerElement {
                     background-color: #b1dcff;
                     outline: 1px solid black;
                     margin-right: 100px;
+                    margin-bottom: 50px;
                 
                 }
 

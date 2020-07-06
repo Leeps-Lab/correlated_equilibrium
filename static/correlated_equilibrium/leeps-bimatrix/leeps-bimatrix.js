@@ -173,7 +173,7 @@ export class LeepsBimatrix extends PolymerElement {
                         <div id="heatmap-column" class="layout horizontal">
                             <template is="dom-if" if="[[ pureStrategy ]]">
 
-                                <div class="regret-bar">
+                                <div class="layout vertical around-justified self-center">
                                     <regret-bar
                                         payoff-matrix="[[ payoffMatrix ]]"
                                         my-payoffs="[[ myPayoffs ]]"
