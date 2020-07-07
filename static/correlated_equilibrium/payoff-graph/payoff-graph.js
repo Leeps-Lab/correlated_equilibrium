@@ -192,6 +192,7 @@ export class PayoffGraph extends PolymerElement {
                 
                 {
                     name: (this.$.constants.role == "p3" ) ? 'P2 Payoff' : 'P3 Payoff',
+                    color: '#ff0900',
                     type: "line",
                     data: this.otherOtherPayoffSeries,
                     step: "left"

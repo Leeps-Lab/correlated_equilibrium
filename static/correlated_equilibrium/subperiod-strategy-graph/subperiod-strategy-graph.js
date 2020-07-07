@@ -73,9 +73,6 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 ) ? "Choices vs. Time" : " "},
             exporting: { enabled: false },
             tooltip: { enabled: false },
-            legend: { enabled: ((this.choice == 2 )
-                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
-                ) ? true : false  },
             credits: { enabled: false },
             xAxis: {
                 min: 0,
@@ -97,7 +94,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 }],
             },
             yAxis: {
-                title: { text: (this.choice == 2) ? "U" : (this.choice == 1) ? "C" : "D" },
+                title: { text: (this.choice == 2) ? "U" : (this.choice == 1) ? "C" : "D", rotation: 0 },
                 min: 0,
                 max: 1
             },
@@ -140,6 +137,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 },
                 {
                     name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                    color: '#ff0900',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
@@ -161,6 +159,9 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 
             ] ,
             legend: {
+                enabled: ((this.choice == 2 )
+                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
+                ) ? true : false,
                 align: 'right',
                 verticalAlign: 'top',
                 floating: true,
@@ -181,7 +182,6 @@ export class SubperiodStrategyGraph extends PolymerElement {
             dataset.addPoint([this._currSubperiod, (this.otherDecision == this.choice)? 1 : 0]);            
         }
         
-        
         if(this.numPlayers % 3 == 0 && this.maxInfo) {
             let i = 1;
             console.log("Other player decisions: " + this.otherDecisionArray);
@@ -192,8 +192,6 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 i++;
             }
         }
-
-        
     }
 }
 
