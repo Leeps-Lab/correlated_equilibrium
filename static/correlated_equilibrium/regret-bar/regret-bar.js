@@ -15,8 +15,22 @@ export class RegretBar extends PolymerElement {
                     display: block;
                 }
 
+                #progress-container3 {
+                    height: 50%;
+                }
+
+                #progress-container2 {
+                    height: 50%;
+                    margin-top: 60px;
+                }
+
+                #progress-container1 {
+                    height: 33%;
+                    margin-top: 30px;
+                }
+
                 #progress-container {
-                    height: 100%;
+                    height: 33%;
                 }
 
                 #myProgress {
@@ -24,8 +38,6 @@ export class RegretBar extends PolymerElement {
                     background-color: #b1dcff;
                     outline: 1px solid black;
                     margin-right: 100px;
-                    margin-bottom: 50px;
-                
                 }
 
                 #myBar0 {
@@ -35,7 +47,6 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    /* margin-bottom: 25px; */
                 }
 
                 #myBar1 {
@@ -45,7 +56,6 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    /* margin-bottom: 25px; */
                 }
 
                 #myBar2 {
@@ -55,7 +65,6 @@ export class RegretBar extends PolymerElement {
                     text-align: center;
                     line-height: 30px;
                     color: white;
-                    /* margin-bottom: 25px; */
                 }
 
             </style>
@@ -66,21 +75,39 @@ export class RegretBar extends PolymerElement {
                 on-event="_handleGroupDecisionsEvent">
             </redwood-channel>
 
-            <div class="layout vertical around-justified self-center" id=progress-container>
-                <div id="myProgress">
-                    <div id="myBar0"></div>
-                </div>
-
-                <div id="myProgress">
-                    <div id="myBar1"></div>
-                </div>
-
-                <template is="dom-if" if="[[ _p3Role() ]]">
+            <template is="dom-if" if="[[ _p3Role() ]]">
+                <div id=progress-container1>
                     <div id="myProgress">
                         <div id="myBar2" ></div>
                     </div>
-                </template>
-            </div>
+                </div>
+
+                <div id=progress-container>
+                    <div id="myProgress">
+                        <div id="myBar1"></div>
+                    </div>
+                </div>
+
+                <div id=progress-container>
+                    <div id="myProgress">
+                        <div id="myBar0"></div>
+                    </div>
+                </div>
+            </template>
+
+            <template is="dom-if" if="[[ !_p3Role() ]]">
+                <div id=progress-container2>
+                    <div id="myProgress">
+                        <div id="myBar1"></div>
+                    </div>
+                </div>
+
+                <div id=progress-container3>
+                    <div id="myProgress">
+                        <div id="myBar0"></div>
+                    </div>
+                </div>
+            </template>   
         `
     }
 
@@ -111,6 +138,7 @@ export class RegretBar extends PolymerElement {
     }
 
     _handleGroupDecisionsEvent(event) {
+        console.log(this.myDecision);
         //Add most recent decision to history
         history.push(this.myDecision);
 
@@ -119,43 +147,70 @@ export class RegretBar extends PolymerElement {
             let maxPayoff = -Infinity;
 
             for (var i=0; i< this.payoffMatrix.length; i++) {
-                
                 for(var j = 0; j < this.payoffMatrix[0].length; j++) {
                     minPayoff = Math.min(minPayoff, this.payoffMatrix[i][j], this.payoffMatrix[i][j]);
                     maxPayoff = Math.max(maxPayoff, this.payoffMatrix[i][j], this.payoffMatrix[i][j]);
                 }
             }
 
-            var elem0 = document.getElementById("myBar0");
-            var elem1 = document.getElementById("myBar1");
+            var elem0 = this.shadowRoot.getElementById("myBar0");
+            var elem1 = this.shadowRoot.getElementById("myBar1");
             var elem2;
 
-            var width0, width1, width2;
-            var regret0, regret1, regret2;
-            var regret0List = history, regret1List = history, regret2List = history;
+            if(this.$.constants.role == 'p3') {
+                elem2 = this.shadowRoot.getElementById("myBar2");
+            }
+
+            var regret0 = 0, regret1 = 0, regret2 = 0;
+            var regret0List = [], regret1List = [], regret2List = [];
 
             var lastDecision = history[(history.length - 1)]; 
             
-            //Calculate regret
+            //Copy elements
+            for(var i = 0; i < history.length; i++) {
+                regret0List.push(history[i]);
+                regret1List.push(history[i]);
+                regret2List.push(history[i]);
+            }
+
+            //Replace elements in list
             for(var i = 0; i < history.length; i++) {
                 if(history[i] == lastDecision) {
+                    regret0List[i] = 0;
+                    regret1List[i] = 1;
+                    regret2List[i] = 2;
                 }
             }
 
-
-
-            if(this.$.constants.role == 'p3') {
-                elem3 = document.getElementById("myBar2");
+            //Calculate regret
+            for(var i = 0; i < history.length; i++) {
+                if(history[i] == 0) {
+                    regret0 += 1; 
+                }
+                else if(history[i] == 1) {
+                    regret1 += 1;
+                }
+                else {
+                    regret2 += 1;
+                }
             }
 
-            width0 = 1;
-            width1 = 1;
-            width2 = 1;
-            
+            regret0 /= history.length;
+            regret1 /= history.length;
+            regret2 /= history.length;
+
+            elem0.style.width = (regret0 * 100) + '%';
+            elem1.style.width = (regret1 * 100) + '%';
+
+            if(this.$.constants.role == 'p3') {
+                elem2.style.width = (regret2 * 100) + '%';
+            }            
         }  
     }
 
-   
+    _p3Role() {
+        return this.$.constants.role == 'p3';
+    } 
 }
 
 window.customElements.define('regret-bar', RegretBar);
