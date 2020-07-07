@@ -84,10 +84,11 @@ export class StrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: this.choice.toString() },
+            title: { text: ((this.choice == 2 )
+                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
+                ) ? "Choices vs. Time" : " " },
             exporting: { enabled: false },
             tooltip: { enabled: false },
-            legend: { enabled: false },
             credits: { enabled: false },
             xAxis: {
                 min: 0,
@@ -107,7 +108,7 @@ export class StrategyGraph extends PolymerElement {
                 }],
             },
             yAxis: {
-                title: { text: 'Choice' },
+                title: { text: (this.choice == 2) ? "U" : (this.choice == 1) ? "C" : "D", rotation: 0 },
                 min: 0,
                 max: 1
             },
@@ -148,6 +149,7 @@ export class StrategyGraph extends PolymerElement {
                 },
                 {
                     name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                    color: '#ff0900',
                     data: this.otherOtherChoiceSeries,
                     step: "left"
                 },
@@ -166,6 +168,9 @@ export class StrategyGraph extends PolymerElement {
                 
             ] ,
             legend: {
+                enabled: ((this.choice == 2 )
+                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
+                ) ? true : false,
                 align: 'right',
                 verticalAlign: 'top',
                 floating: true,
