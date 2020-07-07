@@ -68,10 +68,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: this.choice.toString() },
+            title: { text: ((this.choice == 2 )
+                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
+                ) ? "Choices vs. Time" : " "},
             exporting: { enabled: false },
             tooltip: { enabled: false },
-            legend: { enabled: false },
+            legend: { enabled: ((this.choice == 2 )
+                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
+                ) ? true : false  },
             credits: { enabled: false },
             xAxis: {
                 min: 0,
@@ -93,7 +97,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 }],
             },
             yAxis: {
-                title: { text: 'Chosen?' },
+                title: { text: (this.choice == 2) ? "U" : (this.choice == 1) ? "C" : "D" },
                 min: 0,
                 max: 1
             },
