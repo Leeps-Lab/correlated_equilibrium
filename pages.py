@@ -25,6 +25,10 @@ class Decision(Page):
 
     def is_displayed(self):
         return self.round_number <= self.group.num_rounds()
+
+class ResultsWaitPage(WaitPage):
+    def is_displayed(self):
+        return self.round_number <= self.group.num_rounds()
     
 
 class Results(Page):
@@ -189,5 +193,6 @@ def get_output_discrete_time(events):
 page_sequence = [
     DecisionWaitPage,
     Decision,
+    ResultsWaitPage,
     Results
 ]

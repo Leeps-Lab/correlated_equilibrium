@@ -11,6 +11,7 @@ import '/static/otree-redwood/src/redwood-decision-bot/redwood-decision-bot.js';
 import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 
 import '../bimatrix-heatmap/bimatrix-heatmap.js';
+import '../regret-bar/regret-bar.js';
 import '../heatmap-thermometer/heatmap-thermometer.js';
 import '../payoff-graph/payoff-graph.js';
 import '../subperiod-payoff-graph/subperiod-payoff-graph.js';
@@ -66,6 +67,10 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 paper-radio-group {
+                    height: 300px;
+                }
+
+                regret-bar {
                     height: 300px;
                 }
 
@@ -167,10 +172,21 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div id="heatmap-column" class="layout horizontal">
                             <template is="dom-if" if="[[ pureStrategy ]]">
+
+                                <div class="layout vertical around-justified self-center">
+                                    <regret-bar
+                                        payoff-matrix="[[ payoffMatrix ]]"
+                                        my-payoffs="[[ myPayoffs ]]"
+                                        group-decisions="{{ groupDecisions }}"
+                                        my-decision="[[ myDecision ]]"
+
+                                    ></regret-bar>                            
+                                </div>
+                                
                                 <paper-radio-group
                                     class="layout vertical around-justified self-center"
                                     selected="{{ _myPlannedDecisionString }}">
-                                    
+
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
                                         
                                         <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
@@ -751,7 +767,7 @@ export class LeepsBimatrix extends PolymerElement {
                 otherDecisionArray.push(groupDecisions[player.participantCode]);
             }
         }
-        console.log("Other player decisions: " + otherDecisionArray);
+        //console.log("Other player decisions: " + otherDecisionArray);
         return otherDecisionArray;
     }
     // return true if thermometer is to be shown
