@@ -14,10 +14,10 @@
 {% block content %}
     <leeps-bimatrix
         initial-decision='{{ player.initial_decision }}'
-        payoff-matrix='{{ player.subsession.payoff_matrix }}'
+        payoff-matrix='{{ config.payoff_matrix }}'
         original-payoff-matrix='{{ player.subsession.payoff_matrix }}'
-        period-length='{{ player.group.period_length }}'
-        rate-limit='{{ player.subsession.slider_rate_limit }}'
+        period-length='{{ config.period_length }}'
+        rate-limit='{{ config.rate_limit }}'
         num-players='{{ player.num_players }}'
         {% if player.group.max_info %}
         max-info
@@ -25,11 +25,11 @@
         {% if player.group.mean_matching %}
         mean-matching
         {% endif %}
-        {% if player.group.num_subperiods %}
-        num-subperiods='{{ player.group.num_subperiods }}'
+        {% if config.num_subperiods %}
+            num-subperiods='{{ config.num_subperiods }}'
         {% endif %}
-        {% if player.subsession.pure_strategy %}
-        pure-strategy
+        {% if config.pure_strategy %}
+            pure-strategy
         {% endif %}
         {% if player.subsession.is_multi_dim %}
         is-multi-dim
