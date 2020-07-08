@@ -84,9 +84,7 @@ export class StrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: ((this.choice == 2 )
-                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
-                ) ? "Choices vs. Time" : " " },
+            title: { text: "Choices vs. Time"  },
             exporting: { enabled: false },
             tooltip: { enabled: false },
             credits: { enabled: false },
@@ -136,41 +134,85 @@ export class StrategyGraph extends PolymerElement {
                 type: "line",
                 data: [[0, 0]],
                 step: "left"
-            }] : (this.numPlayers % 3 == 0) ? [
-                {
-                    name: 'Your Choice',
-                    data: this.myChoiceSeries,
-                    step: "left"
-                },
-                {
-                    name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
-                    data: this.otherChoiceSeries,
-                    step: "left"
-                },
-                {
-                    name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
-                    color: '#ff0900',
-                    data: this.otherOtherChoiceSeries,
-                    step: "left"
-                },
-            ] : 
+            }] : (this.numPlayers % 3 == 0 ) ? 
+                    (this.$.constants.role == "p3")? [
+                    {
+                        name: 'Your Choice',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                        type: "line",
+                        color: '#000000',
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                        color: '#ff0000',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    
+                ] : [
+                    {
+                        name: 'Your Choice',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                        color: '#000000',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: 'P3 Chose 1?',
+                        color: '#ff0000',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: 'P3 Chose 2?',
+                        color: '#ff0000',
+                        type: "line",
+                        data: [[0, 0]],
+                        step: "left",
+                        dashStyle: 'dot'
+                    },
+                ] :  //Two player game
             [
                 {
                     name: 'Your Choice',
-                    data: this.myChoiceSeries,
+                    type: "line",
+                    data: [[0, 0]],
                     step: "left"
                 },
                 {
-                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
-                    data: this.otherChoiceSeries,
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
+                    color: '#ff0000',
+                    type: "line",
+                    data: [[0, 0]],
                     step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
+                    color: '#ff0000',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left",
+                    dashStyle: 'dot'
                 },
                 
             ] ,
             legend: {
-                enabled: ((this.choice == 2 )
-                || (this.numPlayers % 3 == 0 && this.$.constants.role != "p3" && this.choice == 1) 
-                ) ? true : false,
+                enabled:  true ,
                 align: 'right',
                 verticalAlign: 'top',
                 floating: true,
@@ -219,15 +261,20 @@ export class StrategyGraph extends PolymerElement {
         // add point for my new decision
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).remove();
-        dataset.addPoint([xval, (this.myDecision == this.choice) ? 1 : 0]);
-        dataset.addPoint([xval, (this.myDecision == this.choice) ? 1 : 0]);
+        dataset.addPoint([xval, (this.myDecision == 1)? 1 : 0]);
+        dataset.addPoint([xval, (this.myDecision == 1)? 1 : 0]);
 
         // add point for others' new decision
         if(this.numPlayers % 2 == 0 && this.maxInfo) {
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).remove();
-            dataset.addPoint([xval, (this.otherDecision == this.choice) ? 1 : 0]);
-            dataset.addPoint([xval, (this.otherDecision == this.choice) ? 1 : 0]);        
+            dataset.addPoint([xval, (this.otherDecision == 1)? 1 : 0]);
+            dataset.addPoint([xval, (this.otherDecision == 1)? 1 : 0]); 
+            
+            dataset = this.graph_obj.series[2];
+            this._lastElem(dataset.data).remove();
+            dataset.addPoint([xval, (this.otherDecision == 2)? 1 : 0]);
+            dataset.addPoint([xval, (this.otherDecision == 2)? 1 : 0]); 
         }
         
         
@@ -235,13 +282,28 @@ export class StrategyGraph extends PolymerElement {
             console.log(this.otherDecisionArray);
             let i = 1;
             for(let decision of this.otherDecisionArray ) {
-                dataset = this.graph_obj.series[i];
-                this._lastElem(dataset.data).remove();
-                dataset.addPoint([xval, (decision == this.choice) ? 1 : 0]);
-                dataset.addPoint([xval, (decision == this.choice) ? 1 : 0]);
+                if (i == 1){
+                    dataset = this.graph_obj.series[i];
+                    this._lastElem(dataset.data).remove();
+                    dataset.addPoint([xval, (decision == 1)? 1 : 0]);
+                    dataset.addPoint([xval, (decision == 1)? 1 : 0]);
+                } else if (i == 2){
+                    dataset = this.graph_obj.series[2];
+                    this._lastElem(dataset.data).remove();
+                    dataset.addPoint([xval, (decision == 1) ? 1 :0]);
+                    dataset.addPoint([xval, (decision == 1) ? 1 :0]);
+
+                    dataset = this.graph_obj.series[3];
+                    this._lastElem(dataset.data).remove();
+                    dataset.addPoint([xval, (decision == 2) ? 1 :0]);
+                    dataset.addPoint([xval, (decision == 2) ? 1 :0]);                    
+                }                
                 i++;
+
             }
         }
+
+        
     }
 }
 
