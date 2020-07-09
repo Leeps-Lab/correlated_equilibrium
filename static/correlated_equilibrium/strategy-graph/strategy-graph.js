@@ -279,7 +279,7 @@ export class StrategyGraph extends PolymerElement {
             console.log(this.otherDecisionArray);
             let i = 1;
             for(let decision of this.otherDecisionArray ) {
-                if (i == 1){
+                if (i == 1 || this.$.constants.role == "p3"){
                     dataset = this.graph_obj.series[i];
                     this._lastElem(dataset.data).remove();
                     dataset.addPoint([xval, (decision == 1)? 1 : 0]);

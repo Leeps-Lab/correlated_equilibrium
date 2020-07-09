@@ -224,7 +224,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             let i = 1;
             console.log("Other player decisions: " + this.otherDecisionArray);
             for( let decision of this.otherDecisionArray ) {
-                if(i == 1){
+                if(i == 1 || this.$.constants.role == "p3"){
                     dataset = this.graph_obj.series[i];
                     this._lastElem(dataset.data).update({y: (decision == 1)? 1 : 0});
                     dataset.addPoint([this._currSubperiod, (decision == 1)? 1 : 0]);
