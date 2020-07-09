@@ -14,13 +14,13 @@
         </th>
         <tr>
             <td>Your Avg.</td>
-            <td>{{ player.get_average_strategy | floatformat:2 }}</td>
+            <td>{{ my_average_strategy | floatformat:2 }}</td>
             <td>{{ player.payoff }}</td>
         </tr>
         <tr>
             <td>Others' Avg.</td>
-            <td>{{ player_average_strategy | floatformat:2 }}</td>
-            <td>{{ player_average_payoff }}</td>
+            <td>{{ role_average_strategy | floatformat:2 }}</td>
+            <td>{{ role_average_payoff }}</td>
         </tr>
     </table>
 

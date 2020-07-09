@@ -13,182 +13,62 @@ class Introduction(Page):
 
 
 class DecisionWaitPage(WaitPage):
-    body_text = 'Waiting for all players to be ready'
 
+    body_text = 'Waiting for all players to be ready'
     wait_for_all_groups = True
+    after_all_players_arrive = 'set_initial_decisions'
 
     def is_displayed(self):
-        return self.round_number <= self.group.num_rounds()
+        return self.subsession.config is not None
 
 
 class Decision(Page):
 
     def is_displayed(self):
-        return self.round_number <= self.group.num_rounds()
+        return self.subsession.config is not None
+
 
 class ResultsWaitPage(WaitPage):
+
+    after_all_players_arrive = 'set_payoffs'
+
     def is_displayed(self):
-        return self.round_number <= self.group.num_rounds()
-    
+        return self.subsession.config is not None
+
 
 class Results(Page):
-    
+
     timeout_seconds = 10
 
+    def is_displayed(self):
+        return self.subsession.config is not None
+
     def vars_for_template(self):
-        if not self.player.payoff:
-            self.player.set_payoff()
-        p1 = self.player.role() == 'p1'
-        p2 = self.player.role() == 'p2'
-        return {
-            'player_average_strategy': self.subsession.get_average_strategy(p1, p2),
-            'player_average_payoff': self.subsession.get_average_payoff(p1, p2),
+        period_start = self.group.get_start_time()
+        period_end = self.group.get_end_time()
+        if None in (period_start, period_end):
+            # I really don't like having to repeat these keys twice but I can't think of any clean way to avoid it
+            return {
+                'role_average_strategy': float('nan'),
+                'my_average_strategy': float('nan'),
+                'role_average_payoff': float('nan'),
+            }
+        decisions = self.group.get_group_decisions_events()
+
+        role_payoffs = [ p.payoff for p in self.group.get_players() if p.role() == self.player.role() ]
+        # keep role strategies in a dict so that my avg. strategy can be retrieved
+        # prevents from having to compute my average strategy twice
+        role_strategies = {
+            p.participant.code: p.get_average_strategy(period_start, period_end, decisions)
+            for p in self.group.get_players() if p.role() == self.player.role()
         }
 
-    def is_displayed(self):
-        return self.round_number <= self.group.num_rounds()
+        return {
+            'role_average_strategy': sum(role_strategies.values()) / len(role_strategies),
+            'my_average_strategy': role_strategies[self.participant.code],
+            'role_average_payoff': sum(role_payoffs) / len(role_payoffs),
+        }
 
-
-def get_config_columns(group):
-    config = parse_config(group.session.config['config_file'])[group.round_number - 1]
-    payoffs = config['payoff_matrix']
-    payoffs = reduce(concat, payoffs)
-
-    return payoffs + [
-        config['shuffle_role'],
-        config['period_length'],
-        config['num_subperiods'],
-        config['gamma'],
-        config['mean_matching'],
-        config['max_info'],
-        config['players_per_group'],
-        config['game'],
-    ]
-
-
-def get_output_table_header(groups):
-    num_silos = groups[0].session.config['num_silos']
-    max_num_players = max(len(g.get_players()) for g in groups)
-
-    header = [
-        'session_code',
-        'subsession_id',
-        'id_in_subsession',
-        'silo_num',
-        'tick',
-    ]
-
-    for player_num in range(1, max_num_players + 1):
-        header.append('p{}_code'.format(player_num))
-        header.append('p{}_role'.format(player_num))
-        header.append('p{}_strategy'.format(player_num))
-        header.append('p{}_target'.format(player_num))
-
-    header += [
-        'shuffle_role',
-        'period_length',
-        'num_subperiods',
-        'gamma',
-        'mean_matching',
-        'max_info',
-        'player_per_group',
-        'game',
-    ]
-    return header
-
-
-def get_output_table(events):
-    if not events:
-        return []
-    if events[0].group.num_subperiods() == 0:
-        return get_output_cont_time(events)
-    else:
-        return get_output_discrete_time(events)
-
-
-# build output for a round of continuous time bimatrix
-def get_output_cont_time(events):
-    rows = []
-    minT = min(e.timestamp for e in events if e.channel == 'state')
-    maxT = max(e.timestamp for e in events if e.channel == 'state')
-    group = events[0].group
-    players = group.get_players()
-    max_num_players = math.ceil(group.session.num_participants / group.session.config['num_silos'])
-    config_columns = get_config_columns(group)
-    # sets sampling frequency
-    ticks_per_second = 2
-    decisions = {p.participant.code: float('nan') for p in players}
-    targets = {p.participant.code: float('nan') for p in players}
-    for tick in range((maxT - minT).seconds * ticks_per_second):
-        currT = minT + timedelta(seconds=(tick / ticks_per_second))
-        cur_decision_event = None
-        while events[0].timestamp <= currT:
-            e = events.pop(0)
-            if e.channel == 'group_decisions':
-                cur_decision_event = e
-            elif e.channel == 'target':
-                targets[e.participant.code] = e.value
-        if cur_decision_event:
-            decisions.update(cur_decision_event.value)
-        row = [
-            group.session.code,
-            group.subsession_id,
-            group.id_in_subsession,
-            group.silo_num,
-            tick,
-        ]
-        for player_num in range(max_num_players):
-            if player_num >= len(players):
-                row += ['', '', '', '']
-            else:
-                pcode = players[player_num].participant.code
-                row += [
-                    pcode,
-                    players[player_num].role(),
-                    decisions[pcode],
-                    targets[pcode],
-                ]
-        row += config_columns
-        rows.append(row)
-    return rows
-
-
-# build output for a round of discrete time bimatrix
-def get_output_discrete_time(events):
-    rows = []
-    players = events[0].group.get_players()
-    group = events[0].group
-    max_num_players = math.ceil(group.session.num_participants / group.session.config['num_silos'])
-    config_columns = get_config_columns(group)
-    tick = 0
-    targets = {p.participant.code: float('nan') for p in players}
-    for event in events:
-        if event.channel == 'target':
-            targets[event.participant.code] = event.value
-        elif event.channel == 'group_decisions':
-            row = [
-                group.session.code,
-                group.subsession_id,
-                group.id_in_subsession,
-                group.silo_num,
-                tick,
-            ]
-            for player_num in range(max_num_players):
-                if player_num >= len(players):
-                    row += ['', '', '', '']
-                else:
-                    pcode = players[player_num].participant.code
-                    row += [
-                        pcode,
-                        players[player_num].role(),
-                        event.value[pcode],
-                        targets[pcode],
-                    ]
-            row += config_columns
-            rows.append(row)
-            tick += 1
-    return rows
-    
 
 page_sequence = [
     DecisionWaitPage,

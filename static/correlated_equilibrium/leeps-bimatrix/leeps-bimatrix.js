@@ -171,120 +171,118 @@ export class LeepsBimatrix extends PolymerElement {
                     <div class="layout horizontal">
 
                         <div id="heatmap-column" class="layout horizontal">
-                            <template is="dom-if" if="[[ pureStrategy ]]">
 
-                                <div class="layout vertical around-justified self-center">
-                                    <regret-bar
-                                        payoff-matrix="[[ payoffMatrix ]]"
-                                        my-payoffs="[[ myPayoffs ]]"
-                                        group-decisions="{{ groupDecisions }}"
-                                        my-decision="[[ myDecision ]]"
+                            <div class="layout vertical around-justified self-center">
+                                <regret-bar
+                                    payoff-matrix="[[ payoffMatrix ]]"
+                                    my-payoffs="[[ myPayoffs ]]"
+                                    group-decisions="{{ groupDecisions }}"
+                                    my-decision="[[ myDecision ]]"
 
-                                    ></regret-bar>                            
-                                </div>
-                                
-                                <paper-radio-group
-                                    class="layout vertical around-justified self-center"
-                                    selected="{{ _myPlannedDecisionString }}">
+                                ></regret-bar>                            
+                            </div>
+                            
+                            <paper-radio-group
+                                class="layout vertical around-justified self-center"
+                                selected="{{ _myPlannedDecisionString }}">
 
-                                    <template is="dom-if" if="[[ !isMultiDim ]]">
-                                        
-                                        <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
-                                            <paper-radio-button name="[[item]]">[[item]]</paper-radio-button>
-                                        </template>                                        
-                                    </template>
-
-                                    <template is="dom-if" if="[[ isMultiDim ]]">
-                                        <template is="dom-if" if="[[ _p3Role() ]]">
-                                            <paper-radio-button name="2"><p is="dom-if" if="[[ !maxInfo ]]"> U </p></paper-radio-button>
-                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
-                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
-                                        </template>
-
-                                        <template is="dom-if" if="[[ !_p3Role() ]]">
-                                            <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
-                                            <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
-                                        </template>
-                                    </template>
-                                </paper-radio-group>
-
-                                <template is="dom-if" if="[[ meanMatching ]]">
-                                    <discrete-mean-matching-heatmap
-                                        class="self-center"
-                                        my-decision="[[ myDecision ]]"
-                                        other-decision="[[ otherDecision ]]"
-                                        size="300"
-                                        payoffs="[[ myPayoffs ]]"
-                                        color="[[ myColor ]]">
-                                    </discrete-mean-matching-heatmap>
+                                <template is="dom-if" if="[[ !isMultiDim ]]">
+                                    
+                                    <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
+                                        <paper-radio-button name="[[item]]">[[item]]</paper-radio-button>
+                                    </template>                                        
                                 </template>
 
-                                <template is="dom-if" if="[[ maxInfo ]]">
-                                    <template is="dom-if" if="[[ !meanMatching ]]">
-                                        <template is="dom-if" if="[[ !isMultiDim ]]">
-
-                                            <table id="payoff-table" class="self-center" >
-                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
-                                                    <tr>
-                                                        <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                                <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
-                                                                        <span class="your-payoff">
-                                                                            [[ _array(column, payoffIndex) ]]
-                                                                        </span>,
-                                                                        <span class="other-payoff">
-                                                                            [[ _array(column, otherPayoffIndex) ]]
-                                                                        </span>
-                                                                </td>
-                                                        </template>
-                                                    </tr>
-                                                </template>
-                                            </table>
-                                        </template>
-                                        
-
-                                        <template is="dom-if" if="[[ isMultiDim ]]">
-
-                                            <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
-
-                                                <table id="payoff-table" class="self-center two" >
-                                                        <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
-                                                            <tr>
-                                                                <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                        <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
-                                                                            <template is="dom-if" if="[[ _p1Role() ]]">
-                                                                                <span class="your-payoff">
-                                                                                    [[ _array(column, 0) ]]
-                                                                                </span>
-                                                                                
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[ _p2Role() ]]">
-                                                                                <span class="your-payoff">
-                                                                                    [[ _array(column, 1) ]]
-                                                                                </span>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[ _p3Role() ]]">
-                                                                                <span class="your-payoff">
-                                                                                    [[ _array(column, 2) ]]
-                                                                                </span>
-                                                                            </template>
-                                                                            <br>
-                                                                            <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
-                                                                            </span>
-                                                                        </td>
-                                                                </template>
-                                                            </tr>
-                                                        </template>
-                                                </table>
-                                        </template>  
-                                        </template>  
+                                <template is="dom-if" if="[[ isMultiDim ]]">
+                                    <template is="dom-if" if="[[ _p3Role() ]]">
+                                        <paper-radio-button name="2"><p is="dom-if" if="[[ !maxInfo ]]"> U </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
                                     </template>
+
+                                    <template is="dom-if" if="[[ !_p3Role() ]]">
+                                        <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
+                                    </template>
+                                </template>
+                            </paper-radio-group>
+
+                            <template is="dom-if" if="[[ meanMatching ]]">
+                                <discrete-mean-matching-heatmap
+                                    class="self-center"
+                                    my-decision="[[ myDecision ]]"
+                                    other-decision="[[ otherDecision ]]"
+                                    size="300"
+                                    payoffs="[[ myPayoffs ]]"
+                                    color="[[ myColor ]]">
+                                </discrete-mean-matching-heatmap>
+                            </template>
+
+                            <template is="dom-if" if="[[ maxInfo ]]">
+                                <template is="dom-if" if="[[ !meanMatching ]]">
+                                    <template is="dom-if" if="[[ !isMultiDim ]]">
+
+                                        <table id="payoff-table" class="self-center" >
+                                            <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
+                                                <tr>
+                                                    <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                                    <span class="your-payoff">
+                                                                        [[ _array(column, payoffIndex) ]]
+                                                                    </span>,
+                                                                    <span class="other-payoff">
+                                                                        [[ _array(column, otherPayoffIndex) ]]
+                                                                    </span>
+                                                            </td>
+                                                    </template>
+                                                </tr>
+                                            </template>
+                                        </table>
+                                    </template>
+                                    
+
+                                    <template is="dom-if" if="[[ isMultiDim ]]">
+
+                                        <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
+
+                                            <table id="payoff-table" class="self-center two" >
+                                                    <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                        <tr>
+                                                            <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
+                                                                    <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
+                                                                        <template is="dom-if" if="[[ _p1Role() ]]">
+                                                                            <span class="your-payoff">
+                                                                                [[ _array(column, 0) ]]
+                                                                            </span>
+                                                                            
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ _p2Role() ]]">
+                                                                            <span class="your-payoff">
+                                                                                [[ _array(column, 1) ]]
+                                                                            </span>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ _p3Role() ]]">
+                                                                            <span class="your-payoff">
+                                                                                [[ _array(column, 2) ]]
+                                                                            </span>
+                                                                        </template>
+                                                                        <br>
+                                                                        <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
+                                                                        </span>
+                                                                    </td>
+                                                            </template>
+                                                        </tr>
+                                                    </template>
+                                            </table>
+                                    </template>  
+                                    </template>  
                                 </template>
                             </template>
                         </div>
 
                         <div id="graphs-column" class="layout horizontal">
                             <div class="layout horizontal end">
-                                <template is="dom-if" if="[[ _showThermometer(pureStrategy, meanMatching) ]]">
+                                <template is="dom-if" if="[[ _showThermometer(meanMatching) ]]">
                                     <heatmap-thermometer
                                         color="rainbow"
                                         class="self-end">
@@ -445,10 +443,6 @@ export class LeepsBimatrix extends PolymerElement {
             numSubperiods: {
                 type: Number,
                 value: 0
-            },
-            pureStrategy: {
-                type: Boolean,
-                value: false
             },
             isMultiDim: {
                 type: Boolean,
@@ -632,14 +626,14 @@ export class LeepsBimatrix extends PolymerElement {
         }
         
 
-        if (this.pureStrategy) {
-            // if using pure strategy, set bot to only choose pure strategies
-            this.$.bot.lambda = 1;
-            this.$.bot.pattern = true;
+   
+        // if using pure strategy, set bot to only choose pure strategies
+        this.$.bot.lambda = 1;
+        this.$.bot.pattern = true;
 
-            // only set decision string if we're not doing continuous strategy
-            this._myPlannedDecisionString = new String(this.initialDecision);
-        }
+        // only set decision string if we're not doing continuous strategy
+        this._myPlannedDecisionString = new String(this.initialDecision);
+        
     }
 
     _p1Role() {
@@ -771,8 +765,8 @@ export class LeepsBimatrix extends PolymerElement {
         return otherDecisionArray;
     }
     // return true if thermometer is to be shown
-    _showThermometer(pureStrategy, meanMatching) {
-        return !pureStrategy || meanMatching;
+    _showThermometer(meanMatching) {
+        return meanMatching;
     }
 }
 
