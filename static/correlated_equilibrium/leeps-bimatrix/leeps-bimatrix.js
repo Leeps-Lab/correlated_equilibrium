@@ -290,20 +290,6 @@ export class LeepsBimatrix extends PolymerElement {
                                 </template>
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
-                                        <template is="dom-if" if="[[ _show3Chart() ]]">
-                                            <strategy-graph
-                                                num-players="[[ numPlayers ]]"
-                                                my-decision="[[ myPlannedDecision ]]"
-                                                other-decision="[[ otherDecision ]]"
-                                                period-length="[[ periodLength ]]"
-                                                my-choice-series="[[ myChoiceSeries ]]"
-                                                other-decision-array="[[ otherDecisionArray ]]"
-                                                other-choice-series="[[ otherChoiceSeries ]]"
-                                                other-other-choice-series="[[ otherOtherChoiceSeries ]]"
-                                                max-info="[[ maxInfo ]]"
-                                                choice="2"
-                                            ></strategy-graph>
-                                        </template>
                                         <strategy-graph
                                             num-players="[[ numPlayers ]]"
                                             my-decision="[[ myPlannedDecision ]]"
@@ -314,19 +300,6 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-choice-series="[[ otherChoiceSeries ]]"
                                             other-other-choice-series="[[ otherOtherChoiceSeries ]]"
                                             max-info="[[ maxInfo ]]"
-                                            choice="1"
-                                        ></strategy-graph>
-                                        <strategy-graph
-                                            num-players="[[ numPlayers ]]"
-                                            my-decision="[[ myPlannedDecision ]]"
-                                            other-decision="[[ otherDecision ]]"
-                                            period-length="[[ periodLength ]]"
-                                            my-choice-series="[[ myChoiceSeries ]]"
-                                            other-decision-array="[[ otherDecisionArray ]]"
-                                            other-choice-series="[[ otherChoiceSeries ]]"
-                                            other-other-choice-series="[[ otherOtherChoiceSeries ]]"
-                                            max-info="[[ maxInfo ]]"
-                                            choice="0"
                                         ></strategy-graph>
                                         <payoff-graph
                                             num-players="[[ numPlayers ]]"
@@ -345,19 +318,6 @@ export class LeepsBimatrix extends PolymerElement {
                                         ></payoff-graph>
                                     </template>
                                     <template is="dom-if" if="[[ numSubperiods ]]">
-                                        <template is="dom-if" if="[[ _show3Chart() ]]">
-                                            <subperiod-strategy-graph
-                                                num-players="[[ numPlayers ]]"
-                                                group-decisions="{{ groupDecisions }}"
-                                                my-decision="[[ myDecision ]]"
-                                                other-decision="[[ otherDecision ]]"
-                                                other-decision-array="[[ otherDecisionArray ]]"
-                                                period-length="[[ periodLength ]]"
-                                                num-subperiods="[[ numSubperiods ]]"
-                                                max-info="[[ maxInfo ]]"
-                                                choice="2"
-                                            ></subperiod-strategy-graph>
-                                        </template>
                                         <subperiod-strategy-graph
                                             num-players="[[ numPlayers ]]"
                                             group-decisions="{{ groupDecisions }}"
@@ -367,18 +327,6 @@ export class LeepsBimatrix extends PolymerElement {
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             max-info="[[ maxInfo ]]"
-                                            choice="1"
-                                        ></subperiod-strategy-graph>
-                                        <subperiod-strategy-graph
-                                            num-players="[[ numPlayers ]]"
-                                            group-decisions="{{ groupDecisions }}"
-                                            my-decision="[[ myDecision ]]"
-                                            other-decision="[[ otherDecision ]]"
-                                            other-decision-array="[[ otherDecisionArray ]]"
-                                            period-length="[[ periodLength ]]"
-                                            num-subperiods="[[ numSubperiods ]]"
-                                            max-info="[[ maxInfo ]]"
-                                            choice="0"
                                         ></subperiod-strategy-graph>
                                         <subperiod-payoff-graph
                                             group-decisions="{{ groupDecisions }}"
