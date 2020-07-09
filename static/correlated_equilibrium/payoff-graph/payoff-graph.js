@@ -233,6 +233,11 @@ export class PayoffGraph extends PolymerElement {
     // updates current payoff value every 50 ms
     _updateGraph(timestamp) {
         // calculate x value for current time
+        if(!this.graph_obj) {
+            this._animationID = window.requestAnimationFrame(this._updateGraph.bind(this));
+            return;
+        }
+        
         const xval = (
             (timestamp - this.start_time) /
             (this.periodLength * 1000));
@@ -257,6 +262,11 @@ export class PayoffGraph extends PolymerElement {
     }
     // is called everytime someone's decision changes to update this payoff graph
     _updateDataset() {
+        if(Object.keys(this.groupDecisions).length == 0) return;
+        for(let decision of Object.values(this.groupDecisions)){
+           if(decision === null) return;
+        }
+        
         // if graph hasn't been initialized, don't do anything
         if (!this.graph_obj) return;
         let num_other_players = 0;
@@ -265,6 +275,7 @@ export class PayoffGraph extends PolymerElement {
         var other_flow_payoff = 0;
         var third_flow_payoff = 0;
         
+        console.log(this.get("groupDecisions"));
         /*
         // calculate the payoff with current decision values
         for (var player in this.groupDecisions) {
@@ -276,6 +287,8 @@ export class PayoffGraph extends PolymerElement {
         my_flow_payoff /= num_other_players;
         other_flow_payoff /= num_other_players;
         */
+        var p1Decision, p2Decision, p3Decision;
+        var p1ID, p2ID, p3ID;
 
         if(this.numPlayers % 2 == 0) {
 
@@ -293,8 +306,6 @@ export class PayoffGraph extends PolymerElement {
             other_flow_payoff /= num_other_players;
         }
         else if(this.numPlayers % 3 == 0) {
-            var p1Decision, p2Decision, p3Decision;
-            var p1ID, p2ID, p3ID;
             
             for (const player of this.$.constants.group.players) {
                 if(player.role == "p1") { 
@@ -310,8 +321,9 @@ export class PayoffGraph extends PolymerElement {
                     p3ID = player.participantCode;
                 }
             }
-
+            
             if(this.$.constants.participantCode == p1ID) {
+                console.log(this.payoffMatrix[p3Decision]);
                 my_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][0];
                 other_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][1];
                 third_flow_payoff += this.payoffMatrix[p3Decision][this.myDecision][p2Decision][2];
@@ -320,6 +332,7 @@ export class PayoffGraph extends PolymerElement {
             else if(this.$.constants.participantCode == p2ID) {
                 my_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][1];
                 other_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][0];
+                console.log(this.payoffMatrix);
                 third_flow_payoff += this.payoffMatrix[p3Decision][p1Decision][this.myDecision][2];
 
             }

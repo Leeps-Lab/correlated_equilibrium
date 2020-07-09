@@ -34,6 +34,9 @@ export class StrategyGraph extends PolymerElement {
                 type: Number,
                 observer: '_updateDataset'
             },
+            otherDecisionArray: {
+                type: Array,  
+            },
             myChoiceSeries: {
                 type: Array,
                 value: () => {

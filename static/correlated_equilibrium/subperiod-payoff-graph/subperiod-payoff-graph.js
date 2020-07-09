@@ -212,7 +212,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         
         //Get payoffs
         let num_other_players = 0;
-
+        console.log(this.groupDecisions);
         if(this.numPlayers % 2 == 0) {
 
             for (const player of this.$.constants.group.players) {
