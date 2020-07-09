@@ -12,30 +12,29 @@
 {% endblock %}
 
 {% block content %}
-    <leeps-bimatrix
-        initial-decision='{{ player.initial_decision }}'
-        payoff-matrix='{{ config.payoff_matrix }}'
-        original-payoff-matrix='{{ player.subsession.payoff_matrix }}'
-        period-length='{{ config.period_length }}'
-        rate-limit='{{ config.rate_limit }}'
-        num-players='{{ player.num_players }}'
-        {% if player.group.max_info %}
-        max-info
-        {% endif %}
-        {% if player.group.mean_matching %}
-        mean-matching
-        {% endif %}
-        {% if config.num_subperiods %}
-            num-subperiods='{{ config.num_subperiods }}'
-        {% endif %}
-        {% if config.pure_strategy %}
-            pure-strategy
-        {% endif %}
-        {% if player.subsession.is_multi_dim %}
-        is-multi-dim
-        {% endif %}
-        
+    {% with config=subsession.config %}
+        <leeps-bimatrix
+            initial-decision='{{ player.initial_decision }}'
+            payoff-matrix='{{ player.subsession.payoff_matrix }}'
+            original-payoff-matrix='{{ player.subsession.payoff_matrix }}'
+            period-length='{{ config.period_length }}'
+            rate-limit='{{ group.rate_limit }}'
+            num-players='{{ player.num_players }}'
+            {% if config.max_info %}
+            max-info
+            {% endif %}
+            {% if config.mean_matching %}
+            mean-matching
+            {% endif %}
+            {% if config.num_subperiods %}
+                num-subperiods='{{ config.num_subperiods }}'
+            {% endif %}
+            {% if player.subsession.is_multi_dim %}
+            is-multi-dim
+            {% endif %}
+            
 
-    ></leeps-bimatrix>
+        ></leeps-bimatrix>
+    {% endwith %}
 
 {% endblock %}

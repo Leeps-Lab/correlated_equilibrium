@@ -119,7 +119,7 @@ class Subsession(BaseSubsession):
                 silo_matrix = [ silo ]
             else:
                 silo_matrix = []
-                ppg = Constants.players_per_group
+                ppg = self.config['players_per_group']
                 for i in range(0, len(silo), ppg):
                     silo_matrix.append(silo[i:i+ppg])
             group_matrix.extend(otree.common._group_randomly(silo_matrix, fixed_id_in_group))
@@ -127,7 +127,7 @@ class Subsession(BaseSubsession):
         self.set_group_matrix(group_matrix)
 
     def set_initial_decisions(self):
-        pure_strategy = self.config['pure_strategy']
+        pure_strategy = True
         for player in self.get_players():
             if pure_strategy:
                 player._initial_decision = random.choice([0, 1])
@@ -143,29 +143,11 @@ class Subsession(BaseSubsession):
 
 class Group(DecisionGroup):
 
-    def num_rounds(self):
-        return len(parse_config(self.session.config['config_file']))
-
     def num_subperiods(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['num_subperiods']
 
     def period_length(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['period_length']
-    
-    def mean_matching(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['mean_matching']
-
-    def max_info(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['max_info']
-
-    def game(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
-
-    def gamma(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['gamma']
-
-    def player_per_group(self):
-        return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
     
     def rate_limit(self):
         if not self.subsession.pure_strategy() and self.mean_matching():
@@ -180,7 +162,7 @@ class Group(DecisionGroup):
             print('cannot set payoff, period has not ended yet')
             return
         decisions = self.get_group_decisions_events()
-        payoff_matrix = self.subsession.config['payoff_matrix']
+        payoff_matrix = self.subsession.payoff_matrix()
         for player in self.get_players():
             player.set_payoff(period_start, period_end, decisions, payoff_matrix)
 
