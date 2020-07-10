@@ -94,6 +94,9 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 max: 1
             },
             plotOptions: {
+                column: {
+                    stacking: 'normal'
+                  },
                 line: {marker: {enabled: false}},
                 series: {
                     states: {
@@ -112,28 +115,75 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (!this.maxInfo) ? [{
-                name: 'Your Choice',
-                type: "line",
-                data: [[0, 0]],
-                step: "left"
-            }] : (this.numPlayers % 3 == 0 ) ? 
+            series: (!this.maxInfo) ? (this.$.constants.role == "p3")? [
+                {
+                    name: 'U',
+                    color: '#39f',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: 'C',
+                    color: '#b5d9ff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    color: '#054cff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+            ] : [
+                {
+                    name: 'C',
+                    color: '#b5d9ff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    color: '#054cff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+            ] : (this.numPlayers % 3 == 0 ) ? 
                     (this.$.constants.role == "p3")? [
                     {
-                        name: 'Your Choice',
-                        type: "line",
+                        name: 'U',
+                        color: '#39f',
+                        type: "column",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                        name: 'C',
+                        color: '#b5d9ff',
+                        type: "column",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: 'D',
+                        color: '#054cff',
+                        type: "column",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: 'P1 Choice',
                         color: '#000000',
                         type: "line",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: (this.$.constants.role == "p3" ) ? 'P2 Choice' : 'P3 Choice',
+                        name: 'P2 Choice',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
@@ -142,13 +192,21 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     
                 ] : [
                     {
-                        name: 'Your Choice',
-                        type: "line",
+                        name: 'C',
+                        color: '#b5d9ff',
+                        type: "column",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: (this.$.constants.role == "p3" || this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                        name: 'D',
+                        color: '#054cff',
+                        type: "column",
+                        data: [[0, 0]],
+                        step: "left"
+                    },
+                    {
+                        name: (this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
                         color: '#000000',
                         type: "line",
                         data: [[0, 0]],
@@ -170,10 +228,19 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         dashStyle: 'dot'
                     },
                 ] : //two player games
+            (this.gameType == "MV") ?
             [
                 {
-                    name: 'Your Choice',
-                    type: "line",
+                    name: 'C',
+                    color: '#b5d9ff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    color: '#054cff',
+                    type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
@@ -193,7 +260,29 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     dashStyle: 'dot'
                 },
                 
-            ] ,
+            ] : [
+                {
+                    name: 'C',
+                    color: '#b5d9ff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    color: '#054cff',
+                    type: "column",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    color: '#ff0000',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left"
+                },
+            ],
             legend: {
                 enabled:  true ,
                 align: 'right',
@@ -206,41 +295,73 @@ export class SubperiodStrategyGraph extends PolymerElement {
     _handleGroupDecisionsEvent(event) {
         this._currSubperiod += 1;
 
-        let dataset = this.graph_obj.series[0];
-        this._lastElem(dataset.data).update({y: (this.myDecision == 1)? 1 : 0});
-        dataset.addPoint([this._currSubperiod, (this.myDecision == 1)? 1 : 0]);
-        
-        if(this.numPlayers % 2 == 0  && this.maxInfo) {
+        let dataset;
+
+
+        //For your choice
+        if(this.$.constants.role == "p3") {
+            dataset = this.graph_obj.series[0];
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 2)? 1 : 0]);
+
             dataset = this.graph_obj.series[1];
-            this._lastElem(dataset.data).update({y: (this.otherDecision == 1)? 1 : 0});
-            dataset.addPoint([this._currSubperiod, (this.otherDecision == 1)? 1 : 0]);  
-            
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 1)? 1 : 0]);
+
             dataset = this.graph_obj.series[2];
-            this._lastElem(dataset.data).update({y: (this.otherDecision == 2)? 1 : 0});
-            dataset.addPoint([this._currSubperiod, (this.otherDecision == 2)? 1 : 0]);  
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 0)? 1 : 0]);
+
         }
-        
+        else {
+            dataset = this.graph_obj.series[0];
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 1)? 1 : 0]);
+
+            dataset = this.graph_obj.series[1];
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 0)? 1 : 0]);
+        }
+
+
+        //For other choices
+        if(this.numPlayers % 2 == 0  && this.maxInfo) {
+            if(this.gameType == 'MV') {
+                dataset = this.graph_obj.series[2];
+                this._lastElem(dataset.data).update({y: (this.otherDecision == 1)? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.otherDecision == 1)? 1 : 0]);  
+                
+                dataset = this.graph_obj.series[3];
+                this._lastElem(dataset.data).update({y: (this.otherDecision == 2)? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.otherDecision == 2)? 1 : 0]);  
+            }
+            else {
+                dataset = this.graph_obj.series[2];
+                this._lastElem(dataset.data).update({y: (this.otherDecision == 1)? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.otherDecision == 1)? 1 : 0]);  
+            }
+        }
+
         if(this.numPlayers % 3 == 0 && this.maxInfo) {
-            let i = 1;
-            console.log("Other player decisions: " + this.otherDecisionArray);
             for( let decision of this.otherDecisionArray ) {
-                if(i == 1 || this.$.constants.role == "p3"){
-                    dataset = this.graph_obj.series[i];
+                if(this.$.constants.role == "p3"){
+                    dataset = this.graph_obj.series[3];
                     this._lastElem(dataset.data).update({y: (decision == 1)? 1 : 0});
                     dataset.addPoint([this._currSubperiod, (decision == 1)? 1 : 0]);
+
+                    dataset = this.graph_obj.series[4];
+                    this._lastElem(dataset.data).update({y: (decision == 2)? 1 : 0});
+                    dataset.addPoint([this._currSubperiod, (decision == 2)? 1 : 0]);
                 }
-                else if(i == 2){
+                else{
                     dataset = this.graph_obj.series[2];
                     this._lastElem(dataset.data).update({y: (decision == 1)? 1 : 0});
                     dataset.addPoint([this._currSubperiod, (decision == 1)? 1 : 0]);
 
-
                     dataset = this.graph_obj.series[3];
+                    this._lastElem(dataset.data).update({y: (decision == 1)? 1 : 0});
+                    dataset.addPoint([this._currSubperiod, (decision == 1)? 1 : 0]);
+
+                    dataset = this.graph_obj.series[4];
                     this._lastElem(dataset.data).update({y: (decision == 2)? 1 : 0});
                     dataset.addPoint([this._currSubperiod, (decision == 2)? 1 : 0]);
                     
                 }
-                i++;
             }
         }
     }

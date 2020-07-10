@@ -130,7 +130,7 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 .dark-blue {
-                    background-color: #2a22c9;
+                    background-color: #054cff;
                 }
 
             </style>
@@ -187,22 +187,35 @@ export class LeepsBimatrix extends PolymerElement {
                                 selected="{{ _myPlannedDecisionString }}">
 
                                 <template is="dom-if" if="[[ !isMultiDim ]]">
-                                    
+
+                                    <template is="dom-if" if="[[ _ifMVGame() ]]">
+                                        <paper-radio-button name="2"><p> U </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                    </template>
+
+                                    <template is="dom-if" if="[[ !_ifMVGame() ]]">
+                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                    </template>
+
+                                    <!--
                                     <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
                                         <paper-radio-button name="[[item]]">[[item]]</paper-radio-button>
-                                    </template>                                        
+                                    </template>
+                                    -->                                        
                                 </template>
 
                                 <template is="dom-if" if="[[ isMultiDim ]]">
                                     <template is="dom-if" if="[[ _p3Role() ]]">
-                                        <paper-radio-button name="2"><p is="dom-if" if="[[ !maxInfo ]]"> U </p></paper-radio-button>
-                                        <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
+                                        <paper-radio-button name="2"><p> U </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
                                     </template>
 
                                     <template is="dom-if" if="[[ !_p3Role() ]]">
-                                        <paper-radio-button name="1"><p is="dom-if" if="[[ !maxInfo ]]"> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p is="dom-if" if="[[ !maxInfo ]]"> D </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
                                     </template>
                                 </template>
                             </paper-radio-group>
@@ -291,6 +304,7 @@ export class LeepsBimatrix extends PolymerElement {
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
                                         <strategy-graph
+                                            game-type="[[ gameType ]]"
                                             num-players="[[ numPlayers ]]"
                                             my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
@@ -319,6 +333,7 @@ export class LeepsBimatrix extends PolymerElement {
                                     </template>
                                     <template is="dom-if" if="[[ numSubperiods ]]">
                                         <subperiod-strategy-graph
+                                            game-type="[[ gameType ]]"
                                             num-players="[[ numPlayers ]]"
                                             group-decisions="{{ groupDecisions }}"
                                             my-decision="[[ myDecision ]]"
@@ -395,6 +410,9 @@ export class LeepsBimatrix extends PolymerElement {
             isMultiDim: {
                 type: Boolean,
                 value: false
+            },
+            gameType: {
+                type: String
             },
             showAtWorst: {
                 type: Boolean,
@@ -599,6 +617,10 @@ export class LeepsBimatrix extends PolymerElement {
     _show3Chart(){ 
         //console.log(this.$.constants.role == 'p3' || this.numPlayers % 2 == 0);
         return this.$.constants.role == 'p3' || this.numPlayers % 2 == 0;
+    }
+
+    _ifMVGame() {
+        return this.gameType == 'MV';
     }
 
     _reverse(list) {
