@@ -91,9 +91,7 @@ export class StrategyGraph extends PolymerElement {
             xAxis: {
                 min: 0,
                 max: 1,
-                max: this.numSubperiods,
-                tickInterval: 1,
-                labels: { enabled: true },
+                labels: { enabled: false },
                 plotLines: [{
                     value: 0,
                     width: 1,
@@ -101,7 +99,7 @@ export class StrategyGraph extends PolymerElement {
                     zIndex: 100,
                 },
                 {
-                    value: this.numSubperiods,
+                    value: 1,
                     width: 1,
                     color: '#ccd6eb',
                     zIndex: 100,
