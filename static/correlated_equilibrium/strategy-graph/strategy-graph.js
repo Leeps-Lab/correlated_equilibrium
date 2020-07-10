@@ -84,14 +84,16 @@ export class StrategyGraph extends PolymerElement {
                 width: this.offsetWidth,
                 height: this.offsetHeight
             },
-            title: { text: "Choices vs. Time"  },
+            title: { text: 'Choice vs. Time' },
             exporting: { enabled: false },
             tooltip: { enabled: false },
             credits: { enabled: false },
             xAxis: {
                 min: 0,
                 max: 1,
-                labels: { enabled: false },
+                max: this.numSubperiods,
+                tickInterval: 1,
+                labels: { enabled: true },
                 plotLines: [{
                     value: 0,
                     width: 1,
@@ -99,14 +101,14 @@ export class StrategyGraph extends PolymerElement {
                     zIndex: 100,
                 },
                 {
-                    value: 1,
+                    value: this.numSubperiods,
                     width: 1,
                     color: '#ccd6eb',
                     zIndex: 100,
                 }],
             },
             yAxis: {
-                title: { text: (this.choice == 2) ? "U" : (this.choice == 1) ? "C" : "D", rotation: 0 },
+                title: { text: 'Choice' },
                 min: 0,
                 max: 1
             },
@@ -132,180 +134,202 @@ export class StrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (!this.maxInfo) ? [{
-                name: 'Your Choice',
-                type: "line",
-                data: [[0, 0]],
-                step: "left"
-            }] : (this.numPlayers % 3 == 0 ) ? 
+            series: (!this.maxInfo) ? (this.$.constants.role == "p3")? [
+                {
+                    name: 'U',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#ffff00',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: 'C',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+            ] : [
+                {
+                    name: 'C',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+            ] : (this.numPlayers % 3 == 0 ) ? 
                     (this.$.constants.role == "p3")? [
-                        {
-                            name: 'U',
-                            color: '#39f',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: 'C',
-                            color: '#b5d9ff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: 'D',
-                            color: '#054cff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                    ] : [
-                        {
-                            name: 'C',
-                            color: '#b5d9ff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: 'D',
-                            color: '#054cff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                    ] : (this.numPlayers % 3 == 0 ) ? 
-                            (this.$.constants.role == "p3")? [
-                            {
-                                name: 'U',
-                                color: '#39f',
-                                type: "column",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'C',
-                                color: '#b5d9ff',
-                                type: "column",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'D',
-                                color: '#054cff',
-                                type: "column",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'P1 Choice',
-                                color: '#000000',
-                                type: "line",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'P2 Choice',
-                                color: '#ff0000',
-                                type: "line",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            
-                        ] : [
-                            {
-                                name: 'C',
-                                color: '#b5d9ff',
-                                type: "column",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'D',
-                                color: '#054cff',
-                                type: "column",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: (this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
-                                color: '#000000',
-                                type: "line",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'P3 Chose 1?',
-                                color: '#ff0000',
-                                type: "line",
-                                data: [[0, 0]],
-                                step: "left"
-                            },
-                            {
-                                name: 'P3 Chose 2?',
-                                color: '#ff0000',
-                                type: "line",
-                                data: [[0, 0]],
-                                step: "left",
-                                dashStyle: 'dot'
-                            },
-                        ] : //two player games
-                    (this.gameType == "MV") ?
-                    [
-                        {
-                            name: 'C',
-                            color: '#b5d9ff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: 'D',
-                            color: '#054cff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
-                            color: '#ff0000',
-                            type: "line",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
-                            color: '#ff0000',
-                            type: "line",
-                            data: [[0, 0]],
-                            step: "left",
-                            dashStyle: 'dot'
-                        },
-                        
-                    ] : [
-                        {
-                            name: 'C',
-                            color: '#b5d9ff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: 'D',
-                            color: '#054cff',
-                            type: "column",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                        {
-                            name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
-                            color: '#ff0000',
-                            type: "line",
-                            data: [[0, 0]],
-                            step: "left"
-                        },
-                    ],
+                    {
+                        name: 'U',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#ffff00',
+                        type: "column",
+                        data: this.myChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'C',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#04f2ff',
+                        type: "column",
+                        data: this.myChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'D',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#9aff02',
+                        type: "column",
+                        data: this.myChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'P1 Choice',
+                        color: '#000000',
+                        type: "line",
+                        data: this.otherChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'P2 Choice',
+                        color: '#ff0000',
+                        type: "line",
+                        data: this.otherOtherChoiceSeries,
+                        step: "left"
+                    },
+                    
+                ] : [
+                    {
+                        name: 'C',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#04f2ff',
+                        type: "column",
+                        data: this.myChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'D',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#9aff02',
+                        type: "column",
+                        data: this.myChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: (this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                        color: '#000000',
+                        type: "line",
+                        data: this.otherChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'P3 Chose 1?',
+                        color: '#ff0000',
+                        type: "line",
+                        data: this.otherOtherChoiceSeries,
+                        step: "left"
+                    },
+                    {
+                        name: 'P3 Chose 2?',
+                        color: '#ff0000',
+                        type: "line",
+                        data: this.otherOtherChoiceSeries,
+                        step: "left",
+                        dashStyle: 'dot'
+                    },
+                ] : //two player games
+            (this.gameType == "MV") ?
+            [
+                {
+                    name: 'C',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
+                    color: '#ff0000',
+                    type: "line",
+                    data: this.otherChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 2',
+                    color: '#ff0000',
+                    type: "line",
+                    data: [[0, 0]],
+                    step: "left",
+                    dashStyle: 'dot'
+                },
+                
+            ] : [
+                {
+                    name: 'C',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: 'D',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
+                    type: "column",
+                    data: this.myChoiceSeries,
+                    step: "left"
+                },
+                {
+                    name: ( this.$.constants.role == "p2") ? 'P1 Choice' : 'P2 Choice',
+                    color: '#ff0000',
+                    type: "line",
+                    data: this.otherChoiceSeries,
+                    step: "left"
+                },
+            ],
             legend: {
                 enabled:  true ,
                 align: 'right',

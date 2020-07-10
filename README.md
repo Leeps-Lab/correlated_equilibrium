@@ -10,11 +10,8 @@ Correlated Equilibrium was built using [otree-redwood](https://github.com/Leeps-
 dict(
         name='correlated_equilibrium',
         display_name='correlated_equilibrium Game',
-        num_demo_participants=2,
+        num_demo_participants=3,
         app_sequence=['correlated_equilibrium', 'payment_info'],
         config_file='pilot_test.csv',
 ),
 ```
-
-(Already fixed, but left here as a reminder)
-Note: Must comment out lines 383-384 in file directory to avoid error for 3 player games: ...\oTree\venv\Lib\site-packages\otree\common.py 

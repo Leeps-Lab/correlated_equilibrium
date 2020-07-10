@@ -118,21 +118,27 @@ export class SubperiodStrategyGraph extends PolymerElement {
             series: (!this.maxInfo) ? (this.$.constants.role == "p3")? [
                 {
                     name: 'U',
-                    color: '#39f',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#ffff00',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'C',
-                    color: '#b5d9ff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    color: '#054cff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
@@ -140,14 +146,18 @@ export class SubperiodStrategyGraph extends PolymerElement {
             ] : [
                 {
                     name: 'C',
-                    color: '#b5d9ff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    color: '#054cff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
@@ -156,21 +166,27 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     (this.$.constants.role == "p3")? [
                     {
                         name: 'U',
-                        color: '#39f',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#ffff00',
                         type: "column",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'C',
-                        color: '#b5d9ff',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#04f2ff',
                         type: "column",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'D',
-                        color: '#054cff',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#9aff02',
                         type: "column",
                         data: [[0, 0]],
                         step: "left"
@@ -193,14 +209,18 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 ] : [
                     {
                         name: 'C',
-                        color: '#b5d9ff',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#04f2ff',
                         type: "column",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'D',
-                        color: '#054cff',
+                        pointWidth: 22,
+                        borderColor: null,
+                        color: '#9aff02',
                         type: "column",
                         data: [[0, 0]],
                         step: "left"
@@ -232,14 +252,18 @@ export class SubperiodStrategyGraph extends PolymerElement {
             [
                 {
                     name: 'C',
-                    color: '#b5d9ff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    color: '#054cff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
@@ -263,14 +287,18 @@ export class SubperiodStrategyGraph extends PolymerElement {
             ] : [
                 {
                     name: 'C',
-                    color: '#b5d9ff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#04f2ff',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    color: '#054cff',
+                    pointWidth: 22,
+                    borderColor: null,
+                    color: '#9aff02',
                     type: "column",
                     data: [[0, 0]],
                     step: "left"
