@@ -78,12 +78,16 @@ class Subsession(BaseSubsession):
                     [[[0,100,0], [0,0,0]],
                      [[100,100,0], [100,0,300]]]
                 ]
-        else:
+        elif game == 'BM':
+            #BM = Bimatrix
             payoff_matrix = [
                 [[100,100],[600,200]],
                 [[200,600],[500,500]]
             ]
         return payoff_matrix
+    
+    def game_type(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
     
     def is_multi_dim(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']

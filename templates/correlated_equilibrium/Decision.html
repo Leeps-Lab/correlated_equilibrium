@@ -20,6 +20,7 @@
             period-length='{{ config.period_length }}'
             rate-limit='{{ group.rate_limit }}'
             num-players='{{ player.num_players }}'
+            game-type='{{ player.subsession.game_type }}'
             {% if config.max_info %}
             max-info
             {% endif %}
