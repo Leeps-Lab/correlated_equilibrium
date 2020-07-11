@@ -133,6 +133,11 @@ export class LeepsBimatrix extends PolymerElement {
                     background-color: #054cff;
                 }
 
+                .container {
+                    height: 50%;
+
+                }
+
             </style>
 
             <otree-constants id="constants"></otree-constants>
@@ -255,7 +260,6 @@ export class LeepsBimatrix extends PolymerElement {
                                     
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
-
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
                                             <table id="payoff-table" class="self-center two" >
@@ -287,7 +291,23 @@ export class LeepsBimatrix extends PolymerElement {
                                                         </tr>
                                                     </template>
                                             </table>
-                                    </template>  
+                                        </template>
+
+                                        <template is="dom-repeat" index-as="matrixIndex" items="{{stratMatrix}}" as="matrix">
+                                            <table id="payoff-table" class="self-center two" >
+                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
+                                                    <tr>
+                                                        <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
+                                                                <td class$="">
+                                                                    <span class="your-payoff" >
+                                                                        [[   _freq2(matrixIndex, rowIndex, colIndex, stratMatrix) ]]
+                                                                    </span>
+                                                                </td>
+                                                        </template>
+                                                    </tr>
+                                                </template>
+                                            </table>
+                                        </template>   
                                     </template>  
                                 </template>
                             </template>
@@ -371,6 +391,10 @@ export class LeepsBimatrix extends PolymerElement {
         return {
             payoffMatrix: Array,
             originalPayoffMatrix: Array,
+            stratMatrix: Array,
+            gamma:{
+                type: Number,
+            },
             initialDecision: {
                 type: Number,
             },
@@ -465,6 +489,9 @@ export class LeepsBimatrix extends PolymerElement {
                     return [[0, 0], [Number.EPSILON, 0]];
                 }
             },
+            _freq:{
+                type: Number,
+            },
             // set by redwood-period
             _isPeriodRunning: {
                 type: Boolean
@@ -491,7 +518,7 @@ export class LeepsBimatrix extends PolymerElement {
         }
         this.otherPayoffIndex = Math.abs(1 - this.payoffIndex);
         this.thirdPayoffIndex = Math.abs(2 - this.payoffIndex);   
-
+        console.log(this.stratMatrix);
         //Get number of players
         let num_players = this.numPlayers;
 
@@ -529,6 +556,61 @@ export class LeepsBimatrix extends PolymerElement {
             }
 
             this.set("payoffMatrix", t);
+        }
+
+        // transpose strat matrices if player 2 and there are 3 players
+        if (this.$.constants.idInGroup == 2 && num_players % 3 == 0) {
+            var p1, p2, p3, t = [];
+
+            for (p3=0; p3 < this.stratMatrix.length; p3++) {
+                t[p3] = [];
+
+                for (p2=0; p2 < this.stratMatrix[0][0].length; p2++) {
+                    t[p3][p2] = [];
+
+                    for (p1=0; p1 < this.stratMatrix[0].length; p1++) {
+
+                        t[p3][p2][p1] = this.stratMatrix[p3][p1][p2];
+                    }
+                }
+            }
+            this.set("stratMatrix", t);
+        }
+
+        // transpose strat matrices if player controls vertical line in a 2 player game
+        if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+            var i, j, t = [];
+
+            // Loop through every item in the outer array (height)
+            for (i=0; i < this.stratMatrix.length; i++ ) {
+                t[i] = [];
+
+                for(j = 0; j < this.stratMatrix[0].length; j++) {
+                    t[i][j] = this.stratMatrix[j][i];
+                }
+            }
+
+            this.set("stratMatrix", t);
+        }
+
+        // transpose strat matrices if player controls vertical line in a 3 player game
+        if (this.$.constants.idInGroup % num_players == 0 && num_players % 3 == 0) {
+            var p1, p2, p3, t = [];
+
+            for (p2=0; p2 < this.stratMatrix[0][0].length; p2++) {
+                t[p2] = [];
+
+                for (p3=0; p3 < this.stratMatrix.length; p3++) {
+                    t[p2][p3] = [];
+
+                    for (p1=0; p1 < this.stratMatrix[0].length; p1++) {
+
+                        t[p2][p3][p1] = this.stratMatrix[p3][p1][p2];
+                    }
+                }
+            }
+
+            this.set("stratMatrix", t);
         }
 
         // transpose payoff and probability matrices if player 2 and there are 3 players
@@ -599,7 +681,6 @@ export class LeepsBimatrix extends PolymerElement {
 
         // only set decision string if we're not doing continuous strategy
         this._myPlannedDecisionString = new String(this.initialDecision);
-        
     }
 
     _p1Role() {
@@ -637,6 +718,43 @@ export class LeepsBimatrix extends PolymerElement {
 
     _array(a, i) {
         return a[i];
+    }
+    
+    _freq(a){
+        console.log("called freq(a)" );
+        if (a.length == 0) return 0;
+        var dividend = 0;
+        var divisor = 0;
+        console.log(this.gamma);
+        for(let i = 0; i < a.length; i++){
+            dividend += Math.pow(this.gamma, i) * a[i];
+            divisor +=  Math.pow(this.gamma, i);
+        }
+        
+        return dividend/divisor;
+    }
+
+    _freq2(matrixIndex, rowIndex, colIndex, stratMatrix){
+        console.log("called freq2()" );
+        console.log(this.stratMatrix);
+        if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
+        var dividend = 0;
+        var divisor = 0;
+        console.log(this.gamma);
+        for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
+            divisor +=  Math.pow(this.gamma, i);
+        }
+        
+        return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
+    }
+
+    _freqShade(num){
+        if (num > .5)
+            return 'blue';
+        if (num > .25)
+            return 'light-blue';
+        
     }
     _payoffMatrixClass3(myDecision, otherDecisionArray, i, j, m, payoffMatrix) {
         let otherDecision = otherDecisionArray[0];
@@ -703,6 +821,127 @@ export class LeepsBimatrix extends PolymerElement {
     _onGroupDecisionsChanged() {
         this.lastT = performance.now();
         this._subperiodProgress = 0;
+        console.log("Group Decisions Changed");
+        console.log(this.groupDecisions);
+        if(typeof this.groupDecisions === 'undefined') return;
+        if(Object.keys(this.groupDecisions).length == 0) return;
+        for(let decision of Object.values(this.groupDecisions)){
+            if(decision === null) return;
+         }
+        if(this.numPlayers % 2 == 0) {
+            var p1Decision, p2Decision;
+            var p1ID, p2ID;
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = this.groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = this.groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+            }
+            if(this.$.constants.participantCode == p1ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                      if(i == p1Decision && j == p2Decision){
+                        this.stratMatrix[i][j].push(1);
+                      } else{
+                        this.stratMatrix[i][j].push(0);
+                      }
+                    }
+                }
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                      if(j == p1Decision && i == p2Decision){
+                        this.stratMatrix[i][j].push(1);
+                      } else{
+                        this.stratMatrix[i][j].push(0);
+                      }
+                    }
+                }
+            }
+        }
+        else if(this.numPlayers % 3 == 0) {
+            var p1Decision, p2Decision, p3Decision;
+            var p1ID, p2ID, p3ID;
+
+            var t = [];
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                t[i] = [];
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    t[i][j] = [];
+                    for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                        t[i][j][z] = this.stratMatrix[i][j][z];
+                    }
+                }
+            }
+            
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = this.groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = this.groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+                else if(player.role == "p3") { 
+                    p3Decision = this.groupDecisions[player.participantCode];
+                    p3ID = player.participantCode;
+                }
+            }
+
+            if(this.$.constants.participantCode == p1ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p3Decision && j == p1Decision && z == p2Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            }
+                        }
+                    }
+                }
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p3Decision && j == p1Decision && z == p2Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            }        
+                        }
+                    }
+                }
+
+            }
+            else if(this.$.constants.participantCode == p3ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p2Decision && j == p1Decision && z == p3Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            } 
+                        }
+                    }
+                }
+
+            }
+        }
+        console.log(t);
+        //var t = this.stratMatrix;
+        //this.set('stratMatrix', []);
+        this.set('stratMatrix', t);
+
+        this.notifyPath('stratMatrix');
     }
     _updateSubperiodProgress(t) {
         const deltaT = (t - this.lastT);
