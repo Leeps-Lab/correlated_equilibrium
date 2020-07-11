@@ -70,14 +70,14 @@ class Subsession(BaseSubsession):
                  [[100,200], [200,100], [0,0]]
             ]
         elif game == 'FP':
-                payoff_matrix = [
-                    [[[0,100,300],[0,0,0]],
-                     [[100,100,100],[100,0,0]]],
-                    [[[200,200,200], [0,0,0]],
-                     [[200,200,0], [200,200,200]]],
-                    [[[0,100,0], [0,0,0]],
-                     [[100,100,0], [100,0,300]]]
-                ]
+            payoff_matrix = [
+                [[[0,100,300],[0,0,0]],
+                    [[100,100,100],[100,0,0]]],
+                [[[200,200,200], [0,0,0]],
+                    [[200,200,0], [200,200,200]]],
+                [[[0,100,0], [0,0,0]],
+                    [[100,100,0], [100,0,300]]]
+            ]
         elif game == 'BM':
             #BM = Bimatrix
             payoff_matrix = [
@@ -85,6 +85,28 @@ class Subsession(BaseSubsession):
                 [[200,600],[500,500]]
             ]
         return payoff_matrix
+    
+    def strat_matrix(self):
+        game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
+
+        if game == 'MV':
+            strat_matrix = [
+                [[], [], []],
+                 [[], [], []],
+                 [[], [], []]
+            ]
+        elif game == 'FP':
+            strat_matrix = [
+                [[ [  ], [  ] ], [ [  ], [  ]]],
+                [[ [  ], [  ] ], [ [  ], [  ] ]],
+                [[ [  ], [  ] ], [ [  ], [  ] ]]
+            ]#BM = Bimatrix
+        elif game == "BM":
+            strat_matrix = [
+                [[ ], [ ]],
+                [[ ], [ ]]
+            ]
+        return strat_matrix
     
     def game_type(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['game']
@@ -272,6 +294,3 @@ class Player(BasePlayer):
                 decision_length = (next_change_time - d.timestamp).total_seconds()
             payoff += decision_length * flow_payoff
         return payoff / period_duration.total_seconds()
-
-  
-    
