@@ -133,8 +133,8 @@ export class LeepsBimatrix extends PolymerElement {
                     background-color: #054cff;
                 }
 
-                .container {
-                    height: 50%;
+                .matrices {
+                    height: 300px;
 
                 }
 
@@ -235,7 +235,7 @@ export class LeepsBimatrix extends PolymerElement {
                                     color="[[ myColor ]]">
                                 </discrete-mean-matching-heatmap>
                             </template>
-
+                            <div class="layout vertical">
                             <template is="dom-if" if="[[ maxInfo ]]">
                                 <template is="dom-if" if="[[ !meanMatching ]]">
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
@@ -260,6 +260,7 @@ export class LeepsBimatrix extends PolymerElement {
                                     
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
+                                        <div class="layout horizontal matrices" >
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
                                             <table id="payoff-table" class="self-center two" >
@@ -292,7 +293,8 @@ export class LeepsBimatrix extends PolymerElement {
                                                     </template>
                                             </table>
                                         </template>
-
+                                        </div>
+                                        <div class="layout horizontal">
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{stratMatrix}}" as="matrix">
                                             <table id="payoff-table" class="self-center two" >
                                                 <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
@@ -308,9 +310,11 @@ export class LeepsBimatrix extends PolymerElement {
                                                 </template>
                                             </table>
                                         </template>   
+                                        </div>
                                     </template>  
                                 </template>
                             </template>
+                            </div>
                         </div>
 
                         <div id="graphs-column" class="layout horizontal">
