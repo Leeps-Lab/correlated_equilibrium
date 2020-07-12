@@ -138,6 +138,8 @@ export class LeepsBimatrix extends PolymerElement {
 
                 }
 
+                
+
             </style>
 
             <otree-constants id="constants"></otree-constants>
@@ -300,7 +302,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                 <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
                                                     <tr>
                                                         <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                <td class$="">
+                                                                <td style="background-color: {{_freqColor(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
                                                                     <span class="your-payoff" >
                                                                         [[   _freq2(matrixIndex, rowIndex, colIndex, stratMatrix) ]]
                                                                     </span>
@@ -492,9 +494,6 @@ export class LeepsBimatrix extends PolymerElement {
                 value: () => {
                     return [[0, 0], [Number.EPSILON, 0]];
                 }
-            },
-            _freq:{
-                type: Number,
             },
             // set by redwood-period
             _isPeriodRunning: {
@@ -724,27 +723,31 @@ export class LeepsBimatrix extends PolymerElement {
         return a[i];
     }
     
-    _freq(a){
-        console.log("called freq(a)" );
-        if (a.length == 0) return 0;
+    _freqColor(matrixIndex, rowIndex, colIndex, stratMatrix){
+        console.log("called freqColor()" );
+        if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
-        console.log(this.gamma);
-        for(let i = 0; i < a.length; i++){
-            dividend += Math.pow(this.gamma, i) * a[i];
+        for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
             divisor +=  Math.pow(this.gamma, i);
         }
-        
-        return dividend/divisor;
+        let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
+        num = 100 - num;//Math.abs(num);
+        if (num == 100) return "#ffffff";
+        if (num == 0) return "#0000ff";
+        //num = Math.round(num * 1.5);
+        num = num* 2;
+        console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
+        return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
 
     _freq2(matrixIndex, rowIndex, colIndex, stratMatrix){
         console.log("called freq2()" );
-        console.log(this.stratMatrix);
+        //console.log(this.stratMatrix);
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
-        console.log(this.gamma);
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
             dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
             divisor +=  Math.pow(this.gamma, i);
@@ -753,13 +756,7 @@ export class LeepsBimatrix extends PolymerElement {
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
     }
 
-    _freqShade(num){
-        if (num > .5)
-            return 'blue';
-        if (num > .25)
-            return 'light-blue';
-        
-    }
+    
     _payoffMatrixClass3(myDecision, otherDecisionArray, i, j, m, payoffMatrix) {
         let otherDecision = otherDecisionArray[0];
         let thirdDecision = otherDecisionArray[1];
