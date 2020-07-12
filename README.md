@@ -13,5 +13,6 @@ dict(
         num_demo_participants=3,
         app_sequence=['correlated_equilibrium', 'payment_info'],
         config_file='pilot_test.csv',
-),
+        num_silos=1,
+     ),
 ```
