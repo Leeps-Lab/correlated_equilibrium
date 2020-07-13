@@ -258,6 +258,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                 </tr>
                                             </template>
                                         </table>
+                                        <table id="payoff-table" class="self-center" >
                                         <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(stratMatrix)}}" as="row">
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
@@ -271,7 +272,8 @@ export class LeepsBimatrix extends PolymerElement {
                                                             </td>
                                                     </template>
                                                 </tr>
-                                            </template>
+                                        </template>
+                                        </table >
                                     </template>
                                     
 
@@ -755,6 +757,8 @@ export class LeepsBimatrix extends PolymerElement {
     
     _freq2Color( rowIndex, colIndex, stratMatrix){
         console.log("called freq2Color()" );
+        if(rowIndex == 0)  rowIndex = 2; 
+        else if (rowIndex == 2) rowIndex = 0;
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
@@ -801,6 +805,8 @@ export class LeepsBimatrix extends PolymerElement {
     _freq2( rowIndex, colIndex, stratMatrix){
         console.log("called freq2()" );
         //console.log(this.stratMatrix);
+        if(rowIndex == 0)  rowIndex = 2; 
+        else if (rowIndex == 2) rowIndex = 0;
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
