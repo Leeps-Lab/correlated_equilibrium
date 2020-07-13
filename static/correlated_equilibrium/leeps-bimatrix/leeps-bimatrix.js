@@ -44,15 +44,8 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 #payoff-table  {
-                    width: 300px;
-                    height: 300px;
-                    border-collapse: collapse;
-                    border: 1px solid black;
-                }
-
-                #payoff-table  {
-                    width: 300px;
-                    height: 300px;
+                    width: 250px;
+                    height: 250px;
                     border-collapse: collapse;
                     border: 1px solid black;
                 }
@@ -67,11 +60,11 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 paper-radio-group {
-                    height: 300px;
+                    height: 250px;
                 }
 
                 regret-bar {
-                    height: 300px;
+                    height: 250px;
                 }
 
                 #payoff-table td {
@@ -134,11 +127,17 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 .matrices {
-                    height: 300px;
+                    height: 90%;
 
                 }
 
-                
+                .scaleDown {
+                    transform: scale(0.8, 0.8);
+                    -ms-transform: scale(0.8, 0.8); /* IE 9 */
+                    -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
+                    -o-transform: scale(0.8, 0.8); /* Opera */
+                    -moz-transform: scale(0.8, 0.8); /* Firefox */
+                }
 
             </style>
 
@@ -165,7 +164,7 @@ export class LeepsBimatrix extends PolymerElement {
                 other-decision="[[ otherDecision ]]">
             </redwood-decision-bot>
 
-            <div class="layout vertical center">
+            <div class="layout vertical center ">
 
                 <div class="layout vertical end">
 
@@ -179,31 +178,30 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div id="heatmap-column" class="layout horizontal">
 
-                            <div class="layout vertical around-justified self-center">
+                            <div class="layout vertical right">
                                 <regret-bar
                                     payoff-matrix="[[ payoffMatrix ]]"
                                     my-payoffs="[[ myPayoffs ]]"
                                     group-decisions="{{ groupDecisions }}"
-                                    my-decision="[[ myDecision ]]"
-
+                                    my-decision="[[ myDecision ]]"                                    
                                 ></regret-bar>                            
                             </div>
                             
                             <paper-radio-group
-                                class="layout vertical around-justified self-center"
+                                class="layout vertical around-justified "
                                 selected="{{ _myPlannedDecisionString }}">
 
                                 <template is="dom-if" if="[[ !isMultiDim ]]">
 
                                     <template is="dom-if" if="[[ _ifMVGame() ]]">
-                                        <paper-radio-button name="2"><p> U </p></paper-radio-button>
-                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="2" style="height: 300px;"><p> U </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="height: 300px;"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="height: 300px;"><p> D </p></paper-radio-button>
                                     </template>
 
                                     <template is="dom-if" if="[[ !_ifMVGame() ]]">
-                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="height: 300px; "><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="height: 300px;  "><p> D </p></paper-radio-button>
                                     </template>
 
                                     <!--
@@ -242,7 +240,7 @@ export class LeepsBimatrix extends PolymerElement {
                                 <template is="dom-if" if="[[ !meanMatching ]]">
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
 
-                                        <table id="payoff-table" class="self-center" >
+                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px; margin-bottom: 20px;">
                                             <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
@@ -258,11 +256,24 @@ export class LeepsBimatrix extends PolymerElement {
                                                 </tr>
                                             </template>
                                         </table>
+                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px;">
+                                        <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(stratMatrix)}}" as="row">
+                                                <tr>
+                                                    <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
+                                                            <td class$="[[ _freq2Color( rowIndex, colIndex, stratMatrix) ]]">
+                                                                    <span class="your-payoff">
+                                                                    [[   _freq2( rowIndex, colIndex, stratMatrix) ]]
+                                                                    </span>
+                                                            </td>
+                                                    </template>
+                                                </tr>
+                                        </template>
+                                        </table >
                                     </template>
                                     
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
-                                        <div class="layout horizontal matrices" >
+                                        <div class="layout horizontal matrices" style="margin-bottom: 20px;" >
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
                                             <table id="payoff-table" class="self-center two" >
@@ -286,9 +297,6 @@ export class LeepsBimatrix extends PolymerElement {
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
                                                                         </template>
-                                                                        <br>
-                                                                        <span> i = [[rowIndex]], j = [[colIndex]], m = [[matrixIndex]]
-                                                                        </span>
                                                                     </td>
                                                             </template>
                                                         </tr>
@@ -296,15 +304,16 @@ export class LeepsBimatrix extends PolymerElement {
                                             </table>
                                         </template>
                                         </div>
+                                        
                                         <div class="layout horizontal">
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{stratMatrix}}" as="matrix">
                                             <table id="payoff-table" class="self-center two" >
                                                 <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
                                                     <tr>
                                                         <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                <td style="background-color: {{_freqColor(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
+                                                                <td style="background-color: {{_freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
                                                                     <span class="your-payoff" >
-                                                                        [[   _freq2(matrixIndex, rowIndex, colIndex, stratMatrix) ]]
+                                                                        [[   _freq3(matrixIndex, rowIndex, colIndex, stratMatrix) ]]
                                                                     </span>
                                                                 </td>
                                                         </template>
@@ -541,6 +550,22 @@ export class LeepsBimatrix extends PolymerElement {
             this.set("payoffMatrix", t);
         }
 
+        // transpose strat matrices if player controls vertical line in a 2 player game
+        if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+            var i, j, t = [];
+
+            // Loop through every item in the outer array (height)
+            for (i=0; i < this.stratMatrix.length; i++ ) {
+                t[i] = [];
+
+                for(j = 0; j < this.stratMatrix[0].length; j++) {
+                    t[i][j] = this.stratMatrix[j][i];
+                }
+            }
+
+            this.set("stratMatrix", t);
+        }
+
         // transpose payoff and probability matrices if player controls vertical line in a 3 player game
         if (this.$.constants.idInGroup % num_players == 0 && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
@@ -723,8 +748,45 @@ export class LeepsBimatrix extends PolymerElement {
         return a[i];
     }
     
-    _freqColor(matrixIndex, rowIndex, colIndex, stratMatrix){
-        console.log("called freqColor()" );
+    _freq2Color( rowIndex, colIndex, stratMatrix){
+        console.log("called freq2Color()" );
+        if (!this._ifMVGame()){
+            if(rowIndex== 0)   rowIndex = 1; 
+            else if (rowIndex == 1) rowIndex = 0; 
+            if(colIndex == 0)  colIndex = 1; 
+            else if (colIndex == 1) colIndex = 0; 
+        } else{
+            if(rowIndex == 0)  rowIndex = 2; 
+            else if (rowIndex == 2) rowIndex = 0; 
+            if(colIndex == 0)  colIndex = 2; 
+            else if (colIndex == 2) colIndex = 0; 
+         }
+        if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
+        var dividend = 0;
+        var divisor = 0;
+        for(let i = 0; i < this.stratMatrix[rowIndex][colIndex].length; i++){
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][i];
+            divisor +=  Math.pow(this.gamma, i);
+        }
+        let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
+        num = 100 - num;//Math.abs(num);
+        if (num == 100) return "#ffffff";
+        if (num == 0) return "#0000ff";
+        num = Math.round(num * 2.5);
+        //num = num* 2;
+        console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
+        return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
+    }
+
+    _freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix){
+        console.log("called freq3Color()" );
+        if (stratMatrix.length == 3){
+            if(rowIndex== 0)   rowIndex = 1; 
+            else if (rowIndex == 1) rowIndex = 0; 
+        } else if (stratMatrix.length == 2){
+            if(rowIndex == 0)  rowIndex = 2; 
+            else if (rowIndex == 2) rowIndex = 0; 
+         }
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
@@ -736,15 +798,49 @@ export class LeepsBimatrix extends PolymerElement {
         num = 100 - num;//Math.abs(num);
         if (num == 100) return "#ffffff";
         if (num == 0) return "#0000ff";
-        //num = Math.round(num * 1.5);
-        num = num* 2;
+        num = Math.round(num * 2.5);
+        //num = num* 2;
         console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
 
-    _freq2(matrixIndex, rowIndex, colIndex, stratMatrix){
+    _freq2( rowIndex, colIndex, stratMatrix){
         console.log("called freq2()" );
         //console.log(this.stratMatrix);
+        if (!this._ifMVGame()){
+            console.log("BM")
+            if(rowIndex== 0)   rowIndex = 1; 
+            else if (rowIndex == 1) rowIndex = 0; 
+            if(colIndex == 0)  colIndex = 1; 
+            else if (colIndex == 1) colIndex = 0;
+        } else {
+            if(rowIndex == 0)  rowIndex = 2; 
+            else if (rowIndex == 2) rowIndex = 0; 
+            if(colIndex == 0)  colIndex = 2; 
+            else if (colIndex == 2) colIndex = 0; 
+         }
+         console.log(rowIndex + ", " + colIndex);
+        if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
+        var dividend = 0;
+        var divisor = 0;
+        for(let i = 0; i < this.stratMatrix[rowIndex][colIndex].length; i++){
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][i];
+            divisor +=  Math.pow(this.gamma, i);
+        }
+        
+        return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
+    }
+
+    _freq3(matrixIndex, rowIndex, colIndex, stratMatrix){
+        console.log("called freq3()" );
+        //console.log(this.stratMatrix);
+        if (stratMatrix.length == 3){
+            if(rowIndex== 0)   rowIndex = 1; 
+            else if (rowIndex == 1) rowIndex = 0; 
+        } else if (stratMatrix.length == 2){
+            if(rowIndex == 0)  rowIndex = 2; 
+            else if (rowIndex == 2) rowIndex = 0; 
+         }
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
@@ -829,7 +925,18 @@ export class LeepsBimatrix extends PolymerElement {
         for(let decision of Object.values(this.groupDecisions)){
             if(decision === null) return;
          }
-        if(this.numPlayers % 2 == 0) {
+        if(this.numPlayers % 2 == 0 || this._ifMVGame()) {
+            var i, j, t = [];
+
+            // Loop through every item in the outer array (height)
+            for (i=0; i < this.stratMatrix.length; i++ ) {
+                t[i] = [];
+
+                for(j = 0; j < this.stratMatrix[0].length; j++) {
+                    t[i][j] = this.stratMatrix[i][j];
+                }
+            }
+            
             var p1Decision, p2Decision;
             var p1ID, p2ID;
             for (const player of this.$.constants.group.players) {
@@ -846,9 +953,9 @@ export class LeepsBimatrix extends PolymerElement {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                       if(i == p1Decision && j == p2Decision){
-                        this.stratMatrix[i][j].push(1);
+                        t[i][j].push(1);
                       } else{
-                        this.stratMatrix[i][j].push(0);
+                        t[i][j].push(0);
                       }
                     }
                 }
@@ -857,9 +964,9 @@ export class LeepsBimatrix extends PolymerElement {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                       if(j == p1Decision && i == p2Decision){
-                        this.stratMatrix[i][j].push(1);
+                        t[i][j].push(1);
                       } else{
-                        this.stratMatrix[i][j].push(0);
+                        t[i][j].push(0);
                       }
                     }
                 }
@@ -912,7 +1019,7 @@ export class LeepsBimatrix extends PolymerElement {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                         for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p3Decision && j == p1Decision && z == p2Decision){
+                            if(i == p3Decision && j == p2Decision && z == p1Decision){
                                 t[i][j][z].push(1)
                             } else{
                                 t[i][j][z].push(0)
@@ -926,7 +1033,7 @@ export class LeepsBimatrix extends PolymerElement {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                         for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p2Decision && j == p1Decision && z == p3Decision){
+                            if(i == p2Decision && j == p3Decision && z == p1Decision){
                                 t[i][j][z].push(1)
                             } else{
                                 t[i][j][z].push(0)
@@ -937,9 +1044,7 @@ export class LeepsBimatrix extends PolymerElement {
 
             }
         }
-        console.log(t);
-        //var t = this.stratMatrix;
-        //this.set('stratMatrix', []);
+        console.log(p1Decision + ", " + p2Decision);
         this.set('stratMatrix', t);
 
         this.notifyPath('stratMatrix');
