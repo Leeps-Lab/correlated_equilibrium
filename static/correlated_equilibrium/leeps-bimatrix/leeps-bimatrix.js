@@ -72,6 +72,13 @@ export class LeepsBimatrix extends PolymerElement {
 
                 regret-bar {
                     height: 300px;
+                    margin-top: 0px;
+                    padding-top: 0px;
+                }
+
+                paper-radio-button {
+                    margin-top: 0px;
+                    padding-top: 0px;
                 }
 
                 #payoff-table td {
@@ -179,7 +186,7 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div id="heatmap-column" class="layout horizontal">
 
-                            <div class="layout vertical around-justified self-center">
+                            <div class="layout vertical  ">
                                 <regret-bar
                                     payoff-matrix="[[ payoffMatrix ]]"
                                     my-payoffs="[[ myPayoffs ]]"
@@ -190,7 +197,7 @@ export class LeepsBimatrix extends PolymerElement {
                             </div>
                             
                             <paper-radio-group
-                                class="layout vertical around-justified self-center"
+                                class="layout vertical around-justified "
                                 selected="{{ _myPlannedDecisionString }}">
 
                                 <template is="dom-if" if="[[ !isMultiDim ]]">
@@ -736,8 +743,8 @@ export class LeepsBimatrix extends PolymerElement {
         num = 100 - num;//Math.abs(num);
         if (num == 100) return "#ffffff";
         if (num == 0) return "#0000ff";
-        //num = Math.round(num * 1.5);
-        num = num* 2;
+        num = Math.round(num * 2.5);
+        //num = num* 2;
         console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
