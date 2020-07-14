@@ -164,6 +164,11 @@ export class LeepsBimatrix extends PolymerElement {
                 other-decision="[[ otherDecision ]]">
             </redwood-decision-bot>
 
+            <redwood-channel
+                channel="group_decisions"
+                on-event="_handleGroupDecisionsEvent">
+            </redwood-channel>
+
             <div class="layout vertical center ">
 
                 <div class="layout vertical end">
@@ -516,6 +521,10 @@ export class LeepsBimatrix extends PolymerElement {
                 type: String,
                 observer: '_syncMyPlannedDecision',
             },
+            _currSubperiod: {
+                type: Number,
+                value: 0,
+            },
         }
     }
 
@@ -779,7 +788,6 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix){
-        console.log("called freq3Color()" );
         if (stratMatrix.length == 3){
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
@@ -799,14 +807,11 @@ export class LeepsBimatrix extends PolymerElement {
         if (num == 100) return "#ffffff";
         if (num == 0) return "#0000ff";
         num = Math.round(num * 2.5);
-        //num = num* 2;
-        console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
+        //console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
 
     _freq2( rowIndex, colIndex, stratMatrix){
-        console.log("called freq2()" );
-        //console.log(this.stratMatrix);
         if (!this._ifMVGame()){
             console.log("BM")
             if(rowIndex== 0)   rowIndex = 1; 
@@ -819,7 +824,6 @@ export class LeepsBimatrix extends PolymerElement {
             if(colIndex == 0)  colIndex = 2; 
             else if (colIndex == 2) colIndex = 0; 
          }
-         console.log(rowIndex + ", " + colIndex);
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
@@ -832,8 +836,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _freq3(matrixIndex, rowIndex, colIndex, stratMatrix){
-        console.log("called freq3()" );
-        //console.log(this.stratMatrix);
+        console.log(this.stratMatrix);
         if (stratMatrix.length == 3){
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
@@ -844,11 +847,14 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+        var debug = "";
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
             dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
             divisor +=  Math.pow(this.gamma, i);
+            debug = debug + " + " +Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
         }
-        
+        console.log("Length of " + matrixIndex + ", " + rowIndex + ", "+ colIndex + ": " + this.stratMatrix[matrixIndex][rowIndex][colIndex].length);
+        console.log(Math.round(1000 * dividend/divisor)/1000);
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
     }
 
@@ -918,6 +924,139 @@ export class LeepsBimatrix extends PolymerElement {
     _onGroupDecisionsChanged() {
         this.lastT = performance.now();
         this._subperiodProgress = 0;
+        /*console.log("Group Decisions Changed");
+        console.log(this.groupDecisions);
+        if(typeof this.groupDecisions === 'undefined') return;
+        if(Object.keys(this.groupDecisions).length == 0) return;
+        for(let decision of Object.values(this.groupDecisions)){
+            if(decision === null) return;
+         }
+        if(this.numPlayers % 2 == 0 || this._ifMVGame()) {
+            var i, j, t = [];
+
+            // Loop through every item in the outer array (height)
+            for (i=0; i < this.stratMatrix.length; i++ ) {
+                t[i] = [];
+
+                for(j = 0; j < this.stratMatrix[0].length; j++) {
+                    t[i][j] = this.stratMatrix[i][j];
+                }
+            }
+            
+            var p1Decision, p2Decision;
+            var p1ID, p2ID;
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = this.groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = this.groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+            }
+            if(this.$.constants.participantCode == p1ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                      if(i == p1Decision && j == p2Decision){
+                        t[i][j].push(1);
+                      } else{
+                        t[i][j].push(0);
+                      }
+                    }
+                }
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                      if(j == p1Decision && i == p2Decision){
+                        t[i][j].push(1);
+                      } else{
+                        t[i][j].push(0);
+                      }
+                    }
+                }
+            }
+        }
+        else if(this.numPlayers % 3 == 0) {
+            var p1Decision, p2Decision, p3Decision;
+            var p1ID, p2ID, p3ID;
+
+            var t = [];
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                t[i] = [];
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    t[i][j] = [];
+                    for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                        t[i][j][z] = this.stratMatrix[i][j][z];
+                    }
+                }
+            }
+            
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = this.groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = this.groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+                else if(player.role == "p3") { 
+                    p3Decision = this.groupDecisions[player.participantCode];
+                    p3ID = player.participantCode;
+                }
+            }
+
+            if(this.$.constants.participantCode == p1ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p3Decision && j == p1Decision && z == p2Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            }
+                        }
+                    }
+                }
+            }
+            else if(this.$.constants.participantCode == p2ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p3Decision && j == p2Decision && z == p1Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            }        
+                        }
+                    }
+                }
+
+            }
+            else if(this.$.constants.participantCode == p3ID) {
+                for (let i = 0; i < this.stratMatrix.length; i++){
+                    for (let j = 0; j < this.stratMatrix[0].length; j++){
+                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                            if(i == p2Decision && j == p3Decision && z == p1Decision){
+                                t[i][j][z].push(1)
+                            } else{
+                                t[i][j][z].push(0)
+                            } 
+                        }
+                    }
+                }
+
+            }
+        }
+        console.log(t);
+        this.set('stratMatrix', t);
+
+        this.notifyPath('stratMatrix');*/
+    }
+
+    _handleGroupDecisionsEvent(event) {
         console.log("Group Decisions Changed");
         console.log(this.groupDecisions);
         if(typeof this.groupDecisions === 'undefined') return;
@@ -1044,17 +1183,19 @@ export class LeepsBimatrix extends PolymerElement {
 
             }
         }
-        console.log(p1Decision + ", " + p2Decision);
+        console.log(t);
         this.set('stratMatrix', t);
 
         this.notifyPath('stratMatrix');
+
     }
+
     _updateSubperiodProgress(t) {
         const deltaT = (t - this.lastT);
         const secondsPerSubperiod = this.periodLength / this.numSubperiods;
         this._subperiodProgress = 100 * ((deltaT / 1000) / secondsPerSubperiod);
         this._animID = window.requestAnimationFrame(
-            this._updateSubperiodProgress.bind(this));
+        this._updateSubperiodProgress.bind(this));
     }
     _computeOtherDecision(groupDecisions) {
         // calculate other decision as mean decision of others with opposite role
