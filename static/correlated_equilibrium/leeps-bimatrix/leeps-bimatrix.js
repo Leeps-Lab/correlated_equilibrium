@@ -60,11 +60,12 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 paper-radio-group {
-                    height: 250px;
+                    height: 260px;
                 }
 
                 regret-bar {
-                    height: 250px;
+                    height: 260px;
+                    padding-right: 0px;
                 }
 
                 #payoff-table td {
@@ -74,7 +75,7 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 #payoff-table.two{
-                    margin-right: 30px;
+                    margin-right: 25px;
                 }
 
                 #payoff-table.two tr td{
@@ -131,14 +132,6 @@ export class LeepsBimatrix extends PolymerElement {
 
                 }
 
-                .scaleDown {
-                    transform: scale(0.8, 0.8);
-                    -ms-transform: scale(0.8, 0.8); /* IE 9 */
-                    -webkit-transform: scale(0.8, 0.8); /* Safari and Chrome */
-                    -o-transform: scale(0.8, 0.8); /* Opera */
-                    -moz-transform: scale(0.8, 0.8); /* Firefox */
-                }
-
             </style>
 
             <otree-constants id="constants"></otree-constants>
@@ -183,40 +176,35 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div id="heatmap-column" class="layout horizontal">
 
-                            <div class="layout vertical right">
-                                <regret-bar
-                                    payoff-matrix="[[ payoffMatrix ]]"
-                                    my-payoffs="[[ myPayoffs ]]"
-                                    group-decisions="{{ groupDecisions }}"
-                                    my-decision="[[ myDecision ]]"                                    
-                                ></regret-bar>                            
-                            </div>
                             
-                            <paper-radio-group
-                                class="layout vertical around-justified "
-                                selected="{{ _myPlannedDecisionString }}">
+                            <template is="dom-if" if="[[ isMultiDim ]]">
+                                <div class="layout vertical right self-center">
+                                    <regret-bar
+                                        payoff-matrix="[[ payoffMatrix ]]"
+                                        my-payoffs="[[ myPayoffs ]]"
+                                        group-decisions="{{ groupDecisions }}"
+                                        my-decision="[[ myDecision ]]"                                    
+                                    ></regret-bar>                            
+                                </div>
+                            </template>
 
-                                <template is="dom-if" if="[[ !isMultiDim ]]">
+                            <template is="dom-if" if="[[ !isMultiDim ]]">
+                                <div class="layout vertical right ">
+                                    <regret-bar
+                                        payoff-matrix="[[ payoffMatrix ]]"
+                                        my-payoffs="[[ myPayoffs ]]"
+                                        group-decisions="{{ groupDecisions }}"
+                                        my-decision="[[ myDecision ]]"     
+                                        game-type="[[ gameType ]]"                               
+                                    ></regret-bar>                            
+                                </div>
+                            </template>
 
-                                    <template is="dom-if" if="[[ _ifMVGame() ]]">
-                                        <paper-radio-button name="2" style="height: 300px;"><p> U </p></paper-radio-button>
-                                        <paper-radio-button name="1" style="height: 300px;"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="height: 300px;"><p> D </p></paper-radio-button>
-                                    </template>
+                            <template is="dom-if" if="[[ isMultiDim ]]">
+                                <paper-radio-group
+                                    class="layout vertical around-justified self-center"
+                                    selected="{{ _myPlannedDecisionString }}">
 
-                                    <template is="dom-if" if="[[ !_ifMVGame() ]]">
-                                        <paper-radio-button name="1" style="height: 300px; "><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="height: 300px;  "><p> D </p></paper-radio-button>
-                                    </template>
-
-                                    <!--
-                                    <template is="dom-repeat" items="{{_arrayIndex(payoffMatrix)}}">
-                                        <paper-radio-button name="[[item]]">[[item]]</paper-radio-button>
-                                    </template>
-                                    -->                                        
-                                </template>
-
-                                <template is="dom-if" if="[[ isMultiDim ]]">
                                     <template is="dom-if" if="[[ _p3Role() ]]">
                                         <paper-radio-button name="2"><p> U </p></paper-radio-button>
                                         <paper-radio-button name="1"><p> C </p></paper-radio-button>
@@ -227,8 +215,29 @@ export class LeepsBimatrix extends PolymerElement {
                                         <paper-radio-button name="1"><p> C </p></paper-radio-button>
                                         <paper-radio-button name="0"><p> D </p></paper-radio-button>
                                     </template>
-                                </template>
-                            </paper-radio-group>
+                                </paper-radio-group>
+                            </template>
+
+                            <template is="dom-if" if="[[ !isMultiDim ]]">
+                                <paper-radio-group
+                                    class="layout vertical around-justified"
+                                    selected="{{ _myPlannedDecisionString }}">
+
+                                    <template is="dom-if" if="[[ _ifMVGame() ]]">
+                                        <paper-radio-button name="2" style="margin-top: 25px;"><p> U </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="margin-top: 25px;"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 25px;"><p> D </p></paper-radio-button>
+                                    </template>
+
+                                    <template is="dom-if" if="[[ !_ifMVGame() ]]">
+                                        <paper-radio-button name="1" style="margin-top: 25px; "><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 25px;  "><p> D </p></paper-radio-button>
+                                    </template>              
+
+                                    
+                                </paper-radio-group>
+                            </template>
+                        
 
                             <template is="dom-if" if="[[ meanMatching ]]">
                                 <discrete-mean-matching-heatmap
@@ -245,7 +254,7 @@ export class LeepsBimatrix extends PolymerElement {
                                 <template is="dom-if" if="[[ !meanMatching ]]">
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
 
-                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px; margin-bottom: 20px;">
+                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px;">
                                             <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
@@ -256,24 +265,28 @@ export class LeepsBimatrix extends PolymerElement {
                                                                     <span class="other-payoff">
                                                                         [[ _array(column, otherPayoffIndex) ]]
                                                                     </span>
+                                                                    <div>
+                                                                        <template is="dom-if" if="[[ _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
+                                                                            <paper-radio-button disabled checked></paper-radio-button>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[! _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
+                                                                            <paper-radio-button disabled></paper-radio-button>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ _check2(otherDecision, colIndex, stratMatrix) ]]">
+                                                                            <paper-radio-button disabled checked></paper-radio-button>
+                                                                        </template>
+                                                                        <template is="dom-if" if="[[ ! _check2(otherDecision, colIndex, stratMatrix) ]]">
+                                                                            <paper-radio-button disabled></paper-radio-button>
+                                                                        </template>
+                                                                    </div>
                                                             </td>
                                                     </template>
                                                 </tr>
                                             </template>
                                         </table>
-                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px;">
-                                        <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(stratMatrix)}}" as="row">
-                                                <tr>
-                                                    <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                            <td class$="[[ _freq2Color( rowIndex, colIndex, stratMatrix) ]]">
-                                                                    <span class="your-payoff">
+                                                                    <!--
                                                                     [[   _freq2( rowIndex, colIndex, stratMatrix) ]]
-                                                                    </span>
-                                                            </td>
-                                                    </template>
-                                                </tr>
-                                        </template>
-                                        </table >
+                                                                    -->
                                     </template>
                                     
 
@@ -285,12 +298,11 @@ export class LeepsBimatrix extends PolymerElement {
                                                     <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
                                                         <tr>
                                                             <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                    <td class$="[[ _payoffMatrixClass3(myPlannedDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) ]]">
+                                                                    <td style="background-color: {{_freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
                                                                         <template is="dom-if" if="[[ _p1Role() ]]">
                                                                             <span class="your-payoff">
                                                                                 [[ _array(column, 0) ]]
                                                                             </span>
-                                                                            
                                                                         </template>
                                                                         <template is="dom-if" if="[[ _p2Role() ]]">
                                                                             <span class="your-payoff">
@@ -302,30 +314,32 @@ export class LeepsBimatrix extends PolymerElement {
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
                                                                         </template>
+                                                                        <div>
+                                                                            <template is="dom-if" if="[[ _check(myPlannedDecision, rowIndex, payoffMatrix) ]]">
+                                                                                <paper-radio-button disabled checked></paper-radio-button>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[! _check(myPlannedDecision, rowIndex, payoffMatrix) ]]">
+                                                                                <paper-radio-button disabled></paper-radio-button>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _checkOther(otherDecisionArray, colIndex, 'column', stratMatrix) ]]">
+                                                                                <paper-radio-button disabled checked></paper-radio-button>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ ! _checkOther(otherDecisionArray, colIndex, 'column', stratMatrix) ]]">
+                                                                                <paper-radio-button disabled></paper-radio-button>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[ _checkOther(otherDecisionArray, matrixIndex, 'matrix', stratMatrix) ]]">
+                                                                                <paper-radio-button disabled checked></paper-radio-button>
+                                                                            </template>
+                                                                            <template is="dom-if" if="[[! _checkOther(otherDecisionArray, matrixIndex, 'matrix', stratMatrix) ]]">
+                                                                                <paper-radio-button disabled></paper-radio-button>
+                                                                            </template>
+                                                                        </div>
                                                                     </td>
                                                             </template>
                                                         </tr>
                                                     </template>
                                             </table>
                                         </template>
-                                        </div>
-                                        
-                                        <div class="layout horizontal">
-                                        <template is="dom-repeat" index-as="matrixIndex" items="{{stratMatrix}}" as="matrix">
-                                            <table id="payoff-table" class="self-center two" >
-                                                <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(matrix)}}" as="row">
-                                                    <tr>
-                                                        <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
-                                                                <td style="background-color: {{_freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
-                                                                    <span class="your-payoff" >
-                                                                        [[   _freq3(matrixIndex, rowIndex, colIndex, stratMatrix) ]]
-                                                                    </span>
-                                                                </td>
-                                                        </template>
-                                                    </tr>
-                                                </template>
-                                            </table>
-                                        </template>   
                                         </div>
                                     </template>  
                                 </template>
@@ -343,18 +357,6 @@ export class LeepsBimatrix extends PolymerElement {
                                 </template>
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
-                                        <strategy-graph
-                                            game-type="[[ gameType ]]"
-                                            num-players="[[ numPlayers ]]"
-                                            my-decision="[[ myPlannedDecision ]]"
-                                            other-decision="[[ otherDecision ]]"
-                                            period-length="[[ periodLength ]]"
-                                            my-choice-series="[[ myChoiceSeries ]]"
-                                            other-decision-array="[[ otherDecisionArray ]]"
-                                            other-choice-series="[[ otherChoiceSeries ]]"
-                                            other-other-choice-series="[[ otherOtherChoiceSeries ]]"
-                                            max-info="[[ maxInfo ]]"
-                                        ></strategy-graph>
                                         <payoff-graph
                                             num-players="[[ numPlayers ]]"
                                             group-decisions="{{ groupDecisions }}"
@@ -370,19 +372,20 @@ export class LeepsBimatrix extends PolymerElement {
                                             other-other-payoff-series="[[ otherOtherPayoffSeries ]]"
                                             max-info="[[ maxInfo ]]"
                                         ></payoff-graph>
-                                    </template>
-                                    <template is="dom-if" if="[[ numSubperiods ]]">
-                                        <subperiod-strategy-graph
+                                        <strategy-graph
                                             game-type="[[ gameType ]]"
                                             num-players="[[ numPlayers ]]"
-                                            group-decisions="{{ groupDecisions }}"
-                                            my-decision="[[ myDecision ]]"
+                                            my-decision="[[ myPlannedDecision ]]"
                                             other-decision="[[ otherDecision ]]"
-                                            other-decision-array="[[ otherDecisionArray ]]"
                                             period-length="[[ periodLength ]]"
-                                            num-subperiods="[[ numSubperiods ]]"
+                                            my-choice-series="[[ myChoiceSeries ]]"
+                                            other-decision-array="[[ otherDecisionArray ]]"
+                                            other-choice-series="[[ otherChoiceSeries ]]"
+                                            other-other-choice-series="[[ otherOtherChoiceSeries ]]"
                                             max-info="[[ maxInfo ]]"
-                                        ></subperiod-strategy-graph>
+                                        ></strategy-graph>
+                                    </template>
+                                    <template is="dom-if" if="[[ numSubperiods ]]">
                                         <subperiod-payoff-graph
                                             group-decisions="{{ groupDecisions }}"
                                             my-payoffs="[[ myPayoffs ]]"
@@ -395,6 +398,17 @@ export class LeepsBimatrix extends PolymerElement {
                                             num-players="[[ numPlayers ]]"
                                             max-info="[[ maxInfo ]]"
                                         ></subperiod-payoff-graph>
+                                        <subperiod-strategy-graph
+                                            game-type="[[ gameType ]]"
+                                            num-players="[[ numPlayers ]]"
+                                            group-decisions="{{ groupDecisions }}"
+                                            my-decision="[[ myDecision ]]"
+                                            other-decision="[[ otherDecision ]]"
+                                            other-decision-array="[[ otherDecisionArray ]]"
+                                            period-length="[[ periodLength ]]"
+                                            num-subperiods="[[ numSubperiods ]]"
+                                            max-info="[[ maxInfo ]]"
+                                        ></subperiod-strategy-graph>
                                     </template>
                                 </div>
                             </div>
@@ -738,6 +752,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _ifMVGame() {
+        console.log(this.gameType);
         return this.gameType == 'MV';
     }
 
@@ -836,7 +851,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _freq3(matrixIndex, rowIndex, colIndex, stratMatrix){
-        console.log(this.stratMatrix);
+        //console.log(this.stratMatrix);
         if (stratMatrix.length == 3){
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
@@ -853,8 +868,8 @@ export class LeepsBimatrix extends PolymerElement {
             divisor +=  Math.pow(this.gamma, i);
             debug = debug + " + " +Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
         }
-        console.log("Length of " + matrixIndex + ", " + rowIndex + ", "+ colIndex + ": " + this.stratMatrix[matrixIndex][rowIndex][colIndex].length);
-        console.log(Math.round(1000 * dividend/divisor)/1000);
+        //console.log("Length of " + matrixIndex + ", " + rowIndex + ", "+ colIndex + ": " + this.stratMatrix[matrixIndex][rowIndex][colIndex].length);
+        //console.log(Math.round(1000 * dividend/divisor)/1000);
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
     }
 
@@ -1224,6 +1239,40 @@ export class LeepsBimatrix extends PolymerElement {
     _showThermometer(meanMatching) {
         return meanMatching;
     }
+
+    _check(myPlannedDecision, i, payoffMatrix){
+        // this takes care of reversed i-indices 
+        if (payoffMatrix.length == 3){
+            if(i == 0)   i = 1; 
+            else if (i == 1) i = 0; 
+         } else if (payoffMatrix.length == 2){
+            if(i == 0)  i = 2; 
+            else if (i == 2) i= 0; 
+         }
+         return myPlannedDecision == i;
+
+    }
+
+    _check2(myPlannedDecision, i, payoffMatrix){
+        // this takes care of reversed i-indices
+         return myPlannedDecision ==  payoffMatrix.length - 1 - i;
+
+    }
+
+    _checkOther(otherDecisionArray, i, state, stratMatrix){
+        console.log("checkOther called");
+        if(state == "column"){
+            console.log(otherDecisionArray[0] + "==" + i + " is " + (otherDecisionArray[0] == i));
+            return otherDecisionArray[0] == i;
+        }
+            
+        if(state == "matrix"){
+            console.log(otherDecisionArray[1] + "==" + i + " is " + (otherDecisionArray[1] == i));
+            return otherDecisionArray[1] == i;
+        }
+            
+    }
+
 }
 
 window.customElements.define('leeps-bimatrix', LeepsBimatrix);
