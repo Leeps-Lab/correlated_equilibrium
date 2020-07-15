@@ -819,7 +819,6 @@ export class LeepsBimatrix extends PolymerElement {
         if (num == 100) return "#ffffff";
         if (num == 0) return "#0000ff";
         num = Math.round(num * 2.5);
-        //console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
 
@@ -859,14 +858,10 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
-        var debug = "";
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
             dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
             divisor +=  Math.pow(this.gamma, i);
-            debug = debug + " + " +Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
         }
-        //console.log("Length of " + matrixIndex + ", " + rowIndex + ", "+ colIndex + ": " + this.stratMatrix[matrixIndex][rowIndex][colIndex].length);
-        //console.log(Math.round(1000 * dividend/divisor)/1000);
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
     }
 
