@@ -37,7 +37,7 @@ export class RegretBar extends PolymerElement {
                     width: 200px;
                     background-color: #b1dcff;
                     outline: 1px solid black;
-                    margin-right: 100px;
+                    margin-right: 25px;
                 }
 
                 #myBar0 {
@@ -75,7 +75,7 @@ export class RegretBar extends PolymerElement {
                 on-event="_handleGroupDecisionsEvent">
             </redwood-channel>
 
-            <template is="dom-if" if="[[ _p3Role() ]]">
+            <template is="dom-if" if="[[ _if3()]]">
                 <div id=progress-container1>
                     <div id="myProgress">
                         <div id="myBar2" ></div>
@@ -95,7 +95,7 @@ export class RegretBar extends PolymerElement {
                 </div>
             </template>
 
-            <template is="dom-if" if="[[ !_p3Role() ]]">
+            <template is="dom-if" if="[[  !_if3()]]">
                 <div id=progress-container2>
                     <div id="myProgress">
                         <div id="myBar1"></div>
@@ -138,7 +138,7 @@ export class RegretBar extends PolymerElement {
     }
 
     _handleGroupDecisionsEvent(event) {
-        console.log(this.myDecision);
+        //(this.myDecision);
         //Add most recent decision to history
         history.push(this.myDecision);
 
@@ -157,7 +157,7 @@ export class RegretBar extends PolymerElement {
             var elem1 = this.shadowRoot.getElementById("myBar1");
             var elem2;
 
-            if(this.$.constants.role == 'p3') {
+            if(this.$.constants.role == 'p3' || this.gameType == 'MV') {
                 elem2 = this.shadowRoot.getElementById("myBar2");
             }
 
@@ -202,15 +202,17 @@ export class RegretBar extends PolymerElement {
             elem0.style.width = (regret0 * 100) + '%';
             elem1.style.width = (regret1 * 100) + '%';
 
-            if(this.$.constants.role == 'p3') {
+            if(this.$.constants.role == 'p3' || this.gameType == 'MV') {
                 elem2.style.width = (regret2 * 100) + '%';
             }            
         }  
     }
 
-    _p3Role() {
-        return this.$.constants.role == 'p3';
-    } 
+    
+
+    _if3() {
+        return this.gameType == 'MV' || this.$.constants.role == 'p3';
+    }
 }
 
 window.customElements.define('regret-bar', RegretBar);
