@@ -258,7 +258,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
-                                                            <td class$="[[ _payoffMatrixClass(myPlannedDecision, otherDecision, rowIndex, colIndex, payoffMatrix) ]]">
+                                                            <td style="background-color: {{   _freq2Color( rowIndex, colIndex, stratMatrix) }};">
                                                                     <span class="your-payoff">
                                                                         [[ _array(column, payoffIndex) ]]
                                                                     </span>,
@@ -284,9 +284,6 @@ export class LeepsBimatrix extends PolymerElement {
                                                 </tr>
                                             </template>
                                         </table>
-                                                                    <!--
-                                                                    [[   _freq2( rowIndex, colIndex, stratMatrix) ]]
-                                                                    -->
                                     </template>
                                     
 
