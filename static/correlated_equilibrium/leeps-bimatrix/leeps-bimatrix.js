@@ -51,12 +51,11 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 .your-payoff {
-                    font-weight: bold;
                     font-size: 16pt;
                 }
 
                 .other-payoff {
-                    font-size: 14pt;
+                    font-size: 12pt;
                 }
 
                 paper-radio-group {
@@ -259,12 +258,13 @@ export class LeepsBimatrix extends PolymerElement {
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
                                                             <td style="background-color: {{   _freq2Color( rowIndex, colIndex, stratMatrix) }};">
-                                                                    <span class="your-payoff">
+                                                                    <span class="your-payoff" style="font-weight: {{ _fontSize2(myDecision, otherDecision, rowIndex, colIndex, payoffMatrix) }};">
                                                                         [[ _array(column, payoffIndex) ]]
-                                                                    </span>,
+                                                                    </span><!--,
                                                                     <span class="other-payoff">
                                                                         [[ _array(column, otherPayoffIndex) ]]
                                                                     </span>
+                                                                             -->
                                                                     <div>
                                                                         <template is="dom-if" if="[[ _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
                                                                             <paper-radio-button disabled checked></paper-radio-button>
@@ -297,7 +297,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                             <template is="dom-repeat" index-as="colIndex" items="{{row}}" as="column">
                                                                     <td style="background-color: {{_freq3Color(matrixIndex, rowIndex, colIndex, stratMatrix)}} ;">
                                                                         <template is="dom-if" if="[[ _p1Role() ]]">
-                                                                            <span class="your-payoff">
+                                                                            <span class="your-payoff" style="font-weight: {{ _fontSize3(myDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) }};">
                                                                                 [[ _array(column, 0) ]]
                                                                             </span>
                                                                         </template>
@@ -770,7 +770,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
     
     _freq2Color( rowIndex, colIndex, stratMatrix){
-        console.log("called freq2Color()" );
+        //console.log("called freq2Color()" );
         if (!this._ifMVGame()){
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
@@ -795,7 +795,7 @@ export class LeepsBimatrix extends PolymerElement {
         if (num == 0) return "#0000ff";
         num = Math.round(num * 2.5);
         //num = num* 2;
-        console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
+        //console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
 
@@ -865,7 +865,53 @@ export class LeepsBimatrix extends PolymerElement {
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
     }
 
-    
+    _fontSize3(myDecision, otherDecisionArray, i, j, m, payoffMatrix){
+        let otherDecision = otherDecisionArray[0];
+        let thirdDecision = otherDecisionArray[1];
+        
+        // this takes care of reversed i-indices 
+        if (payoffMatrix.length == 3){
+           if(i == 0)   i = 1; 
+           else if (i == 1) i = 0; 
+        } else if (payoffMatrix.length == 2){
+           if(i == 0)  i = 2; 
+           else if (i == 2) i= 0; 
+        }
+
+        let font = 0;
+         
+        // player's own decision
+        if (myDecision == i) 
+            font++;
+        
+        // 1st/2nd player's decision on 2nd/1st player's matrices
+        if ("p3" != this.$.constants.role && otherDecision == j) 
+            font++;
+        
+        // show third player's decision on first and second player's matrices  
+        if ("p3" != this.$.constants.role && thirdDecision == m ){
+             font++;
+        } 
+           
+        // show first and second player's decisions on third player's matrices
+        if ("p3" == this.$.constants.role){
+            if (otherDecision == j)
+                font++;
+            if (thirdDecision == m)
+                font++;
+        }
+            
+        if (font == 3) return '900';
+        else return '';
+    }
+
+    _fontSize2(myDecision, otherDecision, i, j, payoffMatrix) {
+        if (myDecision === (payoffMatrix.length - 1 - i) && otherDecision === (payoffMatrix[0].length - 1 - j)) {
+            return '900';
+        } 
+        return '';
+    }
+
     _payoffMatrixClass3(myDecision, otherDecisionArray, i, j, m, payoffMatrix) {
         let otherDecision = otherDecisionArray[0];
         let thirdDecision = otherDecisionArray[1];
@@ -1254,12 +1300,12 @@ export class LeepsBimatrix extends PolymerElement {
     _checkOther(otherDecisionArray, i, state, stratMatrix){
         console.log("checkOther called");
         if(state == "column"){
-            console.log(otherDecisionArray[0] + "==" + i + " is " + (otherDecisionArray[0] == i));
+            //console.log(otherDecisionArray[0] + "==" + i + " is " + (otherDecisionArray[0] == i));
             return otherDecisionArray[0] == i;
         }
             
         if(state == "matrix"){
-            console.log(otherDecisionArray[1] + "==" + i + " is " + (otherDecisionArray[1] == i));
+            //console.log(otherDecisionArray[1] + "==" + i + " is " + (otherDecisionArray[1] == i));
             return otherDecisionArray[1] == i;
         }
             
