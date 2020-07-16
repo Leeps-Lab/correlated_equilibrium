@@ -231,7 +231,6 @@ class Player(BasePlayer):
 
         payoff = 0
         role_index = (self.id_in_group - 1) % 3 
-
         for i, d in enumerate(decisions):
             if not d.value: continue
                 
@@ -255,7 +254,7 @@ class Player(BasePlayer):
                 elif self.role() == 'p2':
                     for p1 in p1_decisions:
                         flow_payoff += payoff_matrix[int(p1)][int(my_decision)][int(role_index)]
-                        
+
             elif(num_players % 3 == 0):
                 #If a 3 player game
                 if self.role() == 'p1':
@@ -275,7 +274,7 @@ class Player(BasePlayer):
             pop_size = len(p1_decisions)          
             if(num_players % 2 == 0):
                 #If a 2 player game
-                flow_payoff /= pop_size               
+                flow_payoff /= pop_size
             elif(num_players % 3 == 0):
                 #If a 3 player game
                 flow_payoff /= (pop_size*pop_size)
@@ -293,4 +292,6 @@ class Player(BasePlayer):
                     next_change_time = period_end
                 decision_length = (next_change_time - d.timestamp).total_seconds()
             payoff += decision_length * flow_payoff
+            
+        self.payoff = payoff / period_duration.total_seconds()
         return payoff / period_duration.total_seconds()
