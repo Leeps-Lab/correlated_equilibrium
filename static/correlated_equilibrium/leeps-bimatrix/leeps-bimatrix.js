@@ -237,7 +237,7 @@ export class LeepsBimatrix extends PolymerElement {
                                 </paper-radio-group>
                             </template>
                         
-
+                            <!--
                             <template is="dom-if" if="[[ meanMatching ]]">
                                 <discrete-mean-matching-heatmap
                                     class="self-center"
@@ -248,9 +248,10 @@ export class LeepsBimatrix extends PolymerElement {
                                     color="[[ myColor ]]">
                                 </discrete-mean-matching-heatmap>
                             </template>
+                            -->
                             <div class="layout vertical">
                             <template is="dom-if" if="[[ maxInfo ]]">
-                                <template is="dom-if" if="[[ !meanMatching ]]">
+                             <!--   <template is="dom-if" if="[[ !meanMatching ]]"> -->
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
 
                                         <table id="payoff-table" class="self-center" style="width: 400px; height: 300px;">
@@ -264,7 +265,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                                     <span class="other-payoff">
                                                                         [[ _array(column, otherPayoffIndex) ]]
                                                                     </span>
-                                                                             -->
+                                                                            
                                                                     <div>
                                                                         <template is="dom-if" if="[[ _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
                                                                             <paper-radio-button disabled checked></paper-radio-button>
@@ -278,6 +279,14 @@ export class LeepsBimatrix extends PolymerElement {
                                                                         <template is="dom-if" if="[[ ! _check2(otherDecision, colIndex, stratMatrix) ]]">
                                                                             <paper-radio-button disabled></paper-radio-button>
                                                                         </template>
+                                                                    </div> -->
+                                                                    <div class="layout horizontal center-center" style="margin: auto;">
+                                                                        <paper-progress
+                                                                            max="1" value="[[ _valueMy2(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                        </paper-progress>
+                                                                        <paper-progress
+                                                                            max="100" value="[[ _valueColumn2(otherDecision, colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                        </paper-progress>
                                                                     </div>
                                                             </td>
                                                     </template>
@@ -302,15 +311,16 @@ export class LeepsBimatrix extends PolymerElement {
                                                                             </span>
                                                                         </template>
                                                                         <template is="dom-if" if="[[ _p2Role() ]]">
-                                                                            <span class="your-payoff">
+                                                                            <span class="your-payoff" style="font-weight: {{ _fontSize3(myDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) }};">
                                                                                 [[ _array(column, 1) ]]
                                                                             </span>
                                                                         </template>
                                                                         <template is="dom-if" if="[[ _p3Role() ]]">
-                                                                            <span class="your-payoff">
+                                                                            <span class="your-payoff" style="font-weight: {{ _fontSize3(myDecision, otherDecisionArray, rowIndex, colIndex, matrixIndex, payoffMatrix) }};">
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
                                                                         </template>
+                                                                        <!--
                                                                         <div>
                                                                             <template is="dom-if" if="[[ _check(myPlannedDecision, rowIndex, payoffMatrix) ]]">
                                                                                 <paper-radio-button disabled checked></paper-radio-button>
@@ -331,6 +341,18 @@ export class LeepsBimatrix extends PolymerElement {
                                                                                 <paper-radio-button disabled></paper-radio-button>
                                                                             </template>
                                                                         </div>
+                                                                        -->
+                                                                        <div class="layout horizontal center-center" style="margin: auto;">
+                                                                            <paper-progress
+                                                                                max="1" value="[[ _valueMy(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                            </paper-progress>
+                                                                            <paper-progress
+                                                                                max="100" value="[[ _valueColumn( colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                            </paper-progress>
+                                                                            <paper-progress
+                                                                                max="100" value="[[ _valueMatrix( matrixIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                            </paper-progress>
+                                                                        </div>
                                                                     </td>
                                                             </template>
                                                         </tr>
@@ -339,19 +361,21 @@ export class LeepsBimatrix extends PolymerElement {
                                         </template>
                                         </div>
                                     </template>  
-                                </template>
+                                <!--</template>-->
                             </template>
                             </div>
                         </div>
 
                         <div id="graphs-column" class="layout horizontal">
                             <div class="layout horizontal end">
+                                <!--
                                 <template is="dom-if" if="[[ _showThermometer(meanMatching) ]]">
                                     <heatmap-thermometer
                                         color="rainbow"
                                         class="self-end">
                                     </heatmap-thermometer>
                                 </template>
+                                -->
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
                                         <payoff-graph
@@ -546,8 +570,14 @@ export class LeepsBimatrix extends PolymerElement {
             console.log('Not in game, manually setting payoffIndex');
             this.payoffIndex = 0;
         } else {
-            this.payoffIndex = (this.$.constants.idInGroup - 1) % 3;
+            if (this.numPlayers % 3 == 0) this.payoffIndex = (this.$.constants.idInGroup - 1) % 3;
+            else if (this.numPlayers % 2 == 0) this.payoffIndex = (this.$.constants.idInGroup - 1) % 2;
+            console.log(this.payoffIndex);
+
+            // perhaps use leeps-bimatrix method
         }
+        console.log(this.$.constants.role);
+
         this.otherPayoffIndex = Math.abs(1 - this.payoffIndex);
         this.thirdPayoffIndex = Math.abs(2 - this.payoffIndex);   
         console.log(this.stratMatrix);
@@ -555,7 +585,7 @@ export class LeepsBimatrix extends PolymerElement {
         let num_players = this.numPlayers;
 
          // transpose payoff and probability matrices if player controls vertical line in a 2 player game
-         if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+         if (this.$.constants.role == "p2" && num_players % 2 == 0)  {
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
@@ -571,7 +601,7 @@ export class LeepsBimatrix extends PolymerElement {
         }
 
         // transpose strat matrices if player controls vertical line in a 2 player game
-        if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+        if (this.$.constants.role == "p2" && num_players % 2 == 0)  {
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
@@ -607,7 +637,7 @@ export class LeepsBimatrix extends PolymerElement {
         }
 
         // transpose strat matrices if player 2 and there are 3 players
-        if (this.$.constants.idInGroup == 2 && num_players % 3 == 0) {
+        if (this.$.constants.role == 'p2' && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
 
             for (p3=0; p3 < this.stratMatrix.length; p3++) {
@@ -626,7 +656,7 @@ export class LeepsBimatrix extends PolymerElement {
         }
 
         // transpose strat matrices if player controls vertical line in a 2 player game
-        if (this.$.constants.idInGroup % num_players == 0 && num_players == 2)  {
+        if (this.$.constants.idInGroup % num_players == 0 && num_players % 2 == 0)  {
             var i, j, t = [];
 
             // Loop through every item in the outer array (height)
@@ -662,7 +692,7 @@ export class LeepsBimatrix extends PolymerElement {
         }
 
         // transpose payoff and probability matrices if player 2 and there are 3 players
-        if (this.$.constants.idInGroup == 2 && num_players % 3 == 0) {
+        if (this.$.constants.role == 'p2' && num_players % 3 == 0) {
             var p1, p2, p3, t = [];
 
             for (p3=0; p3 < this.payoffMatrix.length; p3++) {
@@ -1309,6 +1339,144 @@ export class LeepsBimatrix extends PolymerElement {
             return otherDecisionArray[1] == i;
         }
             
+    }
+
+    _valueMy2(myPlannedDecision, i, payoffMatrix){
+        // this takes care of reversed i-indices
+         return (myPlannedDecision ==  payoffMatrix.length - 1 - i) ? 1 : 0;
+
+    }
+
+    _valueColumn2(otherDecision, i, payoffMatrix){
+        // this takes care of reversed i-indices
+        i = payoffMatrix.length - 1 - i;
+        let pickedThis = 0;
+        let total = 0;
+        if(this.$.constants.role == 'p1'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p2') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == i){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }else if(this.$.constants.role == 'p2'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p1') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == i){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }
+
+        if(total == 0){
+            console.log("Something Wrong");
+            return 0;
+        }
+        console.log(pickedThis / total);
+        return Math.round((pickedThis / total) * 100);
+        
+
+    }
+
+    _valueMy(myPlannedDecision, i, payoffMatrix){
+        if (payoffMatrix.length == 3){
+            if(i == 0)   i = 1; 
+            else if (i == 1) i = 0; 
+         } else if (payoffMatrix.length == 2){
+            if(i == 0)  i = 2; 
+            else if (i == 2) i= 0; 
+         }
+         return (myPlannedDecision == i) ? 1 : 0;
+
+    }
+
+    _valueColumn( colIndex, stratMatrix){
+        let pickedThis = 0;
+        let total = 0;
+        if(this.$.constants.role == 'p1'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p2') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == colIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }else if(this.$.constants.role == 'p2'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p1') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == colIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }else if(this.$.constants.role == 'p3'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p1') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == colIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }
+        if(total == 0){
+            console.log("Something Wrong");
+            return 0;
+        }
+        return Math.round((pickedThis / total) * 100);
+    }
+
+    _valueMatrix( matrixIndex, stratMatrix){
+        let pickedThis = 0;
+        let total = 0;
+        if(this.$.constants.role == 'p1'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p3') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == matrixIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }else if(this.$.constants.role == 'p2'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p3') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == matrixIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }else if(this.$.constants.role == 'p3'){
+            for (let player of this.$.constants.group.players) {
+                if (player.role == 'p2') {
+                    total++;
+                    if(this.groupDecisions[player.participantCode] == matrixIndex){
+                        pickedThis++;
+                    }
+                }
+            }
+
+        }
+        if(total == 0){
+            console.log("Something Wrong");
+            return 0;
+        }
+        return Math.round((pickedThis / total) * 100);
+
     }
 
 }
