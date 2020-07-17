@@ -200,12 +200,19 @@ class Player(BasePlayer):
     _initial_decision = models.FloatField()
 
     def role(self):
-        if (self.id_in_group - 1) % 3 == 0:
-            return 'p1'
-        elif (self.id_in_group - 1) % 3 == 1:
-            return 'p2'
-        elif (self.id_in_group - 1) % 3 == 2:
-            return 'p3'
+        num_players = self.num_players()
+        if (num_players % 2 == 0):
+            if (self.id_in_group - 1) % 2 == 0:
+                return 'p1'
+            elif (self.id_in_group - 1) % 2 == 1:
+                return 'p2'
+        elif ((num_players % 3 == 0)):
+            if (self.id_in_group - 1) % 3 == 0:
+                return 'p1'
+            elif (self.id_in_group - 1) % 3 == 1:
+                return 'p2'
+            elif (self.id_in_group - 1) % 3 == 2:
+                return 'p3'
 
     def get_average_strategy(self, period_start, period_end, decisions):
         weighted_sum_decision = 0
@@ -230,7 +237,10 @@ class Player(BasePlayer):
         period_duration = period_end - period_start
 
         payoff = 0
-        role_index = (self.id_in_group - 1) % 3 
+        if(self.num_players() % 2 == 0):
+            role_index = (self.id_in_group - 1) % 2 
+        elif(self.num_players() % 3 == 0):
+            role_index = (self.id_in_group - 1) % 3
         for i, d in enumerate(decisions):
             if not d.value: continue
                 
