@@ -226,32 +226,46 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
             for (const player of this.$.constants.group.players) {
                 let otherDecision = groupDecisions[player.participantCode];
-                //if (player.role != this.$.constants.role) {
                     if(player.role == 'p1') p1_decisions.push(otherDecision);
                     if(player.role == 'p2') p2_decisions.push(otherDecision);
-                //}                    
                     num_other_players++;
             }
             console.log("num_other_players: " + num_other_players);
 
             if(this.$.constants.role == 'p1'){
-                for(const decision of p2_decisions){
-                    my_flow_payoff += this.myPayoffs[myDecision][decision];
-                    other_flow_payoff += this.otherPayoffs[myDecision][decision];
+                // calculate my payoff (average w.r.t myDecision if mean-matching)
+                for(const p2 of p2_decisions){
+                    my_flow_payoff += this.myPayoffs[myDecision][p2];
+                    //other_flow_payoff += this.otherPayoffs[myDecision][p2];
+                }
+
+                // calculate p2 average (overall average if mean-matching)
+                for(const p2 of p2_decisions){
+                    for(const p1 of p1_decisions){
+                        other_flow_payoff += this.otherPayoffs[p1][p2];
+                    }
                 }
 
             }
 
             if(this.$.constants.role == 'p2'){
-                for(const decision of p1_decisions){
-                    my_flow_payoff += this.myPayoffs[myDecision][decision];
-                    other_flow_payoff += this.otherPayoffs[myDecision][decision];
+                // calculate my payoff (average w.r.t myDecision if mean-matching)
+                for(const p1 of p1_decisions){
+                    my_flow_payoff += this.myPayoffs[myDecision][p1];
+                    //other_flow_payoff += this.otherPayoffs[myDecision][p1];
+                }
+
+                // calculate p1 average (overall average if mean-matching)
+                for(const p1 of p1_decisions){
+                    for(const p2 of p2_decisions){
+                        other_flow_payoff += this.otherPayoffs[p2][p1];
+                    }
                 }
             }
             let pop_size = p1_decisions.length;
 
             my_flow_payoff /= pop_size;
-            other_flow_payoff /= pop_size;
+            other_flow_payoff /= (pop_size * pop_size);
         }
         else if(this.numPlayers % 3 == 0) {
             var p1Decision, p2Decision, p3Decision;
@@ -268,46 +282,80 @@ export class SubperiodPayoffGraph extends PolymerElement {
             }
 
             if(this.$.constants.role == "p1") {
+                // calculate own payoff
                 for(const p2 of p2_decisions){
                     for(const p3 of p3_decisions){
                         my_flow_payoff += this.payoffMatrix[p3][myDecision][p2][0];
-                        other_flow_payoff += this.payoffMatrix[p3][myDecision][p2][1];
-                        third_flow_payoff += this.payoffMatrix[p3][myDecision][p2][2];
+                        //other_flow_payoff += this.payoffMatrix[p3][myDecision][p2][1];
+                        //third_flow_payoff += this.payoffMatrix[p3][myDecision][p2][2];
 
                     }
 
                 }
 
+                // calculate other payoffs
+                for(const p1 of p1_decisions){
+                    for(const p2 of p2_decisions){
+                        for(const p3 of p3_decisions){
+                            other_flow_payoff += this.payoffMatrix[p3][p1][p2][1];
+                            third_flow_payoff += this.payoffMatrix[p3][p1][p2][2];
+                        }
+                    }
+                }
+
+
             }
             else if(this.$.constants.role == "p2") {
+                // calculate own payoff
                 for(const p1 of p1_decisions){
                     for(const p3 of p3_decisions){
                         my_flow_payoff += this.originalPayoffMatrix[p3][p1][myDecision][1];
-                        other_flow_payoff += this.originalPayoffMatrix[p3][p1][myDecision][0];
-                        third_flow_payoff += this.originalPayoffMatrix[p3][p1][myDecision][2];
+                        //other_flow_payoff += this.originalPayoffMatrix[p3][p1][myDecision][0];
+                        //third_flow_payoff += this.originalPayoffMatrix[p3][p1][myDecision][2];
 
                     }
 
+                }
+
+                // calculate other payoffs
+                for(const p1 of p1_decisions){
+                    for(const p2 of p2_decisions){
+                        for(const p3 of p3_decisions){
+                            other_flow_payoff += this.originalPayoffMatrix[p3][p1][p2][0];
+                            third_flow_payoff += this.originalPayoffMatrix[p3][p1][p2][2];
+                        }
+                    }
                 }
 
             }
             else if(this.$.constants.role == "p3") {
+                // calculate own payoff
                 for(const p1 of p1_decisions){
                     for(const p2 of p2_decisions){
                         my_flow_payoff += this.originalPayoffMatrix[myDecision][p1][p2][2];
-                        other_flow_payoff += this.originalPayoffMatrix[myDecision][p1][p2][0];
-                        third_flow_payoff += this.originalPayoffMatrix[myDecision][p1][p2][1];
+                        //other_flow_payoff += this.originalPayoffMatrix[myDecision][p1][p2][0];
+                        //third_flow_payoff += this.originalPayoffMatrix[myDecision][p1][p2][1];
 
                     }
 
+                }
+
+                // calculate other payoffs
+                for(const p1 of p1_decisions){
+                    for(const p2 of p2_decisions){
+                        for(const p3 of p3_decisions){
+                            other_flow_payoff += this.originalPayoffMatrix[p3][p1][p2][0];
+                            third_flow_payoff += this.originalPayoffMatrix[p3][p1][p2][1];
+                        }
+                    }
                 }
 
             }
             let pop_size = p1_decisions.length;
             //Fix
             my_flow_payoff /= (pop_size * pop_size);
-            other_flow_payoff /= (pop_size * pop_size);
-            third_flow_payoff /= (pop_size * pop_size);
+            other_flow_payoff /= (pop_size * pop_size * pop_size);
+            third_flow_payoff /= (pop_size * pop_size * pop_size);
 
         }
 
