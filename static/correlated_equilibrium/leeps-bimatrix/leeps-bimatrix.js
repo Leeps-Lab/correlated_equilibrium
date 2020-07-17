@@ -815,8 +815,9 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+        let n = this.stratMatrix[rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[rowIndex][colIndex].length; i++){
-            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][i];
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][n - i];
             divisor +=  Math.pow(this.gamma, i);
         }
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
@@ -840,8 +841,9 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+        let n = this.stratMatrix[matrixIndex][rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
-            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][n - i];
             divisor +=  Math.pow(this.gamma, i);
         }
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
@@ -868,8 +870,9 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+        let n = this.stratMatrix[rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[rowIndex][colIndex].length; i++){
-            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][i];
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][n - i];
             divisor +=  Math.pow(this.gamma, i);
         }
         
@@ -888,8 +891,9 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+        let n = this.stratMatrix[matrixIndex][rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
-            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][i];
+            dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][n - i];
             divisor +=  Math.pow(this.gamma, i);
         }
         return Math.round(1000 * dividend/divisor)/1000;//round to nearest thousandth
