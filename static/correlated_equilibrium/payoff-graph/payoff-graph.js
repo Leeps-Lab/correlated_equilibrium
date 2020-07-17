@@ -95,7 +95,6 @@ export class PayoffGraph extends PolymerElement {
             }
         }
         
-
         // call highcharts setup function
         this.graph_obj = Highcharts.chart({
             chart: {
@@ -276,24 +275,13 @@ export class PayoffGraph extends PolymerElement {
         var third_flow_payoff = 0;
         
         console.log(this.get("groupDecisions"));
-        /*
-        // calculate the payoff with current decision values
-        for (var player in this.groupDecisions) {
-            my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
-            other_flow_payoff += this.otherPayoffs[this.myDecision][this.otherDecision];
-            num_other_players++;
-        }
-
-        my_flow_payoff /= num_other_players;
-        other_flow_payoff /= num_other_players;
-        */
+      
         var p1Decision, p2Decision, p3Decision;
         var p1ID, p2ID, p3ID;
 
         if(this.numPlayers % 2 == 0) {
 
             for (const player of this.$.constants.group.players) {
-                let otherDecision = this.groupDecisions[player.participantCode];
                 if (player.role != this.$.constants.role) {
                     my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
                     other_flow_payoff += this.otherPayoffs[this.myDecision][this.otherDecision];
@@ -302,8 +290,8 @@ export class PayoffGraph extends PolymerElement {
                     num_other_players++;
             }
 
-            my_flow_payoff /= num_other_players;
-            other_flow_payoff /= num_other_players;
+            //my_flow_payoff /= num_other_players;
+            //other_flow_payoff /= num_other_players;
         }
         else if(this.numPlayers % 3 == 0) {
             
@@ -344,9 +332,11 @@ export class PayoffGraph extends PolymerElement {
             }
 
             //Fix
+            /*
             my_flow_payoff /= 2;
             other_flow_payoff /= 2;
             third_flow_payoff /= 2;
+            */
 
         }
 

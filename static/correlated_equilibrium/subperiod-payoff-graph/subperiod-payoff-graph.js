@@ -224,8 +224,8 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     num_other_players++;
             }
 
-            my_flow_payoff /= num_other_players;
-            other_flow_payoff /= num_other_players;
+            //my_flow_payoff /= num_other_players;
+            //other_flow_payoff /= num_other_players;
         }
         else if(this.numPlayers % 3 == 0) {
             var p1Decision, p2Decision, p3Decision;
@@ -266,9 +266,11 @@ export class SubperiodPayoffGraph extends PolymerElement {
             }
 
             //Fix
+            /*
             my_flow_payoff /= 2;
             other_flow_payoff /= 2;
             third_flow_payoff /= 2;
+            */
 
         }
 

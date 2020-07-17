@@ -3,7 +3,9 @@ import '/static/otree-redwood/src/redwood-channel/redwood-channel.js';
 import '/static/otree-redwood/src/otree-constants/otree-constants.js';
 import '../polymer-elements/iron-flex-layout-classes.js';
 
-var history = [];
+//Initialize dict for each player
+var historyDict = {'p1': [], 'p2': [], 'p3': []};
+var myHistory = [];
 
 export class RegretBar extends PolymerElement {
 
@@ -138,9 +140,9 @@ export class RegretBar extends PolymerElement {
     }
 
     _handleGroupDecisionsEvent(event) {
-        //(this.myDecision);
+        
         //Add most recent decision to history
-        history.push(this.myDecision);
+        myHistory.push(this.myDecision);
 
         if(history.length > 0) {
             let minPayoff = Infinity;
@@ -153,6 +155,8 @@ export class RegretBar extends PolymerElement {
                 }
             }
 
+            let maxMinDiff = maxPayoff - minPayoff;
+
             var elem0 = this.shadowRoot.getElementById("myBar0");
             var elem1 = this.shadowRoot.getElementById("myBar1");
             var elem2;
@@ -161,20 +165,51 @@ export class RegretBar extends PolymerElement {
                 elem2 = this.shadowRoot.getElementById("myBar2");
             }
 
+
+            //Calculate regret
+
+            const groupDecisions = event.detail.payload;
+            const myDecision = groupDecisions[this.$.constants.participantCode];
+            var my_flow_payoff = 0;
+
+            //Get each player's decision
+            for (const player of this.$.constants.group.players) {
+                if(player.role == "p1") { 
+                    p1Decision = groupDecisions[player.participantCode];
+                    p1ID = player.participantCode;
+                }
+                else if(player.role == "p2") { 
+                    p2Decision = groupDecisions[player.participantCode];
+                    p2ID = player.participantCode;
+                }
+                else if(player.role == "p3") { 
+                    p3Decision = groupDecisions[player.participantCode];
+                    p3ID = player.participantCode;
+                }
+            }
+
+            //Push history to dictionary
+            historyDict['p1'].push(p1Decision);
+            historyDict['p2'].push(p2Decision);
+            historyDict['p3'].push(p3Decision);
+
+
+
             var regret0 = 0, regret1 = 0, regret2 = 0;
             var regret0List = [], regret1List = [], regret2List = [];
 
-            var lastDecision = history[(history.length - 1)]; 
+            var lastDecision = myHistory[(myHistory.length - 1)]; 
+        
             
             //Copy elements
-            for(var i = 0; i < history.length; i++) {
-                regret0List.push(history[i]);
-                regret1List.push(history[i]);
-                regret2List.push(history[i]);
+            for(var i = 0; i < myHistory.length; i++) {
+                regret0List.push(myHistory[i]);
+                regret1List.push(myHistory[i]);
+                regret2List.push(myHistory[i]);
             }
 
             //Replace elements in list
-            for(var i = 0; i < history.length; i++) {
+            for(var i = 0; i < myHistory.length; i++) {
                 if(history[i] == lastDecision) {
                     regret0List[i] = 0;
                     regret1List[i] = 1;
@@ -182,22 +217,44 @@ export class RegretBar extends PolymerElement {
                 }
             }
 
-            //Calculate regret
-            for(var i = 0; i < history.length; i++) {
-                if(history[i] == 0) {
-                    regret0 += 1; 
+            //Get payoffs
+            for(var i = 0; i < historyDict['p1'].length; i++) {
+                if(this.numPlayers % 2 == 0) {
+                    if(this.$.constants.participantCode == p1ID) {
+                        //If player 1
+                        my_flow_payoff += this.myPayoffs[history['p1'][i]][history['p2'][i]];
+
+                    } 
+                    else if(this.$.constants.participantCode == p2ID) { 
+                        //If player 2
+                        my_flow_payoff += this.myPayoffs[history['p2'][i]][history['p1'][i]];
+                    }
                 }
-                else if(history[i] == 1) {
-                    regret1 += 1;
-                }
-                else {
-                    regret2 += 1;
+                else if(this.numPlayers % 3 == 0) {
+                    my_flow_payoff += this.payoffMatrix[history['p3'][i]][history['p1'][i]][history['p2'][i]][0];
                 }
             }
 
-            regret0 /= history.length;
-            regret1 /= history.length;
-            regret2 /= history.length;
+            //take the average conditional on group size, 2/3 populations share equal sizes.
+            let pop_size = historyDict['p1'].length;
+
+            if(this.numPlayers % 2 == 0) {
+                my_flow_payoff /= pop_size;
+            }
+            else if(this.numPlayers % 3 == 0) {
+                my_flow_payoff /= pop_size*pop_size;
+            }
+
+
+            regret0 /= maxMinDiff;
+            regret1 /= maxMinDiff;
+            regret2 /= maxMinDiff;
+
+            //To deal with possible negative regret
+            regret0 = Math.max(0, regret0);
+            regret1 = Math.max(0, regret1);
+            regret2 = Math.max(0, regret2);
+
 
             elem0.style.width = (regret0 * 100) + '%';
             elem1.style.width = (regret1 * 100) + '%';
