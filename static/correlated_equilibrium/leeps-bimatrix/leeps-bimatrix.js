@@ -288,6 +288,9 @@ export class LeepsBimatrix extends PolymerElement {
                                                                             max="100" value="[[ _valueColumn2(otherDecision, colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                         </paper-progress>
                                                                     </div>
+                                                                    <div>
+                                                                        <span>[[ _freq2( rowIndex, colIndex, stratMatrix) ]]</span>
+                                                                    </div>
                                                             </td>
                                                     </template>
                                                 </tr>
@@ -352,6 +355,9 @@ export class LeepsBimatrix extends PolymerElement {
                                                                             <paper-progress
                                                                                 max="100" value="[[ _valueMatrix( matrixIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                             </paper-progress>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span>[[ _freq3(matrixIndex, rowIndex, colIndex, stratMatrix) ]]</span>
                                                                         </div>
                                                                     </td>
                                                             </template>
@@ -1162,20 +1168,56 @@ export class LeepsBimatrix extends PolymerElement {
                     t[i][j] = this.stratMatrix[i][j];
                 }
             }
+
+            // create counters for all possible strategy profiles played this subperiod
+            var c = [];
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                c[i] = [];
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    c[i][j] = 0;
+                    
+                }
+            }
+            
+            var p1Decisions = [];
+            var p2Decisions = [];
             
             var p1Decision, p2Decision;
-            var p1ID, p2ID;
+
+            // populate decison arrays by role
             for (const player of this.$.constants.group.players) {
                 if(player.role == "p1") { 
                     p1Decision = this.groupDecisions[player.participantCode];
-                    p1ID = player.participantCode;
+                    p1Decisions.push(p1Decision);
                 }
                 else if(player.role == "p2") { 
                     p2Decision = this.groupDecisions[player.participantCode];
-                    p2ID = player.participantCode;
+                    p2Decisions.push(p2Decision);
                 }
             }
-            if(this.$.constants.participantCode == p1ID) {
+
+            // go through each possible strategy profile created from all player decisions and increment respctive counter
+            for(const p1 of p1Decisions){
+                for(const p2 of p2Decisions){
+                    if(this.$.constants.role == "p1") c[p1][p2]++;
+                    if(this.$.constants.role == "p2") c[p2][p1]++;
+
+                }
+            }
+            
+            let pop_size = p1Decisions.length;
+            let distr;
+
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    // calculate joint distribution and push into strategy profile history (stratMatrix or in this case the dummy t)
+                    distr = c[i][j] / (pop_size * pop_size);
+                    if(this.$.constants.role == "p1") t[i][j].push(distr);
+                    if(this.$.constants.role == "p2") t[i][j].push(distr);
+                }
+            }
+/*
+            if(this.$.constants.role == "p1") {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                       if(i == p1Decision && j == p2Decision){
@@ -1186,7 +1228,7 @@ export class LeepsBimatrix extends PolymerElement {
                     }
                 }
             }
-            else if(this.$.constants.participantCode == p2ID) {
+            else if(this.$.constants.role == "p2") {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                       if(j == p1Decision && i == p2Decision){
@@ -1196,12 +1238,13 @@ export class LeepsBimatrix extends PolymerElement {
                       }
                     }
                 }
-            }
+            }*/
         }
         else if(this.numPlayers % 3 == 0) {
             var p1Decision, p2Decision, p3Decision;
             var p1ID, p2ID, p3ID;
 
+            // create a dummy/clone for the history of the strategy profiles (stratMatrix) 
             var t = [];
             for (let i = 0; i < this.stratMatrix.length; i++){
                 t[i] = [];
@@ -1212,23 +1255,74 @@ export class LeepsBimatrix extends PolymerElement {
                     }
                 }
             }
+
+            // create counters for all possible strategy profiles played this subperiod
+            var c = [];
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                c[i] = [];
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    c[i][j] = [];
+                    for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                        c[i][j][z] = 0;
+                    }
+                }
+            }
             
+            var p1Decisions = [];
+            var p2Decisions = [];
+            var p3Decisions = [];
+
+            // populate decison arrays by role
             for (const player of this.$.constants.group.players) {
                 if(player.role == "p1") { 
                     p1Decision = this.groupDecisions[player.participantCode];
-                    p1ID = player.participantCode;
+                    p1Decisions.push(p1Decision);
+                    //p1ID = player.participantCode;
                 }
                 else if(player.role == "p2") { 
                     p2Decision = this.groupDecisions[player.participantCode];
-                    p2ID = player.participantCode;
+                    p2Decisions.push(p2Decision);
+                    //p2ID = player.participantCode;
                 }
                 else if(player.role == "p3") { 
                     p3Decision = this.groupDecisions[player.participantCode];
-                    p3ID = player.participantCode;
+                    p3Decisions.push(p3Decision);
+                    //p3ID = player.participantCode;
                 }
             }
 
-            if(this.$.constants.participantCode == p1ID) {
+            // go through each possible strategy profile created from all player decisions and increment respctive counter
+            for(const p1 of p1Decisions){
+                for(const p2 of p2Decisions){
+                    for(const p3 of p3Decisions){
+                        if(this.$.constants.role == "p1") c[p3][p1][p2]++;
+                        if(this.$.constants.role == "p2") c[p3][p2][p1]++;
+                        if(this.$.constants.role == "p3") c[p2][p3][p1]++;
+                    }
+
+                }
+            }
+            
+            let pop_size = p1Decisions.length;
+            let distr;
+
+            for (let i = 0; i < this.stratMatrix.length; i++){
+                for (let j = 0; j < this.stratMatrix[0].length; j++){
+                    for (let z = 0; z < this.stratMatrix[0][0].length; z++){
+                        // calculate joint distribution and push into strategy profile history (stratMatrix or in this case the dummy t)
+                        distr = c[i][j][z] / (pop_size * pop_size * pop_size);
+                        if(this.$.constants.role == "p1") t[i][j][z].push(distr);
+                        if(this.$.constants.role == "p2") t[i][j][z].push(distr);
+                        if(this.$.constants.role == "p3") t[i][j][z].push(distr);
+                        
+                    }
+                }
+            }
+            
+            
+
+            /*
+            if(this.$.constants.role == "p1") {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                         for (let z = 0; z < this.stratMatrix[0][0].length; z++){
@@ -1241,7 +1335,7 @@ export class LeepsBimatrix extends PolymerElement {
                     }
                 }
             }
-            else if(this.$.constants.participantCode == p2ID) {
+            else if(this.$.constants.role == "p2") {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                         for (let z = 0; z < this.stratMatrix[0][0].length; z++){
@@ -1255,7 +1349,7 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
             }
-            else if(this.$.constants.participantCode == p3ID) {
+            else if(this.$.constants.role == "p3") {
                 for (let i = 0; i < this.stratMatrix.length; i++){
                     for (let j = 0; j < this.stratMatrix[0].length; j++){
                         for (let z = 0; z < this.stratMatrix[0][0].length; z++){
@@ -1268,7 +1362,7 @@ export class LeepsBimatrix extends PolymerElement {
                     }
                 }
 
-            }
+            }*/
         }
         console.log(t);
         this.set('stratMatrix', t);
