@@ -144,19 +144,30 @@ export class RegretBar extends PolymerElement {
         //Add most recent decision to history
         myHistory.push(this.myDecision);
 
+        //Grab the max and min payoffs
         if(history.length > 0) {
             let minPayoff = Infinity;
             let maxPayoff = -Infinity;
 
-            for (var i=0; i< this.payoffMatrix.length; i++) {
-                for(var j = 0; j < this.payoffMatrix[0].length; j++) {
-                    minPayoff = Math.min(minPayoff, this.payoffMatrix[i][j], this.payoffMatrix[i][j]);
-                    maxPayoff = Math.max(maxPayoff, this.payoffMatrix[i][j], this.payoffMatrix[i][j]);
+            for (var i=0; i< this.myPayoffs.length; i++) {
+                for(var j = 0; j < this.myPayoffs[0].length; j++) {
+                    if(this.numPlayers % 2 == 0) {
+                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
+                    }
+                    else if(this.numPlayers % 3 == 0) {
+                            
+                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);
+                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);   
+                    }
                 }
             }
 
+            //Take the difference between the max and min
             let maxMinDiff = maxPayoff - minPayoff;
 
+
+            //Grab the IDs of the regret bars
             var elem0 = this.shadowRoot.getElementById("myBar0");
             var elem1 = this.shadowRoot.getElementById("myBar1");
             var elem2;
@@ -169,8 +180,8 @@ export class RegretBar extends PolymerElement {
             //Calculate regret
 
             const groupDecisions = event.detail.payload;
-            const myDecision = groupDecisions[this.$.constants.participantCode];
-            var my_flow_payoff = 0;
+            var p1Decision, p2Decision, p3Decision;
+            var p1ID, p2ID, p3ID;
 
             //Get each player's decision
             for (const player of this.$.constants.group.players) {
@@ -193,11 +204,8 @@ export class RegretBar extends PolymerElement {
             historyDict['p2'].push(p2Decision);
             historyDict['p3'].push(p3Decision);
 
-
-
             var regret0 = 0, regret1 = 0, regret2 = 0;
             var regret0List = [], regret1List = [], regret2List = [];
-
             var lastDecision = myHistory[(myHistory.length - 1)]; 
         
             
@@ -210,42 +218,73 @@ export class RegretBar extends PolymerElement {
 
             //Replace elements in list
             for(var i = 0; i < myHistory.length; i++) {
-                if(history[i] == lastDecision) {
+                if(myHistory[i] == lastDecision) {
                     regret0List[i] = 0;
                     regret1List[i] = 1;
                     regret2List[i] = 2;
                 }
             }
+            
+
 
             //Get payoffs
-            for(var i = 0; i < historyDict['p1'].length; i++) {
+            for(var i = 0; i < myHistory.length; i++) {
+                
                 if(this.numPlayers % 2 == 0) {
                     if(this.$.constants.participantCode == p1ID) {
                         //If player 1
-                        my_flow_payoff += this.myPayoffs[history['p1'][i]][history['p2'][i]];
+                        //my_flow_payoff += this.myPayoffs[historyDict['p1'][i]][historyDict['p2'][i]];
+                        regret0 += this.myPayoffs[regret0List[i]][historyDict['p2'][i]];
+                        regret1 += this.myPayoffs[regret1List[i]][historyDict['p2'][i]];
+                        regret2 += this.myPayoffs[regret2List[i]][historyDict['p2'][i]];
 
                     } 
                     else if(this.$.constants.participantCode == p2ID) { 
                         //If player 2
-                        my_flow_payoff += this.myPayoffs[history['p2'][i]][history['p1'][i]];
+                        //my_flow_payoff += this.myPayoffs[historyDict['p2'][i]][historyDict['p1'][i]];
+                        regret0 += this.myPayoffs[regret0List[i]][historyDict['p1'][i]];
+                        regret1 += this.myPayoffs[regret1List[i]][historyDict['p1'][i]];
+                        regret2 += this.myPayoffs[regret2List[i]][historyDict['p1'][i]];
                     }
                 }
                 else if(this.numPlayers % 3 == 0) {
-                    my_flow_payoff += this.payoffMatrix[history['p3'][i]][history['p1'][i]][history['p2'][i]][0];
+                    //my_flow_payoff += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
+                    if(this.$.constants.participantCode == p1ID) {
+                        //If player 1
+                        regret0 += this.payoffMatrix[historyDict['p3'][i]][regret0List[i]][historyDict['p2'][i]][0];
+                        regret1 += this.payoffMatrix[historyDict['p3'][i]][regret1List[i]][historyDict['p2'][i]][0];        
+                    }
+                    else if(this.$.constants.participantCode == p2ID) {
+                        //If player 2
+                        regret0 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret0List[i]][0];
+                        regret1 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret1List[i]][0];        
+                    }
+                    else if(this.$.constants.participantCode == p3ID) {
+                        //If player 3
+                        regret0 = this.originalPayoffMatrix[regret0List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
+                        regret1 = this.originalPayoffMatrix[regret1List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
+                        regret2 = this.originalPayoffMatrix[regret2List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
+                    }
                 }
             }
+            
 
             //take the average conditional on group size, 2/3 populations share equal sizes.
-            let pop_size = historyDict['p1'].length;
+            let pop_size = myHistory.length;
 
+            /*
             if(this.numPlayers % 2 == 0) {
-                my_flow_payoff /= pop_size;
+                regret0 /= pop_size;
+                regret1 /= pop_size;
             }
             else if(this.numPlayers % 3 == 0) {
-                my_flow_payoff /= pop_size*pop_size;
-            }
+                regret0 /= pop_size*pop_size;
+                regret1 /= pop_size*pop_size;
+                regret2 /= pop_size*pop_size;
+            }*/
 
 
+            //Divide regret by maxMinDiff to calculate % regret
             regret0 /= maxMinDiff;
             regret1 /= maxMinDiff;
             regret2 /= maxMinDiff;
@@ -255,7 +294,7 @@ export class RegretBar extends PolymerElement {
             regret1 = Math.max(0, regret1);
             regret2 = Math.max(0, regret2);
 
-
+            //Update regret bars
             elem0.style.width = (regret0 * 100) + '%';
             elem1.style.width = (regret1 * 100) + '%';
 
@@ -266,9 +305,10 @@ export class RegretBar extends PolymerElement {
     }
 
     
-
+    //Calculate how many regret bars needed to show
     _if3() {
-        return this.gameType == 'MV' || this.$.constants.role == 'p3';
+        //return this.gameType == 'MV' || this.$.constants.role == 'p3';
+        return this.payoffMatrix[0].length > 2 || this.$.constants.role == 'p3';
     }
 }
 
