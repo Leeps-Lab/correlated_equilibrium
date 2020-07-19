@@ -1322,51 +1322,6 @@ export class LeepsBimatrix extends PolymerElement {
                     }
                 }
             }
-            
-            
-
-            /*
-            if(this.$.constants.role == "p1") {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p3Decision && j == p1Decision && z == p2Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            }
-                        }
-                    }
-                }
-            }
-            else if(this.$.constants.role == "p2") {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p3Decision && j == p2Decision && z == p1Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            }        
-                        }
-                    }
-                }
-
-            }
-            else if(this.$.constants.role == "p3") {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p2Decision && j == p3Decision && z == p1Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            } 
-                        }
-                    }
-                }
-
-            }*/
         }
         console.log(t);
         this.set('stratMatrix', t);
