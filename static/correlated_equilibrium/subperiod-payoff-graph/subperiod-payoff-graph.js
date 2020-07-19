@@ -209,6 +209,12 @@ export class SubperiodPayoffGraph extends PolymerElement {
     }
     _handleGroupDecisionsEvent(event) {
         const groupDecisions = event.detail.payload;
+        if(typeof groupDecisions === 'undefined') return;
+        if(Object.keys(groupDecisions).length == 0) return;
+        for(let decision of Object.values(groupDecisions)){
+            if(decision === null) return;
+        }
+
         const myDecision = groupDecisions[this.$.constants.participantCode];
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
@@ -226,9 +232,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
             for (const player of this.$.constants.group.players) {
                 let otherDecision = groupDecisions[player.participantCode];
-                    if(player.role == 'p1') p1_decisions.push(otherDecision);
-                    if(player.role == 'p2') p2_decisions.push(otherDecision);
-                    num_other_players++;
+                if(player.role == 'p1') p1_decisions.push(otherDecision);
+                if(player.role == 'p2') p2_decisions.push(otherDecision);
+                num_other_players++;
             }
             console.log("num_other_players: " + num_other_players);
 

@@ -906,6 +906,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _fontSize3(myDecision, otherDecisionArray, i, j, m, payoffMatrix){
+        if(this.meanMatching) return '';
         let otherDecision = otherDecisionArray[0];
         let thirdDecision = otherDecisionArray[1];
         
@@ -946,6 +947,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _fontSize2(myDecision, otherDecision, i, j, payoffMatrix) {
+        if(this.meanMatching) return '';
         if (myDecision === (payoffMatrix.length - 1 - i) && otherDecision === (payoffMatrix[0].length - 1 - j)) {
             return '900';
         } 
@@ -1157,6 +1159,8 @@ export class LeepsBimatrix extends PolymerElement {
         for(let decision of Object.values(this.groupDecisions)){
             if(decision === null) return;
          }
+        //console.log("Players in Group: " + this.groupDecisions.length);
+
         if(this.numPlayers % 2 == 0 || this._ifMVGame()) {
             var i, j, t = [];
 
