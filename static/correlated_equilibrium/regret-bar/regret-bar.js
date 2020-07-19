@@ -272,7 +272,7 @@ export class RegretBar extends PolymerElement {
             //take the average conditional on group size, 2/3 populations share equal sizes.
             let pop_size = myHistory.length;
 
-            /*
+            
             if(this.numPlayers % 2 == 0) {
                 regret0 /= pop_size;
                 regret1 /= pop_size;
@@ -281,7 +281,7 @@ export class RegretBar extends PolymerElement {
                 regret0 /= pop_size*pop_size;
                 regret1 /= pop_size*pop_size;
                 regret2 /= pop_size*pop_size;
-            }*/
+            }
 
 
             //Divide regret by maxMinDiff to calculate % regret
@@ -296,10 +296,14 @@ export class RegretBar extends PolymerElement {
 
             //Update regret bars
             elem0.style.width = (regret0 * 100) + '%';
-            elem1.style.width = (regret1 * 100) + '%';
+            elem0.innerHTML = (regret0 * 100) + '%';
 
-            if(this.$.constants.role == 'p3' || this.gameType == 'MV') {
+            elem1.style.width = (regret1 * 100) + '%';
+            elem1.innerHTML = (regret1 * 100) + '%';
+
+            if(_if3()) {
                 elem2.style.width = (regret2 * 100) + '%';
+                elem1.innerHTML = (regret1 * 100) + '%';
             }            
         }  
     }
