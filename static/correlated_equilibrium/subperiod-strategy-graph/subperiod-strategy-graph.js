@@ -233,14 +233,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'P3 Chose 1?',
+                        name: 'P3 Chose C?',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: 'P3 Chose 2?',
+                        name: 'P3 Chose U?',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
@@ -278,14 +278,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 1' : 'P2 Chooses 1',
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses C' : 'P2 Chooses C',
                     color: '#ff0000',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
-                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses 2' : 'P2 Chooses 2',
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses U' : 'P2 Chooses U',
                     color: '#ff0000',
                     type: "line",
                     data: [[0, 0]],
