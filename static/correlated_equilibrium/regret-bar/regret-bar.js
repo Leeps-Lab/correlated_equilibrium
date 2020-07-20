@@ -78,13 +78,13 @@ export class RegretBar extends PolymerElement {
             </redwood-channel>
 
             <template is="dom-if" if="[[ _if3()]]">
-                <div id=progress-container1>
+            <div id=progress-container1 style="padding-bottom: {{_padding()}};">
                     <div id="myProgress">
                         <div id="myBar2" ></div>
                     </div>
                 </div>
 
-                <div id=progress-container>
+                <div id=progress-container style="padding-bottom: {{_padding()}};">
                     <div id="myProgress">
                         <div id="myBar1"></div>
                     </div>
@@ -305,6 +305,12 @@ export class RegretBar extends PolymerElement {
         //return this.gameType == 'MV' || this.$.constants.role == 'p3';
         return this.payoffMatrix[0].length > 2 || this.$.constants.role == 'p3';
     }
+
+    _padding(){
+        if (this.gameType == 'MV') return '12px';
+        return '';
+    }
+
 }
 
 window.customElements.define('regret-bar', RegretBar);
