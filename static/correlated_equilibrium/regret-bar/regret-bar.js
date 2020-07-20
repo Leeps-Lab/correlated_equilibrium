@@ -222,7 +222,7 @@ export class RegretBar extends PolymerElement {
             for(var i = 0; i < myHistory.length; i++) {
                 
                 if(this.numPlayers % 2 == 0) {
-                    if(this.$.constants.participantCode == p1ID) {
+                    if(this.$.constants.role == 'p1') {
                         //If player 1
                         //my_flow_payoff += this.myPayoffs[historyDict['p1'][i]][historyDict['p2'][i]];
                         regret0 += this.myPayoffs[regret0List[i]][historyDict['p2'][i]];
@@ -234,7 +234,7 @@ export class RegretBar extends PolymerElement {
                         }
 
                     } 
-                    else if(this.$.constants.participantCode == p2ID) { 
+                    else if(this.$.constants.role == 'p2') { 
                         //If player 2
                         //my_flow_payoff += this.myPayoffs[historyDict['p2'][i]][historyDict['p1'][i]];
                         regret0 += this.myPayoffs[regret0List[i]][historyDict['p1'][i]];
@@ -248,17 +248,17 @@ export class RegretBar extends PolymerElement {
                 }
                 else if(this.numPlayers % 3 == 0) {
                     //my_flow_payoff += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
-                    if(this.$.constants.participantCode == p1ID) {
+                    if(this.$.constants.role == 'p1') {
                         //If player 1
                         regret0 += this.payoffMatrix[historyDict['p3'][i]][regret0List[i]][historyDict['p2'][i]][0];
                         regret1 += this.payoffMatrix[historyDict['p3'][i]][regret1List[i]][historyDict['p2'][i]][0];        
                     }
-                    else if(this.$.constants.participantCode == p2ID) {
+                    else if(this.$.constants.role == 'p2') {
                         //If player 2
                         regret0 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret0List[i]][0];
                         regret1 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret1List[i]][0];        
                     }
-                    else if(this.$.constants.participantCode == p3ID) {
+                    else if(this.$.constants.role == 'p3') {
                         //If player 3
                         regret0 = this.originalPayoffMatrix[regret0List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
                         regret1 = this.originalPayoffMatrix[regret1List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
