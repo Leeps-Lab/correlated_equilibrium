@@ -268,7 +268,6 @@ export class PayoffGraph extends PolymerElement {
         
         // if graph hasn't been initialized, don't do anything
         if (!this.graph_obj) return;
-        let num_other_players = 0;
 
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
@@ -280,18 +279,16 @@ export class PayoffGraph extends PolymerElement {
         var p1ID, p2ID, p3ID;
 
         if(this.numPlayers % 2 == 0) {
-
             for (const player of this.$.constants.group.players) {
                 if (player.role != this.$.constants.role) {
                     my_flow_payoff += this.myPayoffs[this.myDecision][this.otherDecision];
                     other_flow_payoff += this.otherPayoffs[this.myDecision][this.otherDecision];
                 }
-                    
-                    num_other_players++;
             }
+            //For continuous time divide by number len(period)*2
 
-            //my_flow_payoff /= num_other_players;
-            //other_flow_payoff /= num_other_players;
+            my_flow_payoff /= this.periodLength*2;
+            other_flow_payoff /= this.periodLength*2;
         }
         else if(this.numPlayers % 3 == 0) {
             
@@ -331,13 +328,9 @@ export class PayoffGraph extends PolymerElement {
 
             }
 
-            //Fix
-            /*
-            my_flow_payoff /= 2;
-            other_flow_payoff /= 2;
-            third_flow_payoff /= 2;
-            */
-
+            my_flow_payoff /= this.periodLength*2;
+            other_flow_payoff /= this.periodLength*2;
+            third_flow_payoff /= this.periodLength*2;
         }
 
         // calculate new decision's timestamp as a value between 0 and 1

@@ -14,7 +14,6 @@ doc = """
 This is a configurable bimatrix game.
 """
 
-
 class Constants(BaseConstants):
     name_in_url = 'correlated_equilibrium'
     players_per_group = None

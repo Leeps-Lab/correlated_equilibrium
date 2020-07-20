@@ -151,15 +151,8 @@ export class RegretBar extends PolymerElement {
 
             for (var i=0; i< this.myPayoffs.length; i++) {
                 for(var j = 0; j < this.myPayoffs[0].length; j++) {
-                    if(this.numPlayers % 2 == 0) {
-                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
-                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
-                    }
-                    else if(this.numPlayers % 3 == 0) {
-                            
-                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);
-                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);   
-                    }
+                    minPayoff = Math.min(minPayoff, this.myPayoffs[i][j]);
+                    maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j]);
                 }
             }
 
@@ -224,8 +217,6 @@ export class RegretBar extends PolymerElement {
                     regret2List[i] = 2;
                 }
             }
-            
-
 
             //Get payoffs
             for(var i = 0; i < myHistory.length; i++) {
@@ -236,7 +227,11 @@ export class RegretBar extends PolymerElement {
                         //my_flow_payoff += this.myPayoffs[historyDict['p1'][i]][historyDict['p2'][i]];
                         regret0 += this.myPayoffs[regret0List[i]][historyDict['p2'][i]];
                         regret1 += this.myPayoffs[regret1List[i]][historyDict['p2'][i]];
-                        regret2 += this.myPayoffs[regret2List[i]][historyDict['p2'][i]];
+
+                        //If 3 rows
+                        if(this._if3()) {
+                            regret2 += this.myPayoffs[regret2List[i]][historyDict['p2'][i]];
+                        }
 
                     } 
                     else if(this.$.constants.participantCode == p2ID) { 
@@ -244,7 +239,11 @@ export class RegretBar extends PolymerElement {
                         //my_flow_payoff += this.myPayoffs[historyDict['p2'][i]][historyDict['p1'][i]];
                         regret0 += this.myPayoffs[regret0List[i]][historyDict['p1'][i]];
                         regret1 += this.myPayoffs[regret1List[i]][historyDict['p1'][i]];
-                        regret2 += this.myPayoffs[regret2List[i]][historyDict['p1'][i]];
+
+                        //If 3 rows
+                        if(this._if3()) {
+                            regret2 += this.myPayoffs[regret2List[i]][historyDict['p1'][i]];
+                        }
                     }
                 }
                 else if(this.numPlayers % 3 == 0) {
@@ -272,17 +271,10 @@ export class RegretBar extends PolymerElement {
             //take the average conditional on group size, 2/3 populations share equal sizes.
             let pop_size = myHistory.length;
 
+            regret0 /= pop_size;
+            regret1 /= pop_size;
+            regret2 /= pop_size;
             
-            if(this.numPlayers % 2 == 0) {
-                regret0 /= pop_size;
-                regret1 /= pop_size;
-            }
-            else if(this.numPlayers % 3 == 0) {
-                regret0 /= pop_size*pop_size;
-                regret1 /= pop_size*pop_size;
-                regret2 /= pop_size*pop_size;
-            }
-
 
             //Divide regret by maxMinDiff to calculate % regret
             regret0 /= maxMinDiff;
@@ -295,19 +287,18 @@ export class RegretBar extends PolymerElement {
             regret2 = Math.max(0, regret2);
 
             //Update regret bars
-            elem0.style.width = (regret0 * 100) + '%';
-            elem0.innerHTML = (regret0 * 100) + '%';
+            elem0.style.width = Math.round(regret0 * 100) + '%';
+            elem0.innerHTML = Math.round(regret0 * 100) + '%';
 
-            elem1.style.width = (regret1 * 100) + '%';
-            elem1.innerHTML = (regret1 * 100) + '%';
+            elem1.style.width = Math.round(regret1 * 100) + '%';
+            elem1.innerHTML = Math.round(regret1 * 100) + '%';
 
-            if(_if3()) {
-                elem2.style.width = (regret2 * 100) + '%';
-                elem1.innerHTML = (regret1 * 100) + '%';
+            if(this._if3()) {
+                elem2.style.width = Math.round(regret2 * 100) + '%';
+                elem2.innerHTML = Math.round(regret2 * 100) + '%';
             }            
         }  
     }
-
     
     //Calculate how many regret bars needed to show
     _if3() {

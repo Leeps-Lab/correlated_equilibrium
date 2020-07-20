@@ -180,6 +180,7 @@ export class LeepsBimatrix extends PolymerElement {
                             <template is="dom-if" if="[[ isMultiDim ]]">
                                 <div class="layout vertical right self-center">
                                     <regret-bar
+                                        num-subperiods="[[ numSubperiods ]]"
                                         original-payoff-matrix="[[ originalPayoffMatrix ]]"
                                         num-players="[[ numPlayers ]]"
                                         payoff-matrix="[[ payoffMatrix ]]"

@@ -211,7 +211,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
         this._currSubperiod += 1;
         
         //Get payoffs
-        let num_other_players = 0;
         if(this.numPlayers % 2 == 0) {
 
             for (const player of this.$.constants.group.players) {
@@ -221,11 +220,12 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     other_flow_payoff += this.otherPayoffs[myDecision][otherDecision];
                 }
                     
-                    num_other_players++;
             }
+            //Divide by number of subperiods for discrete time
+            //For continuous time divide by number len(period)*2
 
-            //my_flow_payoff /= num_other_players;
-            //other_flow_payoff /= num_other_players;
+            my_flow_payoff /= this.numSubperiods;
+            other_flow_payoff /= this.numSubperiods;
         }
         else if(this.numPlayers % 3 == 0) {
             var p1Decision, p2Decision, p3Decision;
@@ -265,13 +265,9 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
             }
 
-            //Fix
-            /*
-            my_flow_payoff /= 2;
-            other_flow_payoff /= 2;
-            third_flow_payoff /= 2;
-            */
-
+            my_flow_payoff /= this.numSubperiods;
+            other_flow_payoff /= this.numSubperiods;
+            third_flow_payoff /= this.numSubperiods;
         }
 
         let dataset = this.graph_obj.series[0];
