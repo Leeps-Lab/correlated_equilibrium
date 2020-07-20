@@ -179,10 +179,16 @@ export class LeepsBimatrix extends PolymerElement {
                             <template is="dom-if" if="[[ isMultiDim ]]">
                                 <div class="layout vertical right self-center">
                                     <regret-bar
+                                        num-subperiods="[[ numSubperiods ]]"
+                                        original-payoff-matrix="[[ originalPayoffMatrix ]]"
+                                        num-players="[[ numPlayers ]]"
                                         payoff-matrix="[[ payoffMatrix ]]"
                                         my-payoffs="[[ myPayoffs ]]"
+                                        other-payoffs="[[ otherPayoffs ]]"
+                                        third-payoffs="[[ thirdPayoffs ]]"
                                         group-decisions="{{ groupDecisions }}"
-                                        my-decision="[[ myDecision ]]"                                    
+                                        my-decision="[[ myDecision ]]"     
+                                        game-type="[[ gameType ]]"                                   
                                     ></regret-bar>                            
                                 </div>
                             </template>
@@ -190,8 +196,12 @@ export class LeepsBimatrix extends PolymerElement {
                             <template is="dom-if" if="[[ !isMultiDim ]]">
                                 <div class="layout vertical right ">
                                     <regret-bar
+                                        original-payoff-matrix="[[ originalPayoffMatrix ]]"
+                                        num-players="[[ numPlayers ]]"
                                         payoff-matrix="[[ payoffMatrix ]]"
                                         my-payoffs="[[ myPayoffs ]]"
+                                        other-payoffs="[[ otherPayoffs ]]"
+                                        third-payoffs="[[ thirdPayoffs ]]"
                                         group-decisions="{{ groupDecisions }}"
                                         my-decision="[[ myDecision ]]"     
                                         game-type="[[ gameType ]]"                               
@@ -1385,7 +1395,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _checkOther(otherDecisionArray, i, state, stratMatrix){
-        console.log("checkOther called");
+        //console.log("checkOther called");
         if(state == "column"){
             //console.log(otherDecisionArray[0] + "==" + i + " is " + (otherDecisionArray[0] == i));
             return otherDecisionArray[0] == i;

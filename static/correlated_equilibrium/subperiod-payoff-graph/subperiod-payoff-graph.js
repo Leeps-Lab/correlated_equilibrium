@@ -219,6 +219,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
         var third_flow_payoff = 0;
+        var num_other_players = 0;
         
         var p1_decisions = [];
         var p2_decisions = [];
@@ -227,7 +228,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
         this._currSubperiod += 1;
         
         //Get payoffs
-        let num_other_players = 0;
         if(this.numPlayers % 2 == 0) {
 
             for (const player of this.$.constants.group.players) {
