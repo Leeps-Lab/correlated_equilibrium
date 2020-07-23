@@ -230,6 +230,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         //Get payoffs
         if(this.numPlayers % 2 == 0) {
 
+            // populate decision arrays
             for (const player of this.$.constants.group.players) {
                 let otherDecision = groupDecisions[player.participantCode];
                 if(player.role == 'p1') p1_decisions.push(otherDecision);
@@ -277,6 +278,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
             var p1Decision, p2Decision, p3Decision;
             var p1ID, p2ID, p3ID;
             
+            // populate decision arrays
             for (const player of this.$.constants.group.players) {
                 let decision = groupDecisions[player.participantCode];
                 if(player.role == 'p1') p1_decisions.push(decision);
@@ -358,17 +360,18 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
             }
             let pop_size = p1_decisions.length;
-            //Fix
+            //Divide to take average
             my_flow_payoff /= (pop_size * pop_size);
             other_flow_payoff /= (pop_size * pop_size * pop_size);
             third_flow_payoff /= (pop_size * pop_size * pop_size);
 
         }
-
+        //plot own payoff
         let dataset = this.graph_obj.series[0];
         this._lastElem(dataset.data).update({y: my_flow_payoff});
         dataset.addPoint([this._currSubperiod, my_flow_payoff]);
         
+        //plot other payoff
         if(this.maxInfo){
             dataset = this.graph_obj.series[1];
             this._lastElem(dataset.data).update({y: other_flow_payoff});

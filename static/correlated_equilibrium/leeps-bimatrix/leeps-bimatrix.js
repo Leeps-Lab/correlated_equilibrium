@@ -594,6 +594,8 @@ export class LeepsBimatrix extends PolymerElement {
         }
         console.log(this.$.constants.role);
 
+        console.log(this.initialDecision);
+
         this.otherPayoffIndex = Math.abs(1 - this.payoffIndex);
         this.thirdPayoffIndex = Math.abs(2 - this.payoffIndex);   
         console.log(this.stratMatrix);
@@ -775,6 +777,7 @@ export class LeepsBimatrix extends PolymerElement {
 
         // only set decision string if we're not doing continuous strategy
         this._myPlannedDecisionString = new String(this.initialDecision);
+        console.log(this._myPlannedDecisionString);
     }
 
     _p1Role() {
@@ -871,6 +874,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _freq2( rowIndex, colIndex, stratMatrix){
+        // this accounts for reversed indices
         if (!this._ifMVGame()){
             console.log("BM")
             if(rowIndex== 0)   rowIndex = 1; 
@@ -883,9 +887,13 @@ export class LeepsBimatrix extends PolymerElement {
             if(colIndex == 0)  colIndex = 2; 
             else if (colIndex == 2) colIndex = 0; 
          }
+
         if (this.stratMatrix[rowIndex][colIndex].length == 0) return 0;
+
         var dividend = 0;
         var divisor = 0;
+
+         //loop through history of this particular strategy profile
         let n = this.stratMatrix[rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[rowIndex][colIndex].length; i++){
             dividend += Math.pow(this.gamma, i) * this.stratMatrix[rowIndex][colIndex][n - i];
@@ -896,7 +904,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _freq3(matrixIndex, rowIndex, colIndex, stratMatrix){
-        //console.log(this.stratMatrix);
+        //This accounts for reversed row indices
         if (stratMatrix.length == 3){
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
@@ -907,6 +915,8 @@ export class LeepsBimatrix extends PolymerElement {
         if (this.stratMatrix[matrixIndex][rowIndex][colIndex].length == 0) return 0;
         var dividend = 0;
         var divisor = 0;
+
+         //loop through history of this particular strategy profile
         let n = this.stratMatrix[matrixIndex][rowIndex][colIndex].length - 1;
         for(let i = 0; i < this.stratMatrix[matrixIndex][rowIndex][colIndex].length; i++){
             dividend += Math.pow(this.gamma, i) * this.stratMatrix[matrixIndex][rowIndex][colIndex][n - i];
@@ -1164,12 +1174,12 @@ export class LeepsBimatrix extends PolymerElement {
     _handleGroupDecisionsEvent(event) {
         console.log("Group Decisions Changed");
         console.log(this.groupDecisions);
+        //NUll Checks
         if(typeof this.groupDecisions === 'undefined') return;
         if(Object.keys(this.groupDecisions).length == 0) return;
         for(let decision of Object.values(this.groupDecisions)){
             if(decision === null) return;
          }
-        //console.log("Players in Group: " + this.groupDecisions.length);
 
         if(this.numPlayers % 2 == 0 || this._ifMVGame()) {
             var i, j, t = [];
@@ -1230,29 +1240,6 @@ export class LeepsBimatrix extends PolymerElement {
                     if(this.$.constants.role == "p2") t[i][j].push(distr);
                 }
             }
-/*
-            if(this.$.constants.role == "p1") {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                      if(i == p1Decision && j == p2Decision){
-                        t[i][j].push(1);
-                      } else{
-                        t[i][j].push(0);
-                      }
-                    }
-                }
-            }
-            else if(this.$.constants.role == "p2") {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                      if(j == p1Decision && i == p2Decision){
-                        t[i][j].push(1);
-                      } else{
-                        t[i][j].push(0);
-                      }
-                    }
-                }
-            }*/
         }
         else if(this.numPlayers % 3 == 0) {
             var p1Decision, p2Decision, p3Decision;
