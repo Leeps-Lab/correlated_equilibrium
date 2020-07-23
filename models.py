@@ -157,7 +157,7 @@ class Subsession(BaseSubsession):
             if pure_strategy:
                 player._initial_decision = random.choice([0, 1])
             else:
-                player._initial_decision = random.random()
+                player._initial_decision = random.choice([0, 1])
     
     @property
     def config(self):
@@ -196,7 +196,7 @@ class Group(DecisionGroup):
 class Player(BasePlayer):
 
     silo_num = models.IntegerField()
-    _initial_decision = models.FloatField()
+    _initial_decision = models.IntegerField()
 
     def role(self):
         num_players = self.num_players()
@@ -223,7 +223,7 @@ class Player(BasePlayer):
         return weighted_sum_decision / self.group.period_length()
     
     def initial_decision(self):
-        self._initial_decision
+        return self._initial_decision
 
     def num_players(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
