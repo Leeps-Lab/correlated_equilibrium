@@ -41,6 +41,7 @@ def parse_config(config_file):
 
 class Subsession(BaseSubsession):
 
+    #get average strategy of role
     def get_average_strategy(self, p1, p2):
         role = 'p1' if p1 else 'p2' if p2 else 'p3'
         players = [p for p in self.get_players() if p.role() == role] 
@@ -48,7 +49,8 @@ class Subsession(BaseSubsession):
         for p in players:
             sum_strategies += p.get_average_strategy()
         return sum_strategies / len(players)
-    
+
+    #get average payoff of role
     def get_average_payoff(self, p1, p2):
         role = 'p1' if p1 else 'p2' if p2 else 'p3'
         players = [p for p in self.get_players() if p.role() == role] 
@@ -221,6 +223,42 @@ class Player(BasePlayer):
             decision_value = cur_decision.value[self.participant.code]
             weighted_sum_decision += decision_value * (next_change_time - cur_decision.timestamp).total_seconds()
         return weighted_sum_decision / self.group.period_length()
+
+    #get frequency of player picking choice
+    def get_frequency(self, choice, decisions):
+        count = 0
+        total = 0
+        decisions = self.group.get_group_decisions_events()
+        while decisions:
+            cur_decision = decisions.pop(0)
+            decision_value = cur_decision.value[self.participant.code]
+            total += 1
+            if (decision_value == choice):
+                count += 1
+        return count / total   
+    
+    #get average frequency of player's role picking choice
+    def get_role_frequency(self, decisions):
+        counts = [0, 0, 0]
+        total = 0
+        decisions = self.group.get_group_decisions_events()
+
+        for i, d in enumerate(decisions):
+            if not d.value: continue
+                
+            role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == self.role()]
+            for decision in role_decisions:
+                total += 1
+                if (int(decision) == 0):
+                    counts[0] += 1
+                elif (int(decision) == 1):
+                    counts[1] += 1
+                else:
+                    counts[2] += 1
+        counts[0] /= total
+        counts[1] /= total
+        counts[2] /= total
+        return counts
     
     def initial_decision(self):
         return self._initial_decision
@@ -288,19 +326,21 @@ class Player(BasePlayer):
                 #If a 3 player game
                 flow_payoff /= (pop_size*pop_size)
 
-            if self.group.num_subperiods():
-                if i == 0:
-                    prev_change_time = period_start
-                else:
-                    prev_change_time = decisions[i - 1].timestamp
-                decision_length = (d.timestamp - prev_change_time).total_seconds()
-            else:
-                if i + 1 < len(decisions):
-                    next_change_time = decisions[i + 1].timestamp
-                else:
-                    next_change_time = period_end
-                decision_length = (next_change_time - d.timestamp).total_seconds()
-            payoff += decision_length * flow_payoff
-            
-        self.payoff = payoff / period_duration.total_seconds()
-        return payoff / period_duration.total_seconds()
+            #if self.group.num_subperiods():
+            #    if i == 0:
+            #        prev_change_time = period_start
+            #    else:
+            #        prev_change_time = decisions[i - 1].timestamp
+            #    decision_length = (d.timestamp - prev_change_time).total_seconds()
+            #else:
+            #    if i + 1 < len(decisions):
+            #        next_change_time = decisions[i + 1].timestamp
+            #    else:
+            #        next_change_time = period_end
+            #    decision_length = (next_change_time - d.timestamp).total_seconds()
+            #payoff += decision_length * flow_payoff
+            payoff +=  flow_payoff
+
+        self.payoff = payoff   
+        #self.payoff = payoff / period_duration.total_seconds()
+        #return payoff / period_duration.total_seconds()

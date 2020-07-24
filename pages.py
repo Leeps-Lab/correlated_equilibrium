@@ -38,7 +38,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 10
+    timeout_seconds = 90
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -49,24 +49,40 @@ class Results(Page):
         if None in (period_start, period_end):
             # I really don't like having to repeat these keys twice but I can't think of any clean way to avoid it
             return {
-                'role_average_strategy': float('nan'),
-                'my_average_strategy': float('nan'),
+                #'role_average_strategy': float('nan'),
+                #'my_average_strategy': float('nan'),
                 'role_average_payoff': float('nan'),
+                'freq_u': float('nan'),
+                'freq_c': float('nan'),
+                'freq_d': float('nan'),
+                'role_freq_u': float('nan'),
+                'role_freq_c': float('nan'),
+                'role_freq_d': float('nan'),
+                'role': 'none'
             }
         decisions = self.group.get_group_decisions_events()
 
         role_payoffs = [ p.payoff for p in self.group.get_players() if p.role() == self.player.role() ]
         # keep role strategies in a dict so that my avg. strategy can be retrieved
         # prevents from having to compute my average strategy twice
-        role_strategies = {
-            p.participant.code: p.get_average_strategy(period_start, period_end, decisions)
-            for p in self.group.get_players() if p.role() == self.player.role()
-        }
+        #role_strategies = {
+        #    p.participant.code: p.get_average_strategy(period_start, period_end, decisions)
+        #    for p in self.group.get_players() if p.role() == self.player.role()
+        #}
+
+        role_average_frequencies = self.player.get_role_frequency(decisions)
 
         return {
-            'role_average_strategy': sum(role_strategies.values()) / len(role_strategies),
-            'my_average_strategy': role_strategies[self.participant.code],
+            #'role_average_strategy': sum(role_strategies.values()) / len(role_strategies),
+            #'my_average_strategy': role_strategies[self.participant.code],
             'role_average_payoff': sum(role_payoffs) / len(role_payoffs),
+            'freq_u': self.player.get_frequency( 2, decisions),
+            'freq_c': self.player.get_frequency( 1, decisions),
+            'freq_d': self.player.get_frequency( 0, decisions),
+            'role_freq_u': role_average_frequencies[2],
+            'role_freq_c': role_average_frequencies[1],
+            'role_freq_d': role_average_frequencies[0],
+            'role': self.player.role()
         }
 
 

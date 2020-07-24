@@ -5,24 +5,131 @@
     Results
 {% endblock %}
 
+{% block scripts %}
+    <script src="{% static 'correlated_equilibrium/highcharts.js' %}"></script>
+
+    <script>
+        Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Frequency of Your Choices'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                name: 'Choices',
+                colorByPoint: true,
+                data: [{
+                    name: 'D',
+                    y: {{ freq_d | floatformat:2 }},
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'C',
+                    y: {{ freq_c | floatformat:2 }}
+                }, {
+                    name: 'U',
+                    y: {{ freq_u | floatformat:2 }}
+                }]
+            }]
+        });
+    </script>
+    <script>
+        Highcharts.chart('containerAverage', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Frequency of Average {{ role }} Choices'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                name: 'Choices',
+                colorByPoint: true,
+                data: [{
+                    name: 'D',
+                    y: {{ role_freq_d | floatformat:2 }},
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'C',
+                    y: {{ role_freq_c | floatformat:2 }}
+                }, {
+                    name: 'U',
+                    y: {{ role_freq_u | floatformat:2 }}
+                }]
+            }]
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
 
-    <table class="table" style="width:400px; margin-top:20px; margin-bottom:10px">
+    <table class="table" style="width:600px; margin-top:20px; margin-bottom:10px">
         <th>
-            <td>Mix</td>
-            <td>Payoff</td>
+            <td>Frequency of U</td>
+            <td>Frequency of C</td>
+            <td>Frequency of D</td>
+            <td>Flow Payoff</td>
         </th>
         <tr>
-            <td>Your Avg.</td>
-            <td>{{ my_average_strategy | floatformat:2 }}</td>
+            <td>Your Stats.</td>
+            <td>{{ freq_u | floatformat:2 }}</td>
+            <td>{{ freq_c | floatformat:2 }}</td>
+            <td>{{ freq_d | floatformat:2 }}</td>
             <td>{{ player.payoff }}</td>
         </tr>
         <tr>
-            <td>Others' Avg.</td>
-            <td>{{ role_average_strategy | floatformat:2 }}</td>
+            <td>Average {{ role }} Stats.</td>
+            <td>{{ role_freq_u | floatformat:2 }}</td>
+            <td>{{ role_freq_c | floatformat:2 }}</td>
+            <td>{{ role_freq_d | floatformat:2 }}</td>
             <td>{{ role_average_payoff }}</td>
         </tr>
     </table>
+    <div id="container"></div>
+    <div id="containerAverage"></div>
 
     <div>Your total payoff so far: {{ player.participant.payoff }}</div>
 
