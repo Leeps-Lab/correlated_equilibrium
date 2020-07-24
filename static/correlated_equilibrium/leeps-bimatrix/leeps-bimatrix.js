@@ -247,18 +247,7 @@ export class LeepsBimatrix extends PolymerElement {
                                 </paper-radio-group>
                             </template>
                         
-                            <!--
-                            <template is="dom-if" if="[[ meanMatching ]]">
-                                <discrete-mean-matching-heatmap
-                                    class="self-center"
-                                    my-decision="[[ myDecision ]]"
-                                    other-decision="[[ otherDecision ]]"
-                                    size="300"
-                                    payoffs="[[ myPayoffs ]]"
-                                    color="[[ myColor ]]">
-                                </discrete-mean-matching-heatmap>
-                            </template>
-                            -->
+                           
                             <div class="layout vertical">
                             <template is="dom-if" if="[[ maxInfo ]]">
                              <!--   <template is="dom-if" if="[[ !meanMatching ]]"> -->
@@ -384,14 +373,6 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div id="graphs-column" class="layout horizontal">
                             <div class="layout horizontal end">
-                                <!--
-                                <template is="dom-if" if="[[ _showThermometer(meanMatching) ]]">
-                                    <heatmap-thermometer
-                                        color="rainbow"
-                                        class="self-end">
-                                    </heatmap-thermometer>
-                                </template>
-                                -->
                                 <div class="layout vertical">
                                     <template is="dom-if" if="[[ !numSubperiods ]]">
                                         <payoff-graph
@@ -841,8 +822,8 @@ export class LeepsBimatrix extends PolymerElement {
         }
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
         num = 100 - num;//Math.abs(num);
-        if (num == 100) return "#ffffff";
-        if (num == 0) return "#0000ff";
+        if (num == 100) return "#ffffff"; //Min Color
+        if (num < 15) return "#2525ff"; //Max Color
         num = Math.round(num * 2.5);
         //num = num* 2;
         //console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
@@ -868,7 +849,7 @@ export class LeepsBimatrix extends PolymerElement {
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
         num = 100 - num;//Math.abs(num);
         if (num == 100) return "#ffffff";
-        if (num == 0) return "#0000ff";
+        if (num < 15) return "#2525ff";
         num = Math.round(num * 2.5);
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
