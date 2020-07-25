@@ -199,6 +199,9 @@ class Player(BasePlayer):
 
     silo_num = models.IntegerField()
     _initial_decision = models.IntegerField()
+    u_payoff = models.FloatField()
+    c_payoff = models.FloatField()
+    d_payoff = models.FloatField()
 
     def role(self):
         num_players = self.num_players()
@@ -241,27 +244,30 @@ class Player(BasePlayer):
     def get_role_frequency(self, decisions):
         counts = [0, 0, 0]
         total = 0
-        decisions = self.group.get_group_decisions_events()
+        groups = self.group.subsession.get_groups()
+        for group in groups:
+            decisions = group.get_group_decisions_events()
 
-        for i, d in enumerate(decisions):
-            if not d.value: continue
-                
-            role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == self.role()]
-            for decision in role_decisions:
-                total += 1
-                if (int(decision) == 0):
-                    counts[0] += 1
-                elif (int(decision) == 1):
-                    counts[1] += 1
-                else:
-                    counts[2] += 1
-        counts[0] /= total
-        counts[1] /= total
-        counts[2] /= total
+            for i, d in enumerate(decisions):
+                if not d.value: continue
+                    
+                role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == self.role()]
+                for decision in role_decisions:
+                    total += 1
+                    if (int(decision) == 0):
+                        counts[0] += 1
+                    elif (int(decision) == 1):
+                        counts[1] += 1
+                    else:
+                        counts[2] += 1
+            counts[0] /= total
+            counts[1] /= total
+            counts[2] /= total
         return counts
     
     def initial_decision(self):
         return self._initial_decision
+
 
     def num_players(self):
         return parse_config(self.session.config['config_file'])[self.round_number-1]['players_per_group']
@@ -274,6 +280,9 @@ class Player(BasePlayer):
         period_duration = period_end - period_start
 
         payoff = 0
+        calc_u_payoff = 0
+        calc_c_payoff = 0
+        calc_d_payoff = 0
         if(self.num_players() % 2 == 0):
             role_index = (self.id_in_group - 1) % 2 
         elif(self.num_players() % 3 == 0):
@@ -326,21 +335,27 @@ class Player(BasePlayer):
                 #If a 3 player game
                 flow_payoff /= (pop_size*pop_size)
 
-            #if self.group.num_subperiods():
-            #    if i == 0:
-            #        prev_change_time = period_start
-            #    else:
-            #        prev_change_time = decisions[i - 1].timestamp
-            #    decision_length = (d.timestamp - prev_change_time).total_seconds()
-            #else:
-            #    if i + 1 < len(decisions):
-            #        next_change_time = decisions[i + 1].timestamp
-            #    else:
-            #        next_change_time = period_end
-            #    decision_length = (next_change_time - d.timestamp).total_seconds()
-            #payoff += decision_length * flow_payoff
-            payoff +=  flow_payoff
+            if self.group.num_subperiods():
+                if i == 0:
+                    prev_change_time = period_start
+                else:
+                    prev_change_time = decisions[i - 1].timestamp
+                decision_length = (d.timestamp - prev_change_time).total_seconds()
+            else:
+                if i + 1 < len(decisions):
+                    next_change_time = decisions[i + 1].timestamp
+                else:
+                    next_change_time = period_end
+                decision_length = (next_change_time - d.timestamp).total_seconds()
+            payoff += decision_length * flow_payoff
+            if (my_decision == 2):
+                calc_u_payoff += decision_length * flow_payoff
+            elif (my_decision == 1):
+                calc_c_payoff += decision_length * flow_payoff
+            else:
+                calc_d_payoff += decision_length * flow_payoff
 
-        self.payoff = payoff   
-        #self.payoff = payoff / period_duration.total_seconds()
-        #return payoff / period_duration.total_seconds()
+        self.u_payoff = round(calc_u_payoff / period_duration.total_seconds())
+        self.c_payoff = round(calc_c_payoff / period_duration.total_seconds())
+        self.d_payoff = round(calc_d_payoff / period_duration.total_seconds())
+        self.payoff = payoff / period_duration.total_seconds()

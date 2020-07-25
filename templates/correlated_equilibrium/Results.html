@@ -33,6 +33,9 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
+                        style: {
+                            fontSize: '25px'   
+                        },
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -43,14 +46,17 @@
                 data: [{
                     name: 'D',
                     y: {{ freq_d | floatformat:2 }},
+                    color: '#9aff02',
                     sliced: true,
                     selected: true
                 }, {
                     name: 'C',
-                    y: {{ freq_c | floatformat:2 }}
+                    y: {{ freq_c | floatformat:2 }},
+                    color: '#04f2ff'
                 }, {
                     name: 'U',
-                    y: {{ freq_u | floatformat:2 }}
+                    y: {{ freq_u | floatformat:2 }},
+                    color: '#ffff00',
                 }]
             }]
         });
@@ -80,6 +86,9 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
+                        style: {
+                            fontSize: '25px'   
+                        },
                         format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -90,14 +99,17 @@
                 data: [{
                     name: 'D',
                     y: {{ role_freq_d | floatformat:2 }},
+                    color: '#9aff02',
                     sliced: true,
-                    selected: true
+                    selected: true,
                 }, {
                     name: 'C',
-                    y: {{ role_freq_c | floatformat:2 }}
+                    y: {{ role_freq_c | floatformat:2 }},
+                    color: '#04f2ff',
                 }, {
                     name: 'U',
-                    y: {{ role_freq_u | floatformat:2 }}
+                    y: {{ role_freq_u | floatformat:2 }},
+                    color: '#ffff00',
                 }]
             }]
         });
@@ -105,27 +117,62 @@
 {% endblock %}
 
 {% block content %}
-
-    <table class="table" style="width:600px; margin-top:20px; margin-bottom:10px">
-        <th>
-            <td>Frequency of U</td>
-            <td>Frequency of C</td>
-            <td>Frequency of D</td>
-            <td>Flow Payoff</td>
-        </th>
+    <table class="table" style="margin-top:20px; margin-bottom:10px">
         <tr>
-            <td>Your Stats.</td>
-            <td>{{ freq_u | floatformat:2 }}</td>
-            <td>{{ freq_c | floatformat:2 }}</td>
-            <td>{{ freq_d | floatformat:2 }}</td>
-            <td>{{ player.payoff }}</td>
+            <td>You</td>
+            <td>Average {{ role }}</td>
         </tr>
         <tr>
-            <td>Average {{ role }} Stats.</td>
-            <td>{{ role_freq_u | floatformat:2 }}</td>
-            <td>{{ role_freq_c | floatformat:2 }}</td>
-            <td>{{ role_freq_d | floatformat:2 }}</td>
-            <td>{{ role_average_payoff }}</td>
+            <td>
+                <table class="table" >
+                    <th>
+                        <td>U</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>All</td>
+                    </th>
+                    <tr>
+                        <td>% Time.</td>
+
+                        <td>{{ freq_u | floatformat:2 }}</td>
+                        <td>{{ freq_c | floatformat:2 }}</td>
+                        <td>{{ freq_d | floatformat:2 }}</td>
+                        <td>1.00</td>
+                    </tr>
+                    <tr>
+                        <td>Payoff Rate</td>
+
+                        <td>{{ player.u_payoff }}</td>
+                        <td>{{ player.c_payoff }}</td>
+                        <td>{{ player.d_payoff }}</td>
+                        <td>{{ player.payoff }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table class="table" >
+                    <th>
+                        <td>U</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>All</td>
+                    </th>
+                    <tr>
+                        <td> </td>
+                        <td>{{ role_freq_u | floatformat:2 }}</td>
+                        <td>{{ role_freq_c | floatformat:2 }}</td>
+                        <td>{{ role_freq_d | floatformat:2 }}</td>
+                        <td>1.00</td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td>{{ role_average_u_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_c_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_d_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_payoff }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
     <div id="container"></div>
