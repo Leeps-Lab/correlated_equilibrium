@@ -63,22 +63,29 @@ class Results(Page):
             }
         decisions = self.group.get_group_decisions_events()
 
-        role_payoffs = [ p.payoff for p in self.group.get_players() if p.role() == self.player.role() ]
-        role_u_payoffs = [ p.u_payoff for p in self.group.get_players() if p.role() == self.player.role() ]
-        role_c_payoffs = [ p.c_payoff for p in self.group.get_players() if p.role() == self.player.role() ]
-        role_d_payoffs = [ p.d_payoff for p in self.group.get_players() if p.role() == self.player.role() ]
+        role_payoffs = [ p.payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_u_payoffs = [ p.u_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_c_payoffs = [ p.c_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_d_payoffs = [ p.d_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
         
 
         role_average_frequencies = self.player.get_role_frequency(decisions)
 
+        freq_u = self.player.get_frequency( 2, decisions)
+        freq_c = self.player.get_frequency( 1, decisions)
+        freq_d = self.player.get_frequency( 0, decisions)
+
         return {
+            'u_payoff': (self.player.u_payoff / freq_u) if freq_u else 0,
+            'c_payoff': (self.player.c_payoff / freq_c) if freq_c else 0,
+            'd_payoff': (self.player.d_payoff / freq_d) if freq_d else 0,
             'role_average_payoff': sum(role_payoffs) / len(role_payoffs),
-            'role_average_u_payoff': round(sum(role_u_payoffs) / len(role_u_payoffs)),
-            'role_average_c_payoff': round(sum(role_c_payoffs) / len(role_c_payoffs)),
-            'role_average_d_payoff': round(sum(role_d_payoffs) / len(role_d_payoffs)),
-            'freq_u': self.player.get_frequency( 2, decisions),
-            'freq_c': self.player.get_frequency( 1, decisions),
-            'freq_d': self.player.get_frequency( 0, decisions),
+            'role_average_u_payoff': (round(sum(role_u_payoffs) / len(role_u_payoffs)) / role_average_frequencies[2]) if role_average_frequencies[2] else 0,
+            'role_average_c_payoff': (round(sum(role_c_payoffs) / len(role_c_payoffs)) / role_average_frequencies[1]) if role_average_frequencies[1] else 0,
+            'role_average_d_payoff': (round(sum(role_d_payoffs) / len(role_d_payoffs)) / role_average_frequencies[0]) if role_average_frequencies[0] else 0,
+            'freq_u': freq_u,
+            'freq_c': freq_c,
+            'freq_d': freq_d,
             'role_freq_u': role_average_frequencies[2],
             'role_freq_c': role_average_frequencies[1],
             'role_freq_d': role_average_frequencies[0],

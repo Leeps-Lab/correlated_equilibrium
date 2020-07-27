@@ -9,109 +9,110 @@
     <script src="{% static 'correlated_equilibrium/highcharts.js' %}"></script>
 
     <script>
+        //credit calfzhou on stackoverflow
+        var yourData = [
+            { name: 'U', y: {{ u_payoff | floatformat:2 }}, x: {{ freq_u | floatformat:2 }} , color: '#ffff00'},
+            { name: 'C', y: {{ c_payoff | floatformat:2 }}, x: {{ freq_c | floatformat:2 }}, color: '#04f2ff' },
+            { name: 'D', y: {{ d_payoff | floatformat:2 }}, x: {{ freq_d | floatformat:2 }}, color: '#9aff02' }
+        ];
+
+        var roleData = [
+            { name: 'U', y: {{ role_average_u_payoff | floatformat:2 }}, x: {{ role_freq_u | floatformat:2 }} , color: '#ffff00'},
+            { name: 'C', y: {{ role_average_c_payoff | floatformat:2 }}, x: {{ role_freq_c | floatformat:2 }}, color: '#04f2ff' },
+            { name: 'D', y: {{ role_average_d_payoff | floatformat:2 }}, x: {{ role_freq_d | floatformat:2 }}, color: '#9aff02' }
+        ];
+
+        function makeSeries(listOfData) {
+            var sumX = 0.0;
+            for (var i = 0; i < 3; i++) {
+                sumX += listOfData[i].x;
+            }
+            var allSeries = []
+            var x = 0.0;
+            for (var i = 0; i < 3; i++) {
+                var data = listOfData[i];
+                allSeries[i] = {
+                    name: data.name,
+                    color: data.color,
+                    data: [
+                        [x, 0], [x, data.y],
+                        {
+                            x: x + data.x / 2.0,
+                            y: data.y,
+                            dataLabels: { enabled: true, format: data.x + ' x {y}' }
+                        },
+                        [x + data.x, data.y], [x + data.x, 0]
+                    ],
+                    w: data.x,
+                    h: data.y
+                };
+                x += data.x;
+            }
+            return allSeries;
+        }
+
         Highcharts.chart('container', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
+            chart: { type: 'area' },
+            xAxis: {
+                tickLength: 0,
+                labels: { enabled: false},
+                title: {text: "Frequency"}
+            },
+            yAxis: {
+                title: {text: "Payoff Rate"}
             },
             title: {
-                text: 'Frequency of Your Choices'
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
+                text: 'Frequency of Your Choices and their Payoff Rates'
             },
             plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        style: {
-                            fontSize: '25px'   
-                        },
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                area: {
+                    marker: {
+                        enabled: false,
+                        states: {
+                            hover: { enabled: false }
+                        }
                     }
                 }
             },
-            series: [{
-                name: 'Choices',
-                colorByPoint: true,
-                data: [{
-                    name: 'D',
-                    y: {{ freq_d | floatformat:2 }},
-                    color: '#9aff02',
-                    sliced: true,
-                    selected: true
-                }, {
-                    name: 'C',
-                    y: {{ freq_c | floatformat:2 }},
-                    color: '#04f2ff'
-                }, {
-                    name: 'U',
-                    y: {{ freq_u | floatformat:2 }},
-                    color: '#ffff00',
-                }]
-            }]
-        });
-    </script>
-    <script>
+            tooltip: {
+                followPointer: true,
+                useHTML: true,
+                headerFormat: '<span style="color: {series.color}">{series.name}</span>: ',
+                pointFormat: '<span>{series.options.w} x {series.options.h}</span>'
+            },
+            series: makeSeries(yourData)
+        }); 
+
         Highcharts.chart('containerAverage', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
+            chart: { type: 'area' },
+            xAxis: {
+                tickLength: 0,
+                labels: { enabled: false},
+                title: {text: "Frequency"}
+            },
+            yAxis: {
+                title: {text: "Payoff Rate"}
             },
             title: {
-                text: 'Frequency of Average {{ role }} Choices'
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
+                text: 'Frequency of Average  {{ role }} Choices and their Payoff Rates'
             },
             plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        style: {
-                            fontSize: '25px'   
-                        },
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                area: {
+                    marker: {
+                        enabled: false,
+                        states: {
+                            hover: { enabled: false }
+                        }
                     }
                 }
             },
-            series: [{
-                name: 'Choices',
-                colorByPoint: true,
-                data: [{
-                    name: 'D',
-                    y: {{ role_freq_d | floatformat:2 }},
-                    color: '#9aff02',
-                    sliced: true,
-                    selected: true,
-                }, {
-                    name: 'C',
-                    y: {{ role_freq_c | floatformat:2 }},
-                    color: '#04f2ff',
-                }, {
-                    name: 'U',
-                    y: {{ role_freq_u | floatformat:2 }},
-                    color: '#ffff00',
-                }]
-            }]
+            tooltip: {
+                followPointer: true,
+                useHTML: true,
+                headerFormat: '<span style="color: {series.color}">{series.name}</span>: ',
+                pointFormat: '<span>{series.options.w} x {series.options.h}</span>'
+            },
+            series: makeSeries(roleData)
         });
     </script>
 {% endblock %}
@@ -119,8 +120,8 @@
 {% block content %}
     <table class="table" style="margin-top:20px; margin-bottom:10px">
         <tr>
-            <td>You</td>
-            <td>Average {{ role }}</td>
+            <td style="text-align:center">You</td>
+            <td style="text-align:center">Average {{ role }}</td>
         </tr>
         <tr>
             <td>
@@ -142,9 +143,9 @@
                     <tr>
                         <td>Payoff Rate</td>
 
-                        <td>{{ player.u_payoff }}</td>
-                        <td>{{ player.c_payoff }}</td>
-                        <td>{{ player.d_payoff }}</td>
+                        <td>{{ u_payoff | floatformat:2 }}</td>
+                        <td>{{  c_payoff | floatformat:2 }}</td>
+                        <td>{{  d_payoff | floatformat:2 }}</td>
                         <td>{{ player.payoff }}</td>
                     </tr>
                 </table>

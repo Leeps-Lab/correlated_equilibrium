@@ -263,7 +263,6 @@ class Player(BasePlayer):
         counts[0] /= total
         counts[1] /= total
         counts[2] /= total
-        print(total)
         return counts
     
     def initial_decision(self):
