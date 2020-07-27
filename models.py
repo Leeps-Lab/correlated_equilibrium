@@ -251,7 +251,7 @@ class Player(BasePlayer):
             for i, d in enumerate(decisions):
                 if not d.value: continue
                     
-                role_decisions = [d.value[p.participant.code] for p in self.group.get_players() if p.role() == self.role()]
+                role_decisions = [d.value[p.participant.code] for p in group.get_players() if p.role() == self.role()]
                 for decision in role_decisions:
                     total += 1
                     if (int(decision) == 0):
@@ -260,9 +260,10 @@ class Player(BasePlayer):
                         counts[1] += 1
                     else:
                         counts[2] += 1
-            counts[0] /= total
-            counts[1] /= total
-            counts[2] /= total
+        counts[0] /= total
+        counts[1] /= total
+        counts[2] /= total
+        print(total)
         return counts
     
     def initial_decision(self):
