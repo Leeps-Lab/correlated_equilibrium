@@ -28,6 +28,7 @@ def parse_config(config_file):
     rounds = []
     for row in rows:
         rounds.append({
+            'round': int(row['round']),
             'shuffle_role': True if row['shuffle_role'] == 'TRUE' else False,
             'period_length': int(row['period_length']),
             'num_subperiods': int(row['num_subperiods']),
@@ -188,10 +189,16 @@ class Group(DecisionGroup):
         if None in (period_start, period_end):
             print('cannot set payoff, period has not ended yet')
             return
-        decisions = self.get_group_decisions_events()
+        #decisions = self.get_group_decisions_events()
         payoff_matrix = self.subsession.payoff_matrix()
-        for player in self.get_players():
-            player.set_payoff(period_start, period_end, decisions, payoff_matrix)
+        #for player in self.get_players():
+        #    player.set_payoff(period_start, period_end, decisions, payoff_matrix)
+
+        groups = self.subsession.get_groups()
+        for group in groups:
+            decisions = group.get_group_decisions_events()
+            for player in group.get_players():
+                player.set_payoff(period_start, period_end, decisions, payoff_matrix)
 
 
 
@@ -357,5 +364,6 @@ class Player(BasePlayer):
 
         self.u_payoff = round(calc_u_payoff / period_duration.total_seconds())
         self.c_payoff = round(calc_c_payoff / period_duration.total_seconds())
+        print(self.c_payoff)
         self.d_payoff = round(calc_d_payoff / period_duration.total_seconds())
         self.payoff = payoff / period_duration.total_seconds()
