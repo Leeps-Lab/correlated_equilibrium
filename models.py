@@ -362,8 +362,7 @@ class Player(BasePlayer):
             else:
                 calc_d_payoff += decision_length * flow_payoff
 
-        self.u_payoff = round(calc_u_payoff / period_duration.total_seconds())
-        self.c_payoff = round(calc_c_payoff / period_duration.total_seconds())
-        print(self.c_payoff)
-        self.d_payoff = round(calc_d_payoff / period_duration.total_seconds())
+        self.u_payoff = calc_u_payoff / period_duration.total_seconds()
+        self.c_payoff = calc_c_payoff / period_duration.total_seconds()
+        self.d_payoff = calc_d_payoff / period_duration.total_seconds()
         self.payoff = payoff / period_duration.total_seconds()
