@@ -151,8 +151,17 @@ export class RegretBar extends PolymerElement {
 
             for (var i=0; i< this.myPayoffs.length; i++) {
                 for(var j = 0; j < this.myPayoffs[0].length; j++) {
-                    minPayoff = Math.min(minPayoff, this.myPayoffs[i][j]);
-                    maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j]);
+                    if(this.numPlayers % 2 == 0){
+                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j]);
+                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j]);
+                    }else{
+                        for(var z=0; z < this.myPayoffs[0][0].length; z++){
+                            minPayoff = Math.min(minPayoff, this.myPayoffs[i][j][z]);
+                            maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j][z]);
+                        }
+
+                    }
+                    
                 }
             }
 
@@ -255,14 +264,14 @@ export class RegretBar extends PolymerElement {
                     }
                     else if(this.$.constants.role == 'p2') {
                         //If player 2
-                        regret0 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret0List[i]][0];
-                        regret1 += this.payoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret1List[i]][0];        
+                        regret0 += this.originalPayoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret0List[i]][1];
+                        regret1 += this.originalPayoffMatrix[historyDict['p3'][i]][historyDict['p1'][i]][regret1List[i]][1];        
                     }
                     else if(this.$.constants.role == 'p3') {
                         //If player 3
-                        regret0 = this.originalPayoffMatrix[regret0List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
-                        regret1 = this.originalPayoffMatrix[regret1List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
-                        regret2 = this.originalPayoffMatrix[regret2List[i]][historyDict['p1'][i]][historyDict['p2'][i]][0];
+                        regret0 = this.originalPayoffMatrix[regret0List[i]][historyDict['p1'][i]][historyDict['p2'][i]][2];
+                        regret1 = this.originalPayoffMatrix[regret1List[i]][historyDict['p1'][i]][historyDict['p2'][i]][2];
+                        regret2 = this.originalPayoffMatrix[regret2List[i]][historyDict['p1'][i]][historyDict['p2'][i]][2];
                     }
                 }
             }
