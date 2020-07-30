@@ -63,11 +63,11 @@ export class SubperiodPayoffGraph extends PolymerElement {
 
         // readability is overrated
         // just sums each set of payoffs and divides by 4
-        const myInitialPayoff = this.myPayoffs.reduce(
+        /*const myInitialPayoff = this.myPayoffs.reduce(
             (a, b) => a + b, 0) / 4;
         const otherInitialPayoff = this.otherPayoffs.reduce(
             (a, b) => a + b, 0) / 4;
-
+            */
         let minPayoff = Infinity;
         let maxPayoff = -Infinity;
         
@@ -78,9 +78,11 @@ export class SubperiodPayoffGraph extends PolymerElement {
                     maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j]);
                 }
                 else if(this.numPlayers % 3 == 0) {
-                        
-                    minPayoff = Math.min(minPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);
-                    maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j], this.otherPayoffs[i][j], this.thirdPayoffs[i][j]);   
+                    for(var z = 0; z < this.myPayoffs[0][0].length; z++){
+                        minPayoff = Math.min(minPayoff, this.myPayoffs[i][j][z], this.otherPayoffs[i][j][z], this.thirdPayoffs[i][j][z]);
+                        maxPayoff = Math.max(maxPayoff, this.myPayoffs[i][j][z], this.otherPayoffs[i][j][z], this.thirdPayoffs[i][j][z]); 
+                    }
+                    
                 }
             }
         }
@@ -214,7 +216,7 @@ export class SubperiodPayoffGraph extends PolymerElement {
         for(let decision of Object.values(groupDecisions)){
             if(decision === null) return;
         }
-
+        console.log("Starting Payoff");
         const myDecision = groupDecisions[this.$.constants.participantCode];
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
@@ -275,8 +277,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
             other_flow_payoff /= (pop_size * pop_size);
         }
         else if(this.numPlayers % 3 == 0) {
-            var p1Decision, p2Decision, p3Decision;
-            var p1ID, p2ID, p3ID;
             
             // populate decision arrays
             for (const player of this.$.constants.group.players) {

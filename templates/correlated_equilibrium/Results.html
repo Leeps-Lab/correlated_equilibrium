@@ -9,6 +9,112 @@
     <script src="{% static 'correlated_equilibrium/highcharts.js' %}"></script>
 
     <script>
+        //credit calfzhou on stackoverflow
+        /*
+        var yourData = [
+            { name: 'U', y: {{ u_payoff | floatformat:2 }}, x: {{ freq_u | floatformat:2 }} , color: '#ffff00'},
+            { name: 'C', y: {{ c_payoff | floatformat:2 }}, x: {{ freq_c | floatformat:2 }}, color: '#04f2ff' },
+            { name: 'D', y: {{ d_payoff | floatformat:2 }}, x: {{ freq_d | floatformat:2 }}, color: '#9aff02' }
+        ];
+
+        var roleData = [
+            { name: 'U', y: {{ role_average_u_payoff | floatformat:2 }}, x: {{ role_freq_u | floatformat:2 }} , color: '#ffff00'},
+            { name: 'C', y: {{ role_average_c_payoff | floatformat:2 }}, x: {{ role_freq_c | floatformat:2 }}, color: '#04f2ff' },
+            { name: 'D', y: {{ role_average_d_payoff | floatformat:2 }}, x: {{ role_freq_d | floatformat:2 }}, color: '#9aff02' }
+        ];
+
+        function makeSeries(listOfData) {
+            var sumX = 0.0;
+            for (var i = 0; i < 3; i++) {
+                sumX += listOfData[i].x;
+            }
+            var allSeries = []
+            var x = 0.0;
+            for (var i = 0; i < 3; i++) {
+                var data = listOfData[i];
+                allSeries[i] = {
+                    name: data.name,
+                    color: data.color,
+                    data: [
+                        [x, 0], [x, data.y],
+                        {
+                            x: x + data.x / 2.0,
+                            y: data.y,
+                            dataLabels: { enabled: true, format: data.x + ' x {y}' }
+                        },
+                        [x + data.x, data.y], [x + data.x, 0]
+                    ],
+                    w: data.x,
+                    h: data.y
+                };
+                x += data.x;
+            }
+            return allSeries;
+        }
+
+        Highcharts.chart('containerBar', {
+            chart: { type: 'area' },
+            xAxis: {
+                tickLength: 0,
+                labels: { enabled: false},
+                title: {text: "Frequency"}
+            },
+            yAxis: {
+                title: {text: "Payoff Rate"}
+            },
+            title: {
+                text: 'Frequency of Your Choices and their Payoff Rates'
+            },
+            plotOptions: {
+                area: {
+                    marker: {
+                        enabled: false,
+                        states: {
+                            hover: { enabled: false }
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                followPointer: true,
+                useHTML: true,
+                headerFormat: '<span style="color: {series.color}">{series.name}</span>: ',
+                pointFormat: '<span>{series.options.w} x {series.options.h}</span>'
+            },
+            series: makeSeries(yourData)
+        }); 
+
+        Highcharts.chart('containerAverageBar', {
+            chart: { type: 'area' },
+            xAxis: {
+                tickLength: 0,
+                labels: { enabled: false},
+                title: {text: "Frequency"}
+            },
+            yAxis: {
+                title: {text: "Payoff Rate"}
+            },
+            title: {
+                text: 'Frequency of Average  {{ role }} Choices and their Payoff Rates'
+            },
+            plotOptions: {
+                area: {
+                    marker: {
+                        enabled: false,
+                        states: {
+                            hover: { enabled: false }
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                followPointer: true,
+                useHTML: true,
+                headerFormat: '<span style="color: {series.color}">{series.name}</span>: ',
+                pointFormat: '<span>{series.options.w} x {series.options.h}</span>'
+            },
+            series: makeSeries(roleData)
+        });*/
         Highcharts.chart('container', {
             chart: {
                 plotBackgroundColor: null,
@@ -17,7 +123,7 @@
                 type: 'pie'
             },
             title: {
-                text: 'Frequency of Your Choices'
+                text: 'Frequency of Your Choices and their Payoff Rates'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -33,7 +139,10 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        style: {
+                            fontSize: '25px'   
+                        },
+                        format: '<b>{point.name}</b>: {point.payoff:.2f} '
                     }
                 }
             },
@@ -43,19 +152,23 @@
                 data: [{
                     name: 'D',
                     y: {{ freq_d | floatformat:2 }},
+                    payoff: {{ d_payoff | floatformat:2}},
+                    color: '#9aff02',
                     sliced: true,
                     selected: true
                 }, {
                     name: 'C',
-                    y: {{ freq_c | floatformat:2 }}
+                    y: {{ freq_c | floatformat:2 }},
+                    payoff: {{ c_payoff | floatformat:2}},
+                    color: '#04f2ff'
                 }, {
                     name: 'U',
-                    y: {{ freq_u | floatformat:2 }}
+                    y: {{ freq_u | floatformat:2 }},
+                    payoff: {{ u_payoff | floatformat:2}},
+                    color: '#ffff00',
                 }]
             }]
         });
-    </script>
-    <script>
         Highcharts.chart('containerAverage', {
             chart: {
                 plotBackgroundColor: null,
@@ -64,10 +177,10 @@
                 type: 'pie'
             },
             title: {
-                text: 'Frequency of Average {{ role }} Choices'
+                text: 'Frequency of Average {{ role }} Choices and their Payoff Rates'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b>'
             },
             accessibility: {
                 point: {
@@ -80,7 +193,10 @@
                     cursor: 'pointer',
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        style: {
+                            fontSize: '25px'   
+                        },
+                        format: '<b>{point.name}</b>: {point.payoff:.1f} '
                     }
                 }
             },
@@ -90,42 +206,85 @@
                 data: [{
                     name: 'D',
                     y: {{ role_freq_d | floatformat:2 }},
+                    payoff: {{ role_average_d_payoff | floatformat:2 }},
+                    color: '#9aff02',
                     sliced: true,
-                    selected: true
+                    selected: true,
                 }, {
                     name: 'C',
-                    y: {{ role_freq_c | floatformat:2 }}
+                    y: {{ role_freq_c | floatformat:2 }},
+                    payoff: {{ role_average_c_payoff | floatformat:2 }},
+                    color: '#04f2ff',
                 }, {
                     name: 'U',
-                    y: {{ role_freq_u | floatformat:2 }}
+                    y: {{ role_freq_u | floatformat:2 }},
+                    payoff: {{ role_average_u_payoff | floatformat:2 }},
+                    color: '#ffff00',
                 }]
             }]
         });
+
+
     </script>
 {% endblock %}
 
 {% block content %}
-
-    <table class="table" style="width:600px; margin-top:20px; margin-bottom:10px">
-        <th>
-            <td>Frequency of U</td>
-            <td>Frequency of C</td>
-            <td>Frequency of D</td>
-            <td>Flow Payoff</td>
-        </th>
+    <table class="table" style="margin-top:20px; margin-bottom:10px">
         <tr>
-            <td>Your Stats.</td>
-            <td>{{ freq_u | floatformat:2 }}</td>
-            <td>{{ freq_c | floatformat:2 }}</td>
-            <td>{{ freq_d | floatformat:2 }}</td>
-            <td>{{ player.payoff }}</td>
+            <td style="text-align:center">You</td>
+            <td style="text-align:center">Average {{ role }}</td>
         </tr>
         <tr>
-            <td>Average {{ role }} Stats.</td>
-            <td>{{ role_freq_u | floatformat:2 }}</td>
-            <td>{{ role_freq_c | floatformat:2 }}</td>
-            <td>{{ role_freq_d | floatformat:2 }}</td>
-            <td>{{ role_average_payoff }}</td>
+            <td>
+                <table class="table" >
+                    <th>
+                        <td>U</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>All</td>
+                    </th>
+                    <tr>
+                        <td>% Time.</td>
+
+                        <td>{{ freq_u | floatformat:2 }}</td>
+                        <td>{{ freq_c | floatformat:2 }}</td>
+                        <td>{{ freq_d | floatformat:2 }}</td>
+                        <td>1.00</td>
+                    </tr>
+                    <tr>
+                        <td>Payoff Rate</td>
+
+                        <td>{{ u_payoff | floatformat:2 }}</td>
+                        <td>{{  c_payoff | floatformat:2 }}</td>
+                        <td>{{  d_payoff | floatformat:2 }}</td>
+                        <td>{{ player.payoff }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table class="table" >
+                    <th>
+                        <td>U</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>All</td>
+                    </th>
+                    <tr>
+                        <td> </td>
+                        <td>{{ role_freq_u | floatformat:2 }}</td>
+                        <td>{{ role_freq_c | floatformat:2 }}</td>
+                        <td>{{ role_freq_d | floatformat:2 }}</td>
+                        <td>1.00</td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td>{{ role_average_u_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_c_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_d_payoff | floatformat:2 }}</td>
+                        <td>{{ role_average_payoff }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
     <div id="container"></div>
