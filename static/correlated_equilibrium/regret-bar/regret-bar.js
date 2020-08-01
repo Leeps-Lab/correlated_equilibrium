@@ -300,9 +300,9 @@ export class RegretBar extends PolymerElement {
                         //If player 3
                         for(const p1 of historyDict['p1'][i]){
                             for(const p2 of historyDict['p2'][i]){
-                                regret0 = this.originalPayoffMatrix[regret0List[i]][p1][p2][2];
-                                regret1 = this.originalPayoffMatrix[regret1List[i]][p1][p2][2];
-                                regret2 = this.originalPayoffMatrix[regret2List[i]][p1][p2][2];
+                                regret0 += this.originalPayoffMatrix[regret0List[i]][p1][p2][2];
+                                regret1 += this.originalPayoffMatrix[regret1List[i]][p1][p2][2];
+                                regret2 += this.originalPayoffMatrix[regret2List[i]][p1][p2][2];
                             }
                         }
                         
