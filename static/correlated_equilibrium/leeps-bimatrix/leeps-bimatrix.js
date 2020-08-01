@@ -826,7 +826,7 @@ export class LeepsBimatrix extends PolymerElement {
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
         num = 100 - num;//Math.abs(num);
         if (num == 100) return "#ffffff"; //Min Color
-        if (num < 20) return "#3232ff"; //Max Color
+        if (num < 25) return "#3f3fff"; //Max Color
         num = Math.round(num * 2.5);
         //num = num* 2;
         //console.log((num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff");//convert to hex
@@ -852,7 +852,7 @@ export class LeepsBimatrix extends PolymerElement {
         let num = Math.round(100 * dividend/divisor); //round to nearest hundredth and change to whole number
         num = 100 - num;//Math.abs(num);
         if (num == 100) return "#ffffff";
-        if (num < 20) return "#3232ff";
+        if (num < 25) return "#3f3fff";
         num = Math.round(num * 2.5);
         return (num.toString(16).length == 1) ? "#" + "0" + num.toString(16) + "0" +  num.toString(16) + "ff" : "#" + num.toString(16) +  num.toString(16) + "ff"; //a shade of blue
     }
