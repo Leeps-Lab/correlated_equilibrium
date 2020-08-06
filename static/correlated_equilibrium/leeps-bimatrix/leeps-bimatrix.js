@@ -131,6 +131,8 @@ export class LeepsBimatrix extends PolymerElement {
 
                 }
 
+                
+
             </style>
 
             <otree-constants id="constants"></otree-constants>
@@ -161,19 +163,75 @@ export class LeepsBimatrix extends PolymerElement {
                 on-event="_handleGroupDecisionsEvent">
             </redwood-channel>
 
-            <div class="layout vertical center ">
+            <div class="layout vertical center " style = "max-width: 20%;height: auto;margin: auto;">
 
                 <div class="layout vertical end">
+
+                    <!-- Label for Players -->
+                    <template is="dom-if" if="[[ maxInfo ]]">
+                        <div class="layout horizontal center-center" style="margin: auto;padding-top:0px">
+                            <div class="layout verical">
+                                <paper-progress
+                                    max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                </paper-progress>
+                                <span style="text-align:center">You</span>
+                            </div>
+                            <div class="layout vertical">
+                                <paper-progress
+                                    max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                </paper-progress>
+                                <span style="text-align:center">[[columnPlayer]]</span>
+                            </div>
+                            <template is="dom-if" if="[[ isMultiDim ]]">
+                                <div class="layout vertical">
+                                    <paper-progress
+                                        max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                    </paper-progress>
+                                    <span style="text-align:center">[[matrixPlayer]]</span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
 
                     <template is="dom-if" if="[[ numSubperiods ]]">
                         <paper-progress
                             value="[[ _subperiodProgress ]]">
                         </paper-progress>
                     </template>
+                    
 
                     <div class="layout horizontal">
 
+                        <div class="layout vertical">
+
+                        <!-- Label for Players 
+                        <template is="dom-if" if="[[ maxInfo ]]">
+                            <div class="layout horizontal center-center" style="margin: auto;padding-top:0px">
+                                <div class="layout verical">
+                                    <paper-progress
+                                        max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                    </paper-progress>
+                                    <span style="text-align:center">You</span>
+                                </div>
+                                <div class="layout vertical">
+                                    <paper-progress
+                                        max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                    </paper-progress>
+                                    <span style="text-align:center">[[columnPlayer]]</span>
+                                </div>
+                                <template is="dom-if" if="[[ isMultiDim ]]">
+                                    <div class="layout vertical">
+                                        <paper-progress
+                                            max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                        </paper-progress>
+                                        <span style="text-align:center">[[matrixPlayer]]</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>-->
+
                         <div id="heatmap-column" class="layout horizontal">
+                            
 
                             
                             <template is="dom-if" if="[[ isMultiDim ]]">
@@ -249,6 +307,8 @@ export class LeepsBimatrix extends PolymerElement {
                         
                            
                             <div class="layout vertical">
+                            
+
                             <template is="dom-if" if="[[ maxInfo ]]">
                              <!--   <template is="dom-if" if="[[ !meanMatching ]]"> -->
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
@@ -260,25 +320,7 @@ export class LeepsBimatrix extends PolymerElement {
                                                             <td style="background-color: {{   _freq2Color( rowIndex, colIndex, stratMatrix) }};">
                                                                     <span class="your-payoff" style="font-weight: {{ _fontSize2(myDecision, otherDecision, rowIndex, colIndex, payoffMatrix) }};">
                                                                         [[ _array(column, payoffIndex) ]]
-                                                                    </span><!--,
-                                                                    <span class="other-payoff">
-                                                                        [[ _array(column, otherPayoffIndex) ]]
                                                                     </span>
-                                                                            
-                                                                    <div>
-                                                                        <template is="dom-if" if="[[ _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
-                                                                            <paper-radio-button disabled checked></paper-radio-button>
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[! _check2(myPlannedDecision, rowIndex, payoffMatrix) ]]">
-                                                                            <paper-radio-button disabled></paper-radio-button>
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ _check2(otherDecision, colIndex, stratMatrix) ]]">
-                                                                            <paper-radio-button disabled checked></paper-radio-button>
-                                                                        </template>
-                                                                        <template is="dom-if" if="[[ ! _check2(otherDecision, colIndex, stratMatrix) ]]">
-                                                                            <paper-radio-button disabled></paper-radio-button>
-                                                                        </template>
-                                                                    </div> -->
                                                                     <div class="layout horizontal center-center" style="margin: auto;">
                                                                         <paper-progress
                                                                             max="1" value="[[ _valueMy2(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
@@ -322,28 +364,6 @@ export class LeepsBimatrix extends PolymerElement {
                                                                                 [[ _array(column, 2) ]]
                                                                             </span>
                                                                         </template>
-                                                                        <!--
-                                                                        <div>
-                                                                            <template is="dom-if" if="[[ _check(myPlannedDecision, rowIndex, payoffMatrix) ]]">
-                                                                                <paper-radio-button disabled checked></paper-radio-button>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[! _check(myPlannedDecision, rowIndex, payoffMatrix) ]]">
-                                                                                <paper-radio-button disabled></paper-radio-button>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[ _checkOther(otherDecisionArray, colIndex, 'column', stratMatrix) ]]">
-                                                                                <paper-radio-button disabled checked></paper-radio-button>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[ ! _checkOther(otherDecisionArray, colIndex, 'column', stratMatrix) ]]">
-                                                                                <paper-radio-button disabled></paper-radio-button>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[ _checkOther(otherDecisionArray, matrixIndex, 'matrix', stratMatrix) ]]">
-                                                                                <paper-radio-button disabled checked></paper-radio-button>
-                                                                            </template>
-                                                                            <template is="dom-if" if="[[! _checkOther(otherDecisionArray, matrixIndex, 'matrix', stratMatrix) ]]">
-                                                                                <paper-radio-button disabled></paper-radio-button>
-                                                                            </template>
-                                                                        </div>
-                                                                        -->
                                                                         <div class="layout horizontal center-center" style="margin: auto;">
                                                                             <paper-progress
                                                                                 max="1" value="[[ _valueMy(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
@@ -370,6 +390,9 @@ export class LeepsBimatrix extends PolymerElement {
                             </template>
                             </div>
                         </div>
+                        </div>
+                        
+                   
 
                         <div id="graphs-column" class="layout horizontal">
                             <div class="layout horizontal end">
@@ -432,7 +455,6 @@ export class LeepsBimatrix extends PolymerElement {
                             </div>
                         </div>
                     </div>
-
                 </div>
 
             </div>
@@ -540,6 +562,14 @@ export class LeepsBimatrix extends PolymerElement {
                 value: () => {
                     return [[0, 0], [Number.EPSILON, 0]];
                 }
+            },
+            columnPlayer: {
+                type: String,
+                computed: '_columnPlayer()',
+            },
+            matrixPlayer: {
+                type: String,
+                computed: '_matrixPlayer()',
             },
             // set by redwood-period
             _isPeriodRunning: {
@@ -860,7 +890,6 @@ export class LeepsBimatrix extends PolymerElement {
     _freq2( rowIndex, colIndex, stratMatrix){
         // this accounts for reversed indices
         if (!this._ifMVGame()){
-            console.log("BM")
             if(rowIndex== 0)   rowIndex = 1; 
             else if (rowIndex == 1) rowIndex = 0; 
             if(colIndex == 0)  colIndex = 1; 
@@ -1156,7 +1185,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _handleGroupDecisionsEvent(event) {
-        console.log("Group Decisions Changed");
+        //console.log("Group Decisions Changed");
         console.log(this.groupDecisions);
         //NUll Checks
         if(typeof this.groupDecisions === 'undefined') return;
@@ -1304,7 +1333,7 @@ export class LeepsBimatrix extends PolymerElement {
                 }
             }
         }
-        console.log(t);
+        //console.log(t);
         this.set('stratMatrix', t);
 
         this.notifyPath('stratMatrix');
@@ -1514,6 +1543,20 @@ export class LeepsBimatrix extends PolymerElement {
             return 0;
         }
         return Math.round((pickedThis / total) * 100);
+
+    }
+
+    _columnPlayer(){
+        if(this.$.constants.role == "p1") return "p2";
+        if(this.$.constants.role == "p2") return "p1";
+        if(this.$.constants.role == "p3") return "p1";
+
+    }
+
+    _matrixPlayer(){
+        if(this.$.constants.role == "p1") return "p3";
+        if(this.$.constants.role == "p2") return "p3";
+        if(this.$.constants.role == "p3") return "p2";
 
     }
 
