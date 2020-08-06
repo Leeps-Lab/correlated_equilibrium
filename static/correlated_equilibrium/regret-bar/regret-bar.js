@@ -164,6 +164,7 @@ export class RegretBar extends PolymerElement {
                     
                 }
             }
+            console.log(maxPayoff);
 
             //Take the difference between the max and min
             let maxMinDiff = maxPayoff - minPayoff;
@@ -331,9 +332,9 @@ export class RegretBar extends PolymerElement {
             
 
             //Divide regret by maxMinDiff to calculate % regret
-            regret0 /= maxMinDiff;
-            regret1 /= maxMinDiff;
-            regret2 /= maxMinDiff;
+            regret0 = (regret0 - minPayoff) / maxMinDiff;
+            regret1 = (regret1 - minPayoff) / maxMinDiff;
+            regret2 = (regret2 - minPayoff) / maxMinDiff;
 
             //To deal with possible negative regret
             regret0 = Math.max(0, regret0);

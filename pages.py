@@ -29,6 +29,7 @@ class Decision(Page):
 
 
 class ResultsWaitPage(WaitPage):
+    wait_for_all_groups = True
 
     after_all_players_arrive = 'set_payoffs'
 
@@ -38,7 +39,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 180
+    timeout_seconds = 380
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -75,6 +76,7 @@ class Results(Page):
         freq_c = self.player.get_frequency( 1, decisions)
         freq_d = self.player.get_frequency( 0, decisions)
 
+
         return {
             'u_payoff': (self.player.u_payoff / freq_u) if freq_u else 0,
             'c_payoff': (self.player.c_payoff / freq_c) if freq_c else 0,
@@ -89,7 +91,9 @@ class Results(Page):
             'role_freq_u': role_average_frequencies[2],
             'role_freq_c': role_average_frequencies[1],
             'role_freq_d': role_average_frequencies[0],
-            'role': self.player.role()
+            'role': self.player.role(),
+            'game': self.group.subsession.game_type(),
+            'show_u': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV')
         }
 
 
