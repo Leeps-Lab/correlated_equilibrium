@@ -168,6 +168,11 @@ class Subsession(BaseSubsession):
             return parse_config(self.session.config['config_file'])[self.round_number-1]
         except IndexError:
             return None
+    
+    def set_payoffs(self):
+        groups = self.get_groups()
+        for group in groups:
+            group.set_payoffs()
 
 class Group(DecisionGroup):
 
@@ -198,7 +203,8 @@ class Group(DecisionGroup):
         for group in groups:
             decisions = group.get_group_decisions_events()
             for player in group.get_players():
-                player.set_payoff(period_start, period_end, decisions, payoff_matrix)
+                if not player.payoff:
+                    player.set_payoff(period_start, period_end, decisions, payoff_matrix)
 
 
 
