@@ -115,7 +115,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (!this.maxInfo) ? (this.$.constants.role == "p3")? [
+            series: (!this.maxInfo) ? (this.$.constants.role == "p3" || this.gameType == 'MV')? [
                 {
                     name: 'U',
                     pointWidth: 22,
