@@ -1,5 +1,5 @@
 round,shuffle_role,period_length,num_subperiods,gamma,mean_matching,max_info,players_per_group,game
-1,TRUE,100,10,1,FALSE,FALSE,3,FP
-2,TRUE,100,10,1,FALSE,TRUE,3,FP
-3,TRUE,100,10,1,TRUE,FALSE,3,FP
-4,TRUE,100,10,1,TRUE,TRUE,3,FP
+1,TRUE,120,8,1,FALSE,FALSE,3,FP
+2,TRUE,120,8,1,FALSE,TRUE,3,FP
+3,TRUE,120,8,1,TRUE,FALSE,3,FP
+4,TRUE,120,8,1,TRUE,TRUE,3,FP
