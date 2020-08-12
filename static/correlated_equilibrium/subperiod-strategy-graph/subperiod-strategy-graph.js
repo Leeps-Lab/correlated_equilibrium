@@ -233,14 +233,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'P3 Chose C?',
+                        name: 'P3 Chooses C',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: 'P3 Chose U?',
+                        name: 'P3 Chooses U',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
