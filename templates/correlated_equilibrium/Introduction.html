@@ -2,14 +2,31 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-    Introduction
+    Welcome
 {% endblock %}
 
 {% block content %}
 
-		{% with template_name=subsession.app_name|add:"/Instructions.html" %}
-			{% include template_name %}
-		{% endwith %}
+<p>
+Welcome, and thank you for participating!
+</p>
+
+<p>
+From now until the end of the experiment, 
+please turn off your phone and do not communicate with other participants. 
+If you have any questions, please message us in the chat (or use your microphone) and we will respond as soon possible. 
+Please pay careful attention to the instructions as real money is at stake. 
+</p>
+
+<p>
+During the experiment you will earn points, 
+and at the end of the experiment all your earnings will be converted to AUD dollars at the rate specified by the experimenter. 
+You are guaranteed a show up fee of $5.00 AUD if you show up and complete the session, but you can earn more depending on your decisions throughout the game.
+</p>
+
+<p>
+If you finsish reading, please press next.
+</p>
 
     {% next_button %}
 

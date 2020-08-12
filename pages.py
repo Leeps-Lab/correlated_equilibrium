@@ -39,7 +39,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 380
+    timeout_seconds = 60
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -98,6 +98,7 @@ class Results(Page):
 
 
 page_sequence = [
+    Introduction,
     DecisionWaitPage,
     Decision,
     ResultsWaitPage,
