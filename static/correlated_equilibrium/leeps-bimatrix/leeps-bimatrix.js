@@ -204,32 +204,6 @@ export class LeepsBimatrix extends PolymerElement {
 
                         <div class="layout vertical">
 
-                        <!-- Label for Players 
-                        <template is="dom-if" if="[[ maxInfo ]]">
-                            <div class="layout horizontal center-center" style="margin: auto;padding-top:0px">
-                                <div class="layout verical">
-                                    <paper-progress
-                                        max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
-                                    </paper-progress>
-                                    <span style="text-align:center">You</span>
-                                </div>
-                                <div class="layout vertical">
-                                    <paper-progress
-                                        max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
-                                    </paper-progress>
-                                    <span style="text-align:center">[[columnPlayer]]</span>
-                                </div>
-                                <template is="dom-if" if="[[ isMultiDim ]]">
-                                    <div class="layout vertical">
-                                        <paper-progress
-                                            max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
-                                        </paper-progress>
-                                        <span style="text-align:center">[[matrixPlayer]]</span>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>-->
-
                         <div id="heatmap-column" class="layout horizontal">
                             
 
@@ -246,7 +220,8 @@ export class LeepsBimatrix extends PolymerElement {
                                         third-payoffs="[[ thirdPayoffs ]]"
                                         group-decisions="{{ groupDecisions }}"
                                         my-decision="[[ myDecision ]]"     
-                                        game-type="[[ gameType ]]"                                   
+                                        game-type="[[ gameType ]]"  
+                                        regret-type="[[regretType]]"                                 
                                     ></regret-bar>                            
                                 </div>
                             </template>
@@ -262,7 +237,8 @@ export class LeepsBimatrix extends PolymerElement {
                                         third-payoffs="[[ thirdPayoffs ]]"
                                         group-decisions="{{ groupDecisions }}"
                                         my-decision="[[ myDecision ]]"     
-                                        game-type="[[ gameType ]]"                               
+                                        game-type="[[ gameType ]]" 
+                                        regret-type="[[regretType]]"                                  
                                     ></regret-bar>                            
                                 </div>
                             </template>
@@ -512,6 +488,9 @@ export class LeepsBimatrix extends PolymerElement {
             gameType: {
                 type: String
             },
+            regretType: {
+                type: Number
+            },
             showAtWorst: {
                 type: Boolean,
                 value: false,
@@ -599,13 +578,9 @@ export class LeepsBimatrix extends PolymerElement {
         } else {
             if (this.numPlayers % 3 == 0) this.payoffIndex = (this.$.constants.idInGroup - 1) % 3;
             else if (this.numPlayers % 2 == 0) this.payoffIndex = (this.$.constants.idInGroup - 1) % 2;
-            console.log(this.payoffIndex);
-
             // perhaps use leeps-bimatrix method
         }
-        console.log(this.$.constants.role);
-
-        console.log(this.initialDecision);
+        console.log("regretType: " + this.regretType);
 
         this.otherPayoffIndex = Math.abs(1 - this.payoffIndex);
         this.thirdPayoffIndex = Math.abs(2 - this.payoffIndex);   
@@ -812,7 +787,6 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _ifMVGame() {
-        console.log(this.gameType);
         return this.gameType == 'MV';
     }
 
@@ -1186,7 +1160,7 @@ export class LeepsBimatrix extends PolymerElement {
 
     _handleGroupDecisionsEvent(event) {
         //console.log("Group Decisions Changed");
-        console.log(this.groupDecisions);
+        //console.log(this.groupDecisions);
         //NUll Checks
         if(typeof this.groupDecisions === 'undefined') return;
         if(Object.keys(this.groupDecisions).length == 0) return;
@@ -1445,7 +1419,6 @@ export class LeepsBimatrix extends PolymerElement {
             console.log("Something Wrong");
             return 0;
         }
-        console.log(pickedThis / total);
         return Math.round((pickedThis / total) * 100);
         
 

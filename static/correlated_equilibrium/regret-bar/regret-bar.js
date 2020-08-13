@@ -6,6 +6,11 @@ import '../polymer-elements/iron-flex-layout-classes.js';
 //Initialize dict for each player
 var historyDict = {'p1': [], 'p2': [], 'p3': []};
 var myHistory = [];
+//Store Payoffs for each decision
+var one = [];
+var zero = []; 
+var two = [];
+
 
 export class RegretBar extends PolymerElement {
 
@@ -127,6 +132,9 @@ export class RegretBar extends PolymerElement {
             otherDecision: {
                 type: Number,
             },
+            regretType:{
+                type: Number,
+            },
             periodLength: Number,
             _currSubperiod: {
                 type: Number,
@@ -143,7 +151,7 @@ export class RegretBar extends PolymerElement {
         
         //Add most recent decision to history
         myHistory.push(this.myDecision);
-
+        console.log(this.regretType);
         //Grab the max and min payoffs
         if(history.length > 0) {
             let minPayoff = Infinity;
@@ -164,7 +172,6 @@ export class RegretBar extends PolymerElement {
                     
                 }
             }
-            console.log(maxPayoff);
 
             //Take the difference between the max and min
             let maxMinDiff = maxPayoff - minPayoff;
@@ -183,24 +190,6 @@ export class RegretBar extends PolymerElement {
             //Calculate regret
 
             const groupDecisions = event.detail.payload;
-            var p1Decision, p2Decision, p3Decision;
-            var p1ID, p2ID, p3ID;
-
-            //Get each player's decision
-            /*for (const player of this.$.constants.group.players) {
-                if(player.role == "p1") { 
-                    p1Decision = groupDecisions[player.participantCode];
-                    p1ID = player.participantCode;
-                }
-                else if(player.role == "p2") { 
-                    p2Decision = groupDecisions[player.participantCode];
-                    p2ID = player.participantCode;
-                }
-                else if(player.role == "p3") { 
-                    p3Decision = groupDecisions[player.participantCode];
-                    p3ID = player.participantCode;
-                }
-            }*/
 
             var p1_decisions = [];
             var p2_decisions = [];
@@ -217,9 +206,6 @@ export class RegretBar extends PolymerElement {
 
 
             //Push history to dictionary
-            //historyDict['p1'].push(p1Decision);
-            //historyDict['p2'].push(p2Decision);
-            //historyDict['p3'].push(p3Decision);
 
             historyDict['p1'].push(p1_decisions);
             historyDict['p2'].push(p2_decisions);
@@ -228,108 +214,181 @@ export class RegretBar extends PolymerElement {
             var regret0 = 0, regret1 = 0, regret2 = 0;
             var regret0List = [], regret1List = [], regret2List = [];
             var lastDecision = myHistory[(myHistory.length - 1)]; 
-        
-            
-            //Copy elements
-            for(var i = 0; i < myHistory.length; i++) {
-                regret0List.push(myHistory[i]);
-                regret1List.push(myHistory[i]);
-                regret2List.push(myHistory[i]);
-            }
-
-            //Replace elements in list
-            for(var i = 0; i < myHistory.length; i++) {
-                if(myHistory[i] == lastDecision) {
-                    regret0List[i] = 0;
-                    regret1List[i] = 1;
-                    regret2List[i] = 2;
+            //Mean counterfactual payoff up to time t if all instances of j were swapped out for k.
+            if (this.regretType == 1){
+                //Copy elements
+                for(var i = 0; i < myHistory.length; i++) {
+                    regret0List.push(myHistory[i]);
+                    regret1List.push(myHistory[i]);
+                    regret2List.push(myHistory[i]);
                 }
-            }
 
-            //Get payoffs-- adding over all decisions for mean matching
-            for(var i = 0; i < myHistory.length; i++) {
-                
+                //Replace elements in list
+                for(var i = 0; i < myHistory.length; i++) {
+                    if(myHistory[i] == lastDecision) {
+                        regret0List[i] = 0;
+                        regret1List[i] = 1;
+                        regret2List[i] = 2;
+                    }
+                }
+
+                //Get payoffs-- adding over all decisions for mean matching
+                for(var i = 0; i < myHistory.length; i++) {
+                    
+                    if(this.numPlayers % 2 == 0) {
+                        if(this.$.constants.role == 'p1') {
+                            //If player 1
+                            for(const p2 of historyDict['p2'][i]){
+                                regret0 += this.myPayoffs[regret0List[i]][p2];
+                                regret1 += this.myPayoffs[regret1List[i]][p2];
+
+                                //If 3 rows
+                                if(this._if3()) {
+                                    regret2 += this.myPayoffs[regret2List[i]][p2];
+                                }
+                            }
+
+                        } 
+                        else if(this.$.constants.role == 'p2') { 
+                            //If player 2
+                            for(const p1 of historyDict['p1'][i]){
+                                regret0 += this.myPayoffs[regret0List[i]][p1];
+                                regret1 += this.myPayoffs[regret1List[i]][p1];
+
+                                //If 3 rows
+                                if(this._if3()) {
+                                    regret2 += this.myPayoffs[regret2List[i]][p1];
+                                }
+                            }
+                        }
+                    }
+                    else if(this.numPlayers % 3 == 0) {
+                        if(this.$.constants.role == 'p1') {
+                            //If player 1
+                            for(const p2 of historyDict['p2'][i]){
+                                for(const p3 of historyDict['p3'][i]){
+                                    regret0 += this.payoffMatrix[p3][regret0List[i]][p2][0];
+                                    regret1 += this.payoffMatrix[p3][regret1List[i]][p2][0];
+                                }
+                            }
+                                    
+                        }
+                        else if(this.$.constants.role == 'p2') {
+                            //If player 2
+                            for(const p1 of historyDict['p1'][i]){
+                                for(const p3 of historyDict['p3'][i]){
+                                    regret0 += this.originalPayoffMatrix[p3][p1][regret0List[i]][1];
+                                    regret1 += this.originalPayoffMatrix[p3][p1][regret1List[i]][1];
+                                }
+                            }
+                                    
+                        }
+                        else if(this.$.constants.role == 'p3') {
+                            //If player 3
+                            for(const p1 of historyDict['p1'][i]){
+                                for(const p2 of historyDict['p2'][i]){
+                                    regret0 += this.originalPayoffMatrix[regret0List[i]][p1][p2][2];
+                                    regret1 += this.originalPayoffMatrix[regret1List[i]][p1][p2][2];
+                                    regret2 += this.originalPayoffMatrix[regret2List[i]][p1][p2][2];
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                // Take average payoff for mean-matching
+                let pop_size = p1_decisions.length;
+                if(this.numPlayers % 2 == 0){
+                    regret0 /= pop_size;
+                    regret1 /= pop_size;
+                    regret2 /= pop_size;
+                }else if(this.numPlayers % 3 == 0){
+                    regret0 /= (pop_size * pop_size);
+                    regret1 /= (pop_size * pop_size);
+                    regret2 /= (pop_size * pop_size);
+                }
+
+
+                //take the average conditional on group size, 2/3 populations share equal sizes.
+                let histLength = myHistory.length;
+
+                regret0 /= histLength;
+                regret1 /= histLength;
+                regret2 /= histLength;
+            
+
+            
+            } else if(this.regretType == 2){
+                //Mean actual payoff up to time t.
+                //Get payoff for this round-- adding over all decisions for mean matching
+                var payoff = 0;
                 if(this.numPlayers % 2 == 0) {
                     if(this.$.constants.role == 'p1') {
                         //If player 1
-                        for(const p2 of historyDict['p2'][i]){
-                            regret0 += this.myPayoffs[regret0List[i]][p2];
-                            regret1 += this.myPayoffs[regret1List[i]][p2];
-
-                            //If 3 rows
-                            if(this._if3()) {
-                                regret2 += this.myPayoffs[regret2List[i]][p2];
-                            }
+                        for(const p2 of p2_decisions){
+                            payoff = this.myPayoffs[this.myDecision][p2];
                         }
 
                     } 
                     else if(this.$.constants.role == 'p2') { 
                         //If player 2
-                        for(const p1 of historyDict['p1'][i]){
-                            regret0 += this.myPayoffs[regret0List[i]][p1];
-                            regret1 += this.myPayoffs[regret1List[i]][p1];
-
-                            //If 3 rows
-                            if(this._if3()) {
-                                regret2 += this.myPayoffs[regret2List[i]][p1];
-                            }
+                        for(const p1 of p1_decisions){
+                            payoff = this.myPayoffs[this.myDecision][p1];
                         }
                     }
                 }
                 else if(this.numPlayers % 3 == 0) {
                     if(this.$.constants.role == 'p1') {
                         //If player 1
-                        for(const p2 of historyDict['p2'][i]){
-                            for(const p3 of historyDict['p3'][i]){
-                                regret0 += this.payoffMatrix[p3][regret0List[i]][p2][0];
-                                regret1 += this.payoffMatrix[p3][regret1List[i]][p2][0];
+                        for(const p2 of p2_decisions){
+                            for(const p3 of p3_decisions){
+                                payoff = this.payoffMatrix[p3][this.myDecision][p2][0];
                             }
                         }
                                 
                     }
                     else if(this.$.constants.role == 'p2') {
                         //If player 2
-                        for(const p1 of historyDict['p1'][i]){
-                            for(const p3 of historyDict['p3'][i]){
-                                regret0 += this.originalPayoffMatrix[p3][p1][regret0List[i]][1];
-                                regret1 += this.originalPayoffMatrix[p3][p1][regret1List[i]][1];
+                        for(const p1 of p1_decisions){
+                            for(const p3 of p3_decisions){
+                                payoff = this.originalPayoffMatrix[p3][p1][this.myDecision][1];
                             }
                         }
                                 
                     }
                     else if(this.$.constants.role == 'p3') {
                         //If player 3
-                        for(const p1 of historyDict['p1'][i]){
-                            for(const p2 of historyDict['p2'][i]){
-                                regret0 += this.originalPayoffMatrix[regret0List[i]][p1][p2][2];
-                                regret1 += this.originalPayoffMatrix[regret1List[i]][p1][p2][2];
-                                regret2 += this.originalPayoffMatrix[regret2List[i]][p1][p2][2];
+                        for(const p1 of p1_decisions){
+                            for(const p2 of p2_decisions){
+                                payoff = this.originalPayoffMatrix[this.myDecision][p1][p2][2];
                             }
                         }
                         
                     }
                 }
+                
+                // Take average payoff for mean-matching
+                let pop_size = p1_decisions.length;
+                if(this.numPlayers % 2 == 0){
+                    payoff /= pop_size;
+                }else if(this.numPlayers % 3 == 0){
+                    payoff /= (pop_size * pop_size);
+                }
+
+                //Push the payoff on the respective history list
+                if(this.myDecision == 0) zero.push(payoff);
+                else if(this.myDecision == 1) one.push(payoff);
+                else two.push(payoff);
+
+                //For each decision, sum up payoffs 
+                for (const p of zero) regret0 += p;
+                for (const p of one) regret1 += p;
+                for (const p of two) regret2 += p;
+                // If the list is not empty, divide the calculation by length
+                regret0 = (zero.length > 0) ? regret0 / zero.length : 0;
+                regret1 = (one.length > 0) ? regret1 / one.length : 0;
+                regret2 = (two.length > 0) ? regret2 / two.length : 0;
             }
-            // Take average payoff for mean-matching
-            let pop_size = p1_decisions.length;
-            if(this.numPlayers % 2 == 0){
-                regret0 /= pop_size;
-                regret1 /= pop_size;
-                regret2 /= pop_size;
-            }else if(this.numPlayers % 3 == 0){
-                regret0 /= (pop_size * pop_size);
-                regret1 /= (pop_size * pop_size);
-                regret2 /= (pop_size * pop_size);
-            }
-
-
-            //take the average conditional on group size, 2/3 populations share equal sizes.
-            let histLength = myHistory.length;
-
-            regret0 /= histLength;
-            regret1 /= histLength;
-            regret2 /= histLength;
-            
 
             //Divide regret by maxMinDiff to calculate % regret
             regret0 = (regret0 - minPayoff) / maxMinDiff;
