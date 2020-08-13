@@ -36,7 +36,8 @@ def parse_config(config_file):
             'mean_matching': True if row['mean_matching'] == 'TRUE' else False,
             'max_info': True if row['max_info'] == 'TRUE' else False,
             'players_per_group': int(row['players_per_group']),
-            'game': str(row['game'])
+            'game': str(row['game']),
+            'regret': int(row['regret'])
         })
     return rounds
 
@@ -131,8 +132,11 @@ class Subsession(BaseSubsession):
         num_silos = self.session.config['num_silos']
         fixed_id_in_group = not config['shuffle_role']
 
+        #print("num_silos: ", num_silos)
+
         players = self.get_players()
         num_players = len(players)
+        #print("num_players: ", num_players)
         silos = [[] for _ in range(num_silos)]
         for i, player in enumerate(players):
             if self.round_number == 1:
@@ -140,7 +144,7 @@ class Subsession(BaseSubsession):
             else:
                 player.silo_num = player.in_round(1).silo_num
             silos[player.silo_num].append(player)
-
+        #print(silos)
         group_matrix = []
         for silo in silos:
             if config['mean_matching']:
@@ -151,7 +155,8 @@ class Subsession(BaseSubsession):
                 for i in range(0, len(silo), ppg):
                     silo_matrix.append(silo[i:i+ppg])
             group_matrix.extend(otree.common._group_randomly(silo_matrix, fixed_id_in_group))
-        
+        #print(silo_matrix)
+        #print(group_matrix)
         self.set_group_matrix(group_matrix)
 
     def set_initial_decisions(self):

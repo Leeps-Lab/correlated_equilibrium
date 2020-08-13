@@ -13,6 +13,7 @@
 
 {% block content %}
     {% with config=subsession.config %}
+        
         <leeps-bimatrix
             initial-decision='{{ player.initial_decision }}'
             payoff-matrix='{{ player.subsession.payoff_matrix }}'
@@ -23,6 +24,7 @@
             game-type='{{ player.subsession.game_type }}'
             strat-matrix='{{ player.subsession.strat_matrix }}'
             gamma='{{ config.gamma }}'
+            regret-type='{{config.regret}}'
             {% if config.max_info %}
             max-info
             {% endif %}
