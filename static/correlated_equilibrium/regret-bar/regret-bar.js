@@ -420,7 +420,7 @@ export class RegretBar extends PolymerElement {
 
             if(this._if3()) {
                 elem2.style.width = Math.round(regret2);
-                elem2.innerHTML = Math.round(regret2 );
+                elem2.innerHTML = Math.round(regret2);
             }         
         }  
     }
