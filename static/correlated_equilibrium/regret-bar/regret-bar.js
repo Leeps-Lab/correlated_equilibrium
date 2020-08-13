@@ -391,9 +391,9 @@ export class RegretBar extends PolymerElement {
             }
 
             //Divide regret by maxMinDiff to calculate % regret
-            regret0 = (regret0 - minPayoff) / maxMinDiff;
-            regret1 = (regret1 - minPayoff) / maxMinDiff;
-            regret2 = (regret2 - minPayoff) / maxMinDiff;
+            //regret0 = (regret0 - minPayoff) / maxMinDiff;
+            //regret1 = (regret1 - minPayoff) / maxMinDiff;
+            //regret2 = (regret2 - minPayoff) / maxMinDiff;
 
             //To deal with possible negative regret
             regret0 = Math.max(0, regret0);
@@ -401,16 +401,27 @@ export class RegretBar extends PolymerElement {
             regret2 = Math.max(0, regret2);
 
             //Update regret bars
-            elem0.style.width = Math.round(regret0 * 100) + '%';
-            elem0.innerHTML = Math.round(regret0 * 100) + '%';
+            //elem0.style.width = Math.round(regret0 * 100) + '%';
+            //elem0.innerHTML = Math.round(regret0 * 100) + '%';
 
-            elem1.style.width = Math.round(regret1 * 100) + '%';
-            elem1.innerHTML = Math.round(regret1 * 100) + '%';
+            //elem1.style.width = Math.round(regret1 * 100) + '%';
+            //elem1.innerHTML = Math.round(regret1 * 100) + '%';
+
+            //if(this._if3()) {
+            //    elem2.style.width = Math.round(regret2 * 100) + '%';
+            //    elem2.innerHTML = Math.round(regret2 * 100) + '%';
+            //}
+            
+            elem0.style.width = Math.round(regret0);
+            elem0.innerHTML = Math.round(regret0);
+
+            elem1.style.width = Math.round(regret1);
+            elem1.innerHTML = Math.round(regret1);
 
             if(this._if3()) {
-                elem2.style.width = Math.round(regret2 * 100) + '%';
-                elem2.innerHTML = Math.round(regret2 * 100) + '%';
-            }            
+                elem2.style.width = Math.round(regret2);
+                elem2.innerHTML = Math.round(regret2 );
+            }         
         }  
     }
     
