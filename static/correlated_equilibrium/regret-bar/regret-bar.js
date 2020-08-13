@@ -151,7 +151,6 @@ export class RegretBar extends PolymerElement {
         
         //Add most recent decision to history
         myHistory.push(this.myDecision);
-        console.log(this.regretType);
         //Grab the max and min payoffs
         if(history.length > 0) {
             let minPayoff = Infinity;
@@ -391,14 +390,19 @@ export class RegretBar extends PolymerElement {
             }
 
             //Divide regret by maxMinDiff to calculate % regret
-            //regret0 = (regret0 - minPayoff) / maxMinDiff;
-            //regret1 = (regret1 - minPayoff) / maxMinDiff;
-            //regret2 = (regret2 - minPayoff) / maxMinDiff;
+            var regret0Percent = (regret0 - minPayoff) / maxMinDiff;
+            var regret1Percent = (regret1 - minPayoff) / maxMinDiff;
+            var regret2Percent = (regret2 - minPayoff) / maxMinDiff;
 
             //To deal with possible negative regret
             regret0 = Math.max(0, regret0);
             regret1 = Math.max(0, regret1);
             regret2 = Math.max(0, regret2);
+
+            //To deal with possible negative regret
+            regret0Percent = Math.max(0, regret0Percent);
+            regret1Percent = Math.max(0, regret1Percent);
+            regret2Percent = Math.max(0, regret2Percent);
 
             //Update regret bars
             //elem0.style.width = Math.round(regret0 * 100) + '%';
@@ -412,14 +416,14 @@ export class RegretBar extends PolymerElement {
             //    elem2.innerHTML = Math.round(regret2 * 100) + '%';
             //}
             
-            elem0.style.width = Math.round(regret0);
+            elem0.style.width = Math.round(regret0Percent * 100) + '%';
             elem0.innerHTML = Math.round(regret0);
 
-            elem1.style.width = Math.round(regret1);
+            elem1.style.width = Math.round(regret1Percent * 100) + '%';
             elem1.innerHTML = Math.round(regret1);
 
             if(this._if3()) {
-                elem2.style.width = Math.round(regret2);
+                elem2.style.width = Math.round(regret2Percent * 100) + '%';
                 elem2.innerHTML = Math.round(regret2);
             }         
         }  
