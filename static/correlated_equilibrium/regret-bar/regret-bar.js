@@ -326,14 +326,14 @@ export class RegretBar extends PolymerElement {
                     if(this.$.constants.role == 'p1') {
                         //If player 1
                         for(const p2 of p2_decisions){
-                            payoff = this.myPayoffs[this.myDecision][p2];
+                            payoff += this.myPayoffs[this.myDecision][p2];
                         }
 
                     } 
                     else if(this.$.constants.role == 'p2') { 
                         //If player 2
                         for(const p1 of p1_decisions){
-                            payoff = this.myPayoffs[this.myDecision][p1];
+                            payoff += this.myPayoffs[this.myDecision][p1];
                         }
                     }
                 }
@@ -342,7 +342,7 @@ export class RegretBar extends PolymerElement {
                         //If player 1
                         for(const p2 of p2_decisions){
                             for(const p3 of p3_decisions){
-                                payoff = this.payoffMatrix[p3][this.myDecision][p2][0];
+                                payoff += this.payoffMatrix[p3][this.myDecision][p2][0];
                             }
                         }
                                 
@@ -351,7 +351,7 @@ export class RegretBar extends PolymerElement {
                         //If player 2
                         for(const p1 of p1_decisions){
                             for(const p3 of p3_decisions){
-                                payoff = this.originalPayoffMatrix[p3][p1][this.myDecision][1];
+                                payoff += this.originalPayoffMatrix[p3][p1][this.myDecision][1];
                             }
                         }
                                 
@@ -360,7 +360,7 @@ export class RegretBar extends PolymerElement {
                         //If player 3
                         for(const p1 of p1_decisions){
                             for(const p2 of p2_decisions){
-                                payoff = this.originalPayoffMatrix[this.myDecision][p1][p2][2];
+                                payoff += this.originalPayoffMatrix[this.myDecision][p1][p2][2];
                             }
                         }
                         
@@ -380,7 +380,7 @@ export class RegretBar extends PolymerElement {
                 else if(this.myDecision == 1) one.push(payoff);
                 else two.push(payoff);
 
-                //For each decision, sum up payoffs 
+                //For each decision, sum up payoffs (get average payoffs for all round)
                 for (const p of zero) regret0 += p;
                 for (const p of one) regret1 += p;
                 for (const p of two) regret2 += p;
