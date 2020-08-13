@@ -222,8 +222,11 @@
             </td>
         </tr>
     </table>
-    <div id="container"></div>
-    <div id="containerAverage"></div>
+    <div style="height: 100%;width: 100%; display: flex;">
+        <div id="container" style="width: 50%;"></div>
+        <div id="containerAverage" style="width: 50%;"></div>
+    </div>
+    
 
     <div>Your total payoff so far: {{ player.participant.payoff }}</div>
 

@@ -216,7 +216,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
         for(let decision of Object.values(groupDecisions)){
             if(decision === null) return;
         }
-        console.log("Starting Payoff");
         const myDecision = groupDecisions[this.$.constants.participantCode];
         var my_flow_payoff = 0;
         var other_flow_payoff = 0;
@@ -239,7 +238,6 @@ export class SubperiodPayoffGraph extends PolymerElement {
                 if(player.role == 'p2') p2_decisions.push(otherDecision);
                 num_other_players++;
             }
-            console.log("num_other_players: " + num_other_players);
 
             if(this.$.constants.role == 'p1'){
                 // calculate my payoff (average w.r.t myDecision if mean-matching)
