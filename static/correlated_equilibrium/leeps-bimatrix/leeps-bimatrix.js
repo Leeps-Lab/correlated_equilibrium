@@ -305,6 +305,9 @@ export class LeepsBimatrix extends PolymerElement {
                                                                             max="100" value="[[ _valueColumn2(otherDecision, colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                         </paper-progress>
                                                                     </div>
+                                                                    <div>
+                                                                        <span>[[ _freq2( rowIndex, colIndex, stratMatrix) ]]</span>
+                                                                    </div>
                                                             </td>
                                                     </template>
                                                 </tr>
@@ -347,6 +350,9 @@ export class LeepsBimatrix extends PolymerElement {
                                                                             <paper-progress
                                                                                 max="100" value="[[ _valueMatrix( matrixIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                             </paper-progress>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span>[[ _freq3(matrixIndex, rowIndex, colIndex, stratMatrix) ]]</span>
                                                                         </div>
                                                                     </td>
                                                             </template>
