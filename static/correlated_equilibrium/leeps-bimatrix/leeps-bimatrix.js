@@ -169,7 +169,7 @@ export class LeepsBimatrix extends PolymerElement {
 
                     <!-- Label for Players -->
                     <template is="dom-if" if="[[ maxInfo ]]">
-                        <div class="layout horizontal center-center" style="margin: auto;padding-top:0px">
+                        <div class="layout horizontal" style="margin: auto; margin-left: 0px; padding-top:0px">
                             <div class="layout verical">
                                 <paper-progress
                                     max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
