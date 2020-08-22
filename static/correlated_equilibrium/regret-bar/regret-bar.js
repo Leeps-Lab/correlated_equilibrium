@@ -390,9 +390,9 @@ export class RegretBar extends PolymerElement {
             }
 
             //Divide regret by maxMinDiff to calculate % regret
-            var regret0Percent = (regret0 - minPayoff) / maxMinDiff;
-            var regret1Percent = (regret1 - minPayoff) / maxMinDiff;
-            var regret2Percent = (regret2 - minPayoff) / maxMinDiff;
+            var regret0Percent = regret0 / maxPayoff;
+            var regret1Percent = regret1 / maxPayoff;
+            var regret2Percent = regret2 / maxPayoff;
 
             //To deal with possible negative regret
             regret0 = Math.max(0, regret0);
