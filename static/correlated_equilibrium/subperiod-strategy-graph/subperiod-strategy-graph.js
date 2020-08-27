@@ -97,6 +97,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 column: {
                     stacking: 'normal'
                   },
+                area: {marker: {enabled: false}},
                 line: {marker: {enabled: false}},
                 series: {
                     states: {
@@ -118,47 +119,42 @@ export class SubperiodStrategyGraph extends PolymerElement {
             series: (!this.maxInfo) ? (this.$.constants.role == "p3" || this.gameType == 'MV')? [
                 {
                     name: 'U',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#ffff00',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'C',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#04f2ff',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#9aff02',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
             ] : [
                 {
                     name: 'C',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#04f2ff',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#9aff02',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
@@ -166,28 +162,25 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     (this.$.constants.role == "p3")? [
                     {
                         name: 'U',
-                        pointWidth: 22,
                         borderColor: null,
                         color: '#ffff00',
-                        type: "column",
+                        type: "area",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'C',
-                        pointWidth: 22,
                         borderColor: null,
                         color: '#04f2ff',
-                        type: "column",
+                        type: "area",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'D',
-                        pointWidth: 22,
                         borderColor: null,
                         color: '#9aff02',
-                        type: "column",
+                        type: "area",
                         data: [[0, 0]],
                         step: "left"
                     },
@@ -209,19 +202,17 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 ] : [
                     {
                         name: 'C',
-                        pointWidth: 22,
                         borderColor: null,
                         color: '#04f2ff',
-                        type: "column",
+                        type: "area",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
                         name: 'D',
-                        pointWidth: 22,
                         borderColor: null,
                         color: '#9aff02',
-                        type: "column",
+                        type: "area",
                         data: [[0, 0]],
                         step: "left"
                     },
@@ -252,28 +243,25 @@ export class SubperiodStrategyGraph extends PolymerElement {
             [
                 {
                     name: 'U',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#ffff00',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'C',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#04f2ff',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#9aff02',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
@@ -296,19 +284,17 @@ export class SubperiodStrategyGraph extends PolymerElement {
             ] : [
                 {
                     name: 'C',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#04f2ff',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
                     name: 'D',
-                    pointWidth: 22,
                     borderColor: null,
                     color: '#9aff02',
-                    type: "column",
+                    type: "area",
                     data: [[0, 0]],
                     step: "left"
                 },
@@ -358,6 +344,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
 
         //For your choice
         if(this.$.constants.role == "p3") {
+            /* For Stacked Area
             var count2 = 0;
             var count1 = 0;
             var count0 = 0;
@@ -376,16 +363,31 @@ export class SubperiodStrategyGraph extends PolymerElement {
 
 
             dataset = this.graph_obj.series[0];
+            this._lastElem(dataset.data).update({y: count2});
             dataset.addPoint([this._currSubperiod, count2]);
 
             dataset = this.graph_obj.series[1];
+            this._lastElem(dataset.data).update({y: count1});
             dataset.addPoint([this._currSubperiod, count1]);
 
             dataset = this.graph_obj.series[2];
+            this._lastElem(dataset.data).update({y: count0});
             dataset.addPoint([this._currSubperiod, count0]);
+            */
+            dataset = this.graph_obj.series[0];
+            this._lastElem(dataset.data).update({y: (this.myDecision == 2) ? 1 : 0});
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 2) ? 1 : 0]);
+
+            dataset = this.graph_obj.series[1];
+            this._lastElem(dataset.data).update({y: (this.myDecision == 1) ? 1 : 0});
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 1) ? 1 : 0]);
+
+            dataset = this.graph_obj.series[2];
+            this._lastElem(dataset.data).update({y: (this.myDecision == 0) ? 1 : 0});
+            dataset.addPoint([this._currSubperiod, (this.myDecision == 0) ? 1 : 0]);
 
         }
-        else {
+        else {/* For stacked area
             var count2 = 0;
             var count1 = 0;
             var count0 = 0;
@@ -411,24 +413,50 @@ export class SubperiodStrategyGraph extends PolymerElement {
 
             count2 /= len;
             count1 /= len;
-            count0 /= len;
+            count0 /= len;*/
 
-            if(this.gameType == 'MV'){
+            if(this.gameType == 'MV'){/*
                 dataset = this.graph_obj.series[0];
+                this._lastElem(dataset.data).update({y: count2});
                 dataset.addPoint([this._currSubperiod, count2]);
 
                 dataset = this.graph_obj.series[1];
+                this._lastElem(dataset.data).update({y: count1});
                 dataset.addPoint([this._currSubperiod, count1]);
 
                 dataset = this.graph_obj.series[2];
+                this._lastElem(dataset.data).update({y: count0});
                 dataset.addPoint([this._currSubperiod, count0]);
-
-            } else {
+                */
                 dataset = this.graph_obj.series[0];
+                this._lastElem(dataset.data).update({y: (this.myDecision == 2) ? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.myDecision == 2) ? 1 : 0]);
+
+                dataset = this.graph_obj.series[1];
+                this._lastElem(dataset.data).update({y: (this.myDecision == 1) ? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.myDecision == 1) ? 1 : 0]);
+
+                dataset = this.graph_obj.series[2];
+                this._lastElem(dataset.data).update({y: (this.myDecision == 0) ? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.myDecision == 0) ? 1 : 0]);
+
+            } else {/*
+                dataset = this.graph_obj.series[0];
+                this._lastElem(dataset.data).update({y: count1});
                 dataset.addPoint([this._currSubperiod, count1]);
 
                 dataset = this.graph_obj.series[1];
+                this._lastElem(dataset.data).update({y: count0});
                 dataset.addPoint([this._currSubperiod, count0]);
+                */
+
+                dataset = this.graph_obj.series[0];
+                this._lastElem(dataset.data).update({y: (this.myDecision == 1) ? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.myDecision == 1) ? 1 : 0]);
+
+                dataset = this.graph_obj.series[1];
+                this._lastElem(dataset.data).update({y: (this.myDecision == 0) ? 1 : 0});
+                dataset.addPoint([this._currSubperiod, (this.myDecision == 0) ? 1 : 0]);
             }
 
             
