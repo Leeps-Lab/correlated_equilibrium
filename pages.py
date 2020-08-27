@@ -39,7 +39,7 @@ class ResultsWaitPage(WaitPage):
 
 class Results(Page):
 
-    timeout_seconds = 60
+    timeout_seconds = 20
 
     def is_displayed(self):
         return self.subsession.config is not None
@@ -78,13 +78,13 @@ class Results(Page):
 
 
         return {
-            'u_payoff': (self.player.u_payoff / freq_u) if freq_u else 0,
-            'c_payoff': (self.player.c_payoff / freq_c) if freq_c else 0,
-            'd_payoff': (self.player.d_payoff / freq_d) if freq_d else 0,
-            'role_average_payoff': sum(role_payoffs) / len(role_payoffs),
-            'role_average_u_payoff': (round(sum(role_u_payoffs) / len(role_u_payoffs)) / role_average_frequencies[2]) if role_average_frequencies[2] else 0,
-            'role_average_c_payoff': (round(sum(role_c_payoffs) / len(role_c_payoffs)) / role_average_frequencies[1]) if role_average_frequencies[1] else 0,
-            'role_average_d_payoff': (round(sum(role_d_payoffs) / len(role_d_payoffs)) / role_average_frequencies[0]) if role_average_frequencies[0] else 0,
+            'u_payoff': round(self.player.u_payoff / freq_u) if freq_u else 0,
+            'c_payoff': round(self.player.c_payoff / freq_c) if freq_c else 0,
+            'd_payoff': round(self.player.d_payoff / freq_d) if freq_d else 0,
+            'role_average_payoff': round(sum(role_payoffs) / len(role_payoffs)),
+            'role_average_u_payoff': round((round(sum(role_u_payoffs) / len(role_u_payoffs)) / role_average_frequencies[2])) if role_average_frequencies[2] else 0,
+            'role_average_c_payoff': round((round(sum(role_c_payoffs) / len(role_c_payoffs)) / role_average_frequencies[1])) if role_average_frequencies[1] else 0,
+            'role_average_d_payoff': round((round(sum(role_d_payoffs) / len(role_d_payoffs)) / role_average_frequencies[0])) if role_average_frequencies[0] else 0,
             'freq_u': freq_u,
             'freq_c': freq_c,
             'freq_d': freq_d,
