@@ -127,7 +127,8 @@ def get_output_discrete_time(events):
         if event.channel == 'target':
             targets[event.participant.code] = event.value
         elif event.channel == 'group_decisions':
-            row = config_columns
+            row = []
+            row += config_columns
             row += [
                 group.session.code,
                 group.subsession_id,
