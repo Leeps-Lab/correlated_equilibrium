@@ -152,12 +152,16 @@
 {% endblock %}
 
 {% block content %}
+    {% if subsession.config.max_info %}
     <div style="text-align:center;font-weight: bold; font-size: large;"><p>Your were {{role}} in this round.</p></div>
-    
+    {% endif %}
+
     <table class="table" style="margin-top:20px; margin-bottom:10px">
         <tr>
             <td style="text-align:center">You</td>
-            <td style="text-align:center">Average of Your Role</td>
+            {% if subsession.config.max_info %}
+                <td style="text-align:center">Average of Your Role</td>
+            {% endif %}
         </tr>
         <tr>
             <td>
@@ -190,6 +194,7 @@
                     </tr>
                 </table>
             </td>
+            {% if subsession.config.max_info %}
             <td>
                 <table class="table" >
                     <th>
@@ -220,11 +225,20 @@
                     </tr>
                 </table>
             </td>
+            {% endif %}
         </tr>
     </table>
     <div style="height: 100%;width: 100%; display: flex;">
-        <div id="container" style="width: 50%;"></div>
-        <div id="containerAverage" style="width: 50%;"></div>
+        <div id="container" 
+            {% if subsession.config.max_info %} 
+                style="width: 50%;" 
+            {% else %}
+                style= "margin:auto;"
+            {% endif %}>
+        </div>
+        {% if subsession.config.max_info %}
+        <div id="containerAverage" style="width: 50%;"></div> 
+        {% endif %}
     </div>
     
 
