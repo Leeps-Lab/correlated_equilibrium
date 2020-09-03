@@ -13,7 +13,14 @@
 
 {% block content %}
     {% with config=subsession.config %}
-        
+        <style>
+            body{
+                font-size: 90%;
+            }
+            leeps-bimatrix {
+                width: 100%;
+            }
+        </style>
         <leeps-bimatrix
             initial-decision='{{ player.initial_decision }}'
             payoff-matrix='{{ player.subsession.payoff_matrix }}'

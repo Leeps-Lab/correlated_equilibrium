@@ -36,45 +36,45 @@ export class LeepsBimatrix extends PolymerElement {
                 }
 
                 #graphs-column {
-                    margin-left: 20px;
+                    margin-left: 1.25em;
                 }
 
                 #your-heatmap {
-                    margin-top: 30px;
+                    margin-top: 1.875em;
                 }
 
                 #payoff-table  {
-                    width: 250px;
-                    height: 250px;
+                    width: 15.625em;
+                    height: 15.625em;
                     border-collapse: collapse;
-                    border: 1px solid black;
+                    border: 0.0625em solid black;
                 }
 
                 .your-payoff {
-                    font-size: 16pt;
+                    font-size: 1em;
                 }
 
                 .other-payoff {
-                    font-size: 12pt;
+                    font-size: .75em;
                 }
 
                 paper-radio-group {
-                    height: 260px;
+                    height: 16.25em;
                 }
 
                 regret-bar {
-                    height: 260px;
+                    height: 16.25em;
                     padding-right: 0px;
                 }
 
                 #payoff-table td {
-                    border: 1px solid black;
+                    border: 0.0625em solid black;
                     text-align: center;
                     vertical-align: center;
                 }
 
                 #payoff-table.two{
-                    margin-right: 25px;
+                    margin-right: 1.5625em;
                 }
 
                 #payoff-table.two tr td{
@@ -84,34 +84,34 @@ export class LeepsBimatrix extends PolymerElement {
                 styled-range {
                     transform: rotate(270deg) translateX(-100%);
                     transform-origin: 0 0px;
-                    width: 315px;
-                    height: 50px;
+                    width: 19.6875em;
+                    height: 3.125em;
                 }
 
                 .slider-container {
-                    margin-top: 13px;
-                    width: 50px;
-                    height: 315px;
+                    margin-top: 0.8125em;
+                    width: 3.125em;
+                    height: 19.6875em;
                 }
 
                 heatmap-thermometer {
-                    margin-bottom: 20px;
-                    height: 243px;
+                    margin-bottom: 0.8125em;
+                    height: 15.1875em;
                 }
 
                 strategy-graph, subperiod-strategy-graph {
-                    width: 510px;
-                    height: 200px;
+                    width: 31.875em;
+                    height: 12.5em;
                 }
 
                 payoff-graph, subperiod-payoff-graph {
-                    width: 510px;
-                    height: 305px;
+                    width: 31.875em;
+                    height: 19.0625em;
                 }
 
                 paper-progress {
-                    margin-bottom: 10px;
-                    --paper-progress-height: 30px;
+                    margin-bottom: 0.625em;
+                    --paper-progress-height: 1.875em;
                 }
 
                 .light-blue {
@@ -172,20 +172,20 @@ export class LeepsBimatrix extends PolymerElement {
                         <div class="layout horizontal" style="margin: auto; margin-left: 0px; padding-top:0px">
                             <div class="layout verical">
                                 <paper-progress
-                                    max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                    max="1" value="1" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                 </paper-progress>
                                 <span style="text-align:center">You</span>
                             </div>
                             <div class="layout vertical">
                                 <paper-progress
-                                    max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                    max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                 </paper-progress>
                                 <span style="text-align:center">[[columnPlayer]]</span>
                             </div>
                             <template is="dom-if" if="[[ isMultiDim ]]">
                                 <div class="layout vertical">
                                     <paper-progress
-                                        max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                        max="100" value="0" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                     </paper-progress>
                                     <span style="text-align:center">[[matrixPlayer]]</span>
                                 </div>
@@ -267,14 +267,14 @@ export class LeepsBimatrix extends PolymerElement {
                                     selected="{{ _myPlannedDecisionString }}">
 
                                     <template is="dom-if" if="[[ _ifMVGame() ]]">
-                                        <paper-radio-button name="2" style="margin-top: 25px;"><p> U </p></paper-radio-button>
-                                        <paper-radio-button name="1" style="margin-top: 25px;"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="margin-top: 25px;"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="2" style="margin-top: 1.5625em;"><p> U </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="margin-top: 1.5625em;"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 1.5625em;"><p> D </p></paper-radio-button>
                                     </template>
 
                                     <template is="dom-if" if="[[ !_ifMVGame() ]]">
-                                        <paper-radio-button name="1" style="margin-top: 25px; "><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="margin-top: 25px;  "><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="margin-top: 1.5625em; "><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 1.5625em;  "><p> D </p></paper-radio-button>
                                     </template>              
 
                                     
@@ -289,7 +289,7 @@ export class LeepsBimatrix extends PolymerElement {
                              <!--   <template is="dom-if" if="[[ !meanMatching ]]"> -->
                                     <template is="dom-if" if="[[ !isMultiDim ]]">
 
-                                        <table id="payoff-table" class="self-center" style="width: 400px; height: 300px;">
+                                        <table id="payoff-table" class="self-center" style="width: 25em; height: 18.75em;">
                                             <template is="dom-repeat" index-as="rowIndex" items="{{_reverse(payoffMatrix)}}" as="row">
                                                 <tr>
                                                     <template is="dom-repeat" index-as="colIndex" items="{{_reverse(row)}}" as="column">
@@ -299,10 +299,10 @@ export class LeepsBimatrix extends PolymerElement {
                                                                     </span>
                                                                     <div class="layout horizontal center-center" style="margin: auto;">
                                                                         <paper-progress
-                                                                            max="1" value="[[ _valueMy2(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                            max="1" value="[[ _valueMy2(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                         </paper-progress>
                                                                         <paper-progress
-                                                                            max="100" value="[[ _valueColumn2(otherDecision, colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                            max="100" value="[[ _valueColumn2(otherDecision, colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                         </paper-progress>
                                                                     </div>
                                                                     <div>
@@ -317,7 +317,7 @@ export class LeepsBimatrix extends PolymerElement {
                                     
 
                                     <template is="dom-if" if="[[ isMultiDim ]]">
-                                        <div class="layout horizontal matrices" style="margin-bottom: 20px;" >
+                                        <div class="layout horizontal matrices" style="margin-bottom: 1.25em;" >
                                         <template is="dom-repeat" index-as="matrixIndex" items="{{payoffMatrix}}" as="matrix">
 
                                             <table id="payoff-table" class="self-center two" >
@@ -342,13 +342,13 @@ export class LeepsBimatrix extends PolymerElement {
                                                                         </template>
                                                                         <div class="layout horizontal center-center" style="margin: auto;">
                                                                             <paper-progress
-                                                                                max="1" value="[[ _valueMy(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                                max="1" value="[[ _valueMy(myPlannedDecision, rowIndex, payoffMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                             </paper-progress>
                                                                             <paper-progress
-                                                                                max="100" value="[[ _valueColumn( colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                                max="100" value="[[ _valueColumn( colIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                             </paper-progress>
                                                                             <paper-progress
-                                                                                max="100" value="[[ _valueMatrix( matrixIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:20px;width:20px;margin-right:5px;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
+                                                                                max="100" value="[[ _valueMatrix( matrixIndex, stratMatrix) ]]" style="transform: rotate(270deg);border-radius: 50%;height:1.25em;width:1.25em;margin-right:0.3125em;border-style: solid;--paper-progress-container-color: #ffffff;--paper-progress-active-color: #000000;">
                                                                             </paper-progress>
                                                                         </div>
                                                                         <div>
