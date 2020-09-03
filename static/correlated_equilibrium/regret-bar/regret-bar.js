@@ -28,12 +28,12 @@ export class RegretBar extends PolymerElement {
 
                 #progress-container2 {
                     height: 50%;
-                    margin-top: 60px;
+                    margin-top: 3.75em;
                 }
 
                 #progress-container1 {
                     height: 33%;
-                    margin-top: 30px;
+                    margin-top: 1.875em;
                 }
 
                 #progress-container {
@@ -41,36 +41,36 @@ export class RegretBar extends PolymerElement {
                 }
 
                 #myProgress {
-                    width: 200px;
+                    width: 12.5em;
                     background-color: #b1dcff;
-                    outline: 1px solid black;
-                    margin-right: 25px;
+                    outline: 0.0625em solid black;
+                    margin-right: 1.5625em;
                 }
 
                 #myBar0 {
                     width: 0%;
-                    height: 30px;
+                    height: 1.875em;
                     background-color: #ffc249;
                     text-align: center;
-                    line-height: 30px;
+                    line-height: 1.875em;
                     color: white;
                 }
 
                 #myBar1 {
                     width: 0%;
-                    height: 30px;
+                    height: 1.875em;
                     background-color: #ffc249;
                     text-align: center;
-                    line-height: 30px;
+                    line-height: 1.875em;
                     color: white;
                 }
 
                 #myBar2 {
                     width: 0%;
-                    height: 30px;
+                    height: 1.875em;
                     background-color: #ffc249;
                     text-align: center;
-                    line-height: 30px;
+                    line-height: 1.875em;
                     color: white;
                 }
 
@@ -436,7 +436,7 @@ export class RegretBar extends PolymerElement {
     }
 
     _padding(){
-        if (this.gameType == 'MV') return '12px';
+        if (this.gameType == 'MV') return '0.75em';
         return '';
     }
 

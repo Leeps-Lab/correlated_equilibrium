@@ -303,7 +303,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     color: '#ff0000',
                     type: "line",
                     data: [[0, 0]],
-                    step: "left"
+                    step: "left",
                 },
             ],
             legend: {
@@ -312,6 +312,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 verticalAlign: 'top',
                 floating: true,
                 y: 15,
+                itemStyle: {"fontSize": "0.75em",},
             },
         });
     }
