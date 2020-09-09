@@ -244,7 +244,7 @@
     </div>
     
 
-    <div>Your total payoff so far: {{ player.participant.payoff }} {% if subsession.config.practice %}(This was a practice round){% endif %}</div>
+    <div>Your total payoff so far: {{ player.participant.payoff }} {% if subsession.config.practice %}(This was a practice round so your round payoff is 0){% endif %}</div>
 
     {% next_button %}
 
