@@ -37,7 +37,8 @@ def parse_config(config_file):
             'max_info': True if row['max_info'] == 'TRUE' else False,
             'players_per_group': int(row['players_per_group']),
             'game': str(row['game']),
-            'regret': int(row['regret'])
+            'regret': int(row['regret']),
+            'practice': True if row['practice'] == 'TRUE' else False,
         })
     return rounds
 
@@ -117,6 +118,9 @@ class Subsession(BaseSubsession):
     def is_multi_dim(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
         return game == 'FP'
+    
+    def practice(self):
+        return parse_config(self.session.config['config_file'])[self.round_number-1]['practice']
 
     def pure_strategy(self):
         return True
@@ -377,3 +381,5 @@ class Player(BasePlayer):
         self.c_payoff = calc_c_payoff / period_duration.total_seconds()
         self.d_payoff = calc_d_payoff / period_duration.total_seconds()
         self.payoff = payoff / period_duration.total_seconds()
+        if self.group.subsession.practice():
+            self.participant.payoff -= self.payoff
