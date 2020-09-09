@@ -179,10 +179,10 @@
                     <tr>
                         <td>% Time.</td>
                         {% if show_u %}
-                            <td>{{ freq_u  }}</td>
+                            <td>{{ freq_u | floatformat:2 }}</td>
                         {% endif %}
-                        <td>{{ freq_c  }}</td>
-                        <td>{{ freq_d }}</td>
+                        <td>{{ freq_c | floatformat:2 }}</td>
+                        <td>{{ freq_d | floatformat:2 }}</td>
                         <td>1.00</td>
                     </tr>
                     <tr>
@@ -210,10 +210,10 @@
                     <tr>
                         <td> </td>
                         {% if show_u %}
-                            <td>{{ role_freq_u }}</td>
+                            <td>{{ role_freq_u | floatformat:2 }}</td>
                         {% endif %}
-                        <td>{{ role_freq_c }}</td>
-                        <td>{{ role_freq_d }}</td>
+                        <td>{{ role_freq_c | floatformat:2 }}</td>
+                        <td>{{ role_freq_d | floatformat:2 }}</td>
                         <td>1.00</td>
                     </tr>
                     <tr>
