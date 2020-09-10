@@ -96,11 +96,16 @@ class Results(Page):
             'show_u': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV')
         }
 
+class Payment(Page):
+
+    def is_displayed(self):
+        return self.round_number == self.subsession.num_rounds()
 
 page_sequence = [
     Introduction,
     DecisionWaitPage,
     Decision,
     ResultsWaitPage,
-    Results
+    Results,
+    Payment
 ]
