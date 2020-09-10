@@ -100,6 +100,11 @@ class Payment(Page):
 
     def is_displayed(self):
         return self.round_number == self.subsession.num_rounds()
+    
+    def vars_for_template(self):
+        return {
+            'payoff': self.participant.payoff.to_real_world_currency(self.session),
+        }
 
 page_sequence = [
     Introduction,
