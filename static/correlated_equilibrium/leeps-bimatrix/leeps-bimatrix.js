@@ -414,6 +414,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             num-subperiods="[[ numSubperiods ]]"
                                             num-players="[[ numPlayers ]]"
                                             max-info="[[ maxInfo ]]"
+                                            style="width: {{_graphWidth()}};"
                                         ></subperiod-payoff-graph>
                                         <subperiod-strategy-graph
                                             game-type="[[ gameType ]]"
@@ -425,6 +426,7 @@ export class LeepsBimatrix extends PolymerElement {
                                             period-length="[[ periodLength ]]"
                                             num-subperiods="[[ numSubperiods ]]"
                                             max-info="[[ maxInfo ]]"
+                                            style="width: {{_graphWidth()}};"
                                         ></subperiod-strategy-graph>
                                     </template>
                                 </div>
@@ -1531,6 +1533,21 @@ export class LeepsBimatrix extends PolymerElement {
         if(this.$.constants.role == "p2") return "p3";
         if(this.$.constants.role == "p3") return "p2";
 
+    }
+
+    _graphWidth(){
+        if(this.maxInfo){
+            if(this.isMultiDim){
+                if(this.$.constants.role != "p3") return '31.875em';
+                else return '42.875em';
+            } else{
+                return '45.875em';
+            }
+                
+        } else{
+            return '52.875em';
+        }
+        
     }
 
 }
