@@ -43,6 +43,8 @@ def parse_config(config_file):
     return rounds
 
 class Subsession(BaseSubsession):
+    def num_rounds(self):
+        return len(parse_config(self.session.config['config_file']))
 
     #get average strategy of role
     def get_average_strategy(self, p1, p2):

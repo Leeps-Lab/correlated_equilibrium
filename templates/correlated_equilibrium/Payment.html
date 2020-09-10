@@ -1,0 +1,17 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Final Page
+{% endblock %}
+
+{% block content %}
+
+<p>
+Congratulations! You have completed the experiment. The total points you earn in this experiment is {{ participant.payoff }}.
+Please press next to end the experiment.
+</p>
+
+    {% next_button %}
+
+{% endblock %}
