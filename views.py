@@ -19,7 +19,8 @@ def get_config_columns(group):
         config['max_info'],
         config['players_per_group'],
         config['game'],
-        config['regret']
+        config['regret'],
+        config['practice']
     ]
 
 def get_output_table_header(groups):
@@ -36,7 +37,8 @@ def get_output_table_header(groups):
         'max_info',
         'players_per_group',
         'game',
-        'regret'
+        'regret',
+        'practice'
     ]
 
     header += [
