@@ -72,9 +72,11 @@ class Results(Page):
 
         role_average_frequencies = self.player.get_role_frequency(decisions)
 
-        freq_u = self.player.get_frequency( 2, decisions)
-        freq_c = self.player.get_frequency( 1, decisions)
-        freq_d = self.player.get_frequency( 0, decisions)
+        freq = self.player.get_frequency(decisions)
+
+        freq_u = freq[2]
+        freq_c = freq[1]
+        freq_d = freq[0]
 
 
         return {

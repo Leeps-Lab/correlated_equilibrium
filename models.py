@@ -252,17 +252,24 @@ class Player(BasePlayer):
         return weighted_sum_decision / self.group.period_length()
 
     #get frequency of player picking choice
-    def get_frequency(self, choice, decisions):
-        count = 0
+    def get_frequency(self, decisions):
         total = 0
+        counts = [0, 0, 0]
         decisions = self.group.get_group_decisions_events()
         while decisions:
             cur_decision = decisions.pop(0)
             decision_value = cur_decision.value[self.participant.code]
             total += 1
-            if (decision_value == choice):
-                count += 1
-        return count / total   
+            if (int(decision_value) == 0):
+                counts[0] += 1
+            elif (int(decision_value) == 1):
+                counts[1] += 1
+            else:
+                counts[2] += 1
+        counts[0] /= total
+        counts[1] /= total
+        counts[2] /= total
+        return counts   
     
     #get average frequency of player's role picking choice
     def get_role_frequency(self, decisions):
