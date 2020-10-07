@@ -93,7 +93,7 @@ class Results(Page):
             'role_freq_d': role_average_frequencies[0],
             'role': self.player.role(),
             'game': self.group.subsession.game_type(),
-            'show_u': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV')
+            'show_u': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV1') or (self.group.subsession.game_type() == 'MV2')
         }
 
 class Payment(Page):
