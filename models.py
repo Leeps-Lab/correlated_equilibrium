@@ -69,11 +69,17 @@ class Subsession(BaseSubsession):
     def payoff_matrix(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
 
-        if game == 'MV':
+        if game == 'MV1':
             payoff_matrix = [
                 [[0,0], [100,200], [200,100]],
                  [[200,100], [0,0], [100,200]],
                  [[100,200], [200,100], [0,0]]
+            ]
+        elif game == 'MV2':
+            payoff_matrix = [
+                [[200,100], [100,200], [0,0]],
+                 [[0,0], [200,100], [100,200]],
+                 [[100,200], [0,0], [200,100]]
             ]
         elif game == 'FP':
             payoff_matrix = [
@@ -84,18 +90,24 @@ class Subsession(BaseSubsession):
                 [[[0,100,0], [0,0,0]],
                     [[100,100,0], [100,0,300]]]
             ]
-        elif game == 'BM':
+        elif game == 'BM1':
             #BM = Bimatrix
             payoff_matrix = [
                 [[100,100],[600,200]],
                 [[200,600],[500,500]]
+            ]
+        elif game == 'BM2':
+            #BM = Bimatrix
+            payoff_matrix = [
+                [[500,500],[200,600]],
+                [[600,200],[100,100]]
             ]
         return payoff_matrix
     
     def strat_matrix(self):
         game = parse_config(self.session.config['config_file'])[self.round_number-1]['game']
 
-        if game == 'MV':
+        if game == 'MV1' or game == 'MV2':
             strat_matrix = [
                 [[], [], []],
                  [[], [], []],
@@ -107,7 +119,7 @@ class Subsession(BaseSubsession):
                 [[ [  ], [  ] ], [ [  ], [  ] ]],
                 [[ [  ], [  ] ], [ [  ], [  ] ]]
             ]#BM = Bimatrix
-        elif game == "BM":
+        elif game == 'BM1' or game == 'BM2':
             strat_matrix = [
                 [[ ], [ ]],
                 [[ ], [ ]]
