@@ -265,7 +265,7 @@ export class StrategyGraph extends PolymerElement {
                         dashStyle: 'dot'
                     },
                 ] : //two player games
-            (this.gameType == "MV") ?
+            (this.gameType == "MV1" || this.gameType == "MV2") ?
             [
                 {
                     name: 'C',
