@@ -9,7 +9,7 @@
     <script src="{% static 'correlated_equilibrium/highcharts.js' %}"></script>
 
     <script>
-        let show_u = ('{{role}}' == 'p3') || ('{{game}}' == 'MV') ? true : false;
+        let show_u = ('{{role}}' == 'p3') || ('{{game}}' == 'MV1') || ('{{game}}' == 'MV2') ? true : false;
         Highcharts.chart('container', {
             chart: {
                 plotBackgroundColor: null,
