@@ -789,7 +789,7 @@ export class LeepsBimatrix extends PolymerElement {
     }
 
     _ifMVGame() {
-        return this.gameType == 'MV';
+        return this.gameType == 'MV1' || this.gameType == 'MV2';
     }
 
     _reverse(list) {

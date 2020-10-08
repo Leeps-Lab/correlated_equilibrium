@@ -116,7 +116,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     }
                 }
             },
-            series: (!this.maxInfo) ? (this.$.constants.role == "p3" || this.gameType == 'MV')? [
+            series: (!this.maxInfo) ? (this.$.constants.role == "p3" || this.gameType == 'MV1' || this.gameType == 'MV2')? [
                 {
                     name: 'U',
                     borderColor: null,
@@ -239,7 +239,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         dashStyle: 'dot'
                     },
                 ] : //two player games
-            (this.gameType == "MV") ?
+            (this.gameType == "MV1" || this.gameType == "MV2") ?
             [
                 {
                     name: 'U',
@@ -416,7 +416,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             count1 /= len;
             count0 /= len;*/
 
-            if(this.gameType == 'MV'){/*
+            if(this.gameType == 'MV1' || this.gameType == 'MV2'){/*
                 dataset = this.graph_obj.series[0];
                 this._lastElem(dataset.data).update({y: count2});
                 dataset.addPoint([this._currSubperiod, count2]);
@@ -490,7 +490,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             count1 /= len;
 
 
-            if(this.gameType == 'MV') {
+            if(this.gameType == 'MV1' || this.gameType == 'MV2') {
                 //plot if other player chose 1
                 dataset = this.graph_obj.series[3];
                 this._lastElem(dataset.data).update({y: count1});

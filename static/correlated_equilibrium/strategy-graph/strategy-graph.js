@@ -265,7 +265,7 @@ export class StrategyGraph extends PolymerElement {
                         dashStyle: 'dot'
                     },
                 ] : //two player games
-            (this.gameType == "MV") ?
+            (this.gameType == "MV1" || this.gameType == "MV2") ?
             [
                 {
                     name: 'C',
@@ -411,7 +411,7 @@ export class StrategyGraph extends PolymerElement {
 
         //For other choices
         if(this.numPlayers % 2 == 0 && this.maxInfo) {
-            if(this.gameType == 'MV') {
+            if(this.gameType == 'MV1' || this.gameType == 'MV2') {
                 dataset = this.graph_obj.series[2];
                 this._lastElem(dataset.data).remove();
                 dataset.addPoint([xval, (this.otherDecision == 1)? 1 : 0]);

@@ -181,7 +181,7 @@ export class RegretBar extends PolymerElement {
             var elem1 = this.shadowRoot.getElementById("myBar1");
             var elem2;
 
-            if(this.$.constants.role == 'p3' || this.gameType == 'MV') {
+            if(this.$.constants.role == 'p3' || this.gameType == 'MV1' || this.gameType == 'MV2') {
                 elem2 = this.shadowRoot.getElementById("myBar2");
             }
 
@@ -431,12 +431,11 @@ export class RegretBar extends PolymerElement {
     
     //Calculate how many regret bars needed to show
     _if3() {
-        //return this.gameType == 'MV' || this.$.constants.role == 'p3';
         return this.payoffMatrix[0].length > 2 || this.$.constants.role == 'p3';
     }
 
     _padding(){
-        if (this.gameType == 'MV') return '0.75em';
+        if (this.gameType == 'MV1' || this.gameType == 'MV2') return '0.75em';
         return '';
     }
 
