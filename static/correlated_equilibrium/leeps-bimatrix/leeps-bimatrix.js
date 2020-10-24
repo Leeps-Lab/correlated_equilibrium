@@ -249,14 +249,14 @@ export class LeepsBimatrix extends PolymerElement {
                                     selected="{{ _myPlannedDecisionString }}">
 
                                     <template is="dom-if" if="[[ _p3Role() ]]">
-                                        <paper-radio-button name="2"><p> U </p></paper-radio-button>
-                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="2"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p> B </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> A </p></paper-radio-button>
                                     </template>
 
                                     <template is="dom-if" if="[[ !_p3Role() ]]">
-                                        <paper-radio-button name="1"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="1"><p> B </p></paper-radio-button>
+                                        <paper-radio-button name="0"><p> A </p></paper-radio-button>
                                     </template>
                                 </paper-radio-group>
                             </template>
@@ -267,14 +267,14 @@ export class LeepsBimatrix extends PolymerElement {
                                     selected="{{ _myPlannedDecisionString }}">
 
                                     <template is="dom-if" if="[[ _ifMVGame() ]]">
-                                        <paper-radio-button name="2" style="margin-top: 1.5625em;"><p> U </p></paper-radio-button>
-                                        <paper-radio-button name="1" style="margin-top: 1.5625em;"><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="margin-top: 1.5625em;"><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="2" style="margin-top: 1.5625em;"><p> C </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="margin-top: 1.5625em;"><p> B </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 1.5625em;"><p> A </p></paper-radio-button>
                                     </template>
 
                                     <template is="dom-if" if="[[ !_ifMVGame() ]]">
-                                        <paper-radio-button name="1" style="margin-top: 1.5625em; "><p> C </p></paper-radio-button>
-                                        <paper-radio-button name="0" style="margin-top: 1.5625em;  "><p> D </p></paper-radio-button>
+                                        <paper-radio-button name="1" style="margin-top: 1.5625em; "><p> B </p></paper-radio-button>
+                                        <paper-radio-button name="0" style="margin-top: 1.5625em;  "><p> A </p></paper-radio-button>
                                     </template>              
 
                                     
@@ -1028,142 +1028,9 @@ export class LeepsBimatrix extends PolymerElement {
     _onGroupDecisionsChanged() {
         this.lastT = performance.now();
         this._subperiodProgress = 0;
-        /*console.log("Group Decisions Changed");
-        console.log(this.groupDecisions);
-        if(typeof this.groupDecisions === 'undefined') return;
-        if(Object.keys(this.groupDecisions).length == 0) return;
-        for(let decision of Object.values(this.groupDecisions)){
-            if(decision === null) return;
-         }
-        if(this.numPlayers % 2 == 0 || this._ifMVGame()) {
-            var i, j, t = [];
-
-            // Loop through every item in the outer array (height)
-            for (i=0; i < this.stratMatrix.length; i++ ) {
-                t[i] = [];
-
-                for(j = 0; j < this.stratMatrix[0].length; j++) {
-                    t[i][j] = this.stratMatrix[i][j];
-                }
-            }
-            
-            var p1Decision, p2Decision;
-            var p1ID, p2ID;
-            for (const player of this.$.constants.group.players) {
-                if(player.role == "p1") { 
-                    p1Decision = this.groupDecisions[player.participantCode];
-                    p1ID = player.participantCode;
-                }
-                else if(player.role == "p2") { 
-                    p2Decision = this.groupDecisions[player.participantCode];
-                    p2ID = player.participantCode;
-                }
-            }
-            if(this.$.constants.participantCode == p1ID) {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                      if(i == p1Decision && j == p2Decision){
-                        t[i][j].push(1);
-                      } else{
-                        t[i][j].push(0);
-                      }
-                    }
-                }
-            }
-            else if(this.$.constants.participantCode == p2ID) {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                      if(j == p1Decision && i == p2Decision){
-                        t[i][j].push(1);
-                      } else{
-                        t[i][j].push(0);
-                      }
-                    }
-                }
-            }
-        }
-        else if(this.numPlayers % 3 == 0) {
-            var p1Decision, p2Decision, p3Decision;
-            var p1ID, p2ID, p3ID;
-
-            var t = [];
-            for (let i = 0; i < this.stratMatrix.length; i++){
-                t[i] = [];
-                for (let j = 0; j < this.stratMatrix[0].length; j++){
-                    t[i][j] = [];
-                    for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                        t[i][j][z] = this.stratMatrix[i][j][z];
-                    }
-                }
-            }
-            
-            for (const player of this.$.constants.group.players) {
-                if(player.role == "p1") { 
-                    p1Decision = this.groupDecisions[player.participantCode];
-                    p1ID = player.participantCode;
-                }
-                else if(player.role == "p2") { 
-                    p2Decision = this.groupDecisions[player.participantCode];
-                    p2ID = player.participantCode;
-                }
-                else if(player.role == "p3") { 
-                    p3Decision = this.groupDecisions[player.participantCode];
-                    p3ID = player.participantCode;
-                }
-            }
-
-            if(this.$.constants.participantCode == p1ID) {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p3Decision && j == p1Decision && z == p2Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            }
-                        }
-                    }
-                }
-            }
-            else if(this.$.constants.participantCode == p2ID) {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p3Decision && j == p2Decision && z == p1Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            }        
-                        }
-                    }
-                }
-
-            }
-            else if(this.$.constants.participantCode == p3ID) {
-                for (let i = 0; i < this.stratMatrix.length; i++){
-                    for (let j = 0; j < this.stratMatrix[0].length; j++){
-                        for (let z = 0; z < this.stratMatrix[0][0].length; z++){
-                            if(i == p2Decision && j == p3Decision && z == p1Decision){
-                                t[i][j][z].push(1)
-                            } else{
-                                t[i][j][z].push(0)
-                            } 
-                        }
-                    }
-                }
-
-            }
-        }
-        console.log(t);
-        this.set('stratMatrix', t);
-
-        this.notifyPath('stratMatrix');*/
     }
 
     _handleGroupDecisionsEvent(event) {
-        //console.log("Group Decisions Changed");
-        //console.log(this.groupDecisions);
-        //NUll Checks
         if(typeof this.groupDecisions === 'undefined') return;
         if(Object.keys(this.groupDecisions).length == 0) return;
         for(let decision of Object.values(this.groupDecisions)){

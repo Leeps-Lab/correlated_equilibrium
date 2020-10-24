@@ -118,7 +118,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             },
             series: (!this.maxInfo) ? (this.$.constants.role == "p3" || this.gameType == 'MV1' || this.gameType == 'MV2')? [
                 {
-                    name: 'U',
+                    name: 'C',
                     borderColor: null,
                     color: '#ffff00',
                     type: "area",
@@ -126,7 +126,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'C',
+                    name: 'B',
                     borderColor: null,
                     color: '#04f2ff',
                     type: "area",
@@ -134,7 +134,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'D',
+                    name: 'A',
                     borderColor: null,
                     color: '#9aff02',
                     type: "area",
@@ -143,7 +143,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 },
             ] : [
                 {
-                    name: 'C',
+                    name: 'B',
                     borderColor: null,
                     color: '#04f2ff',
                     type: "area",
@@ -151,7 +151,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'D',
+                    name: 'A',
                     borderColor: null,
                     color: '#9aff02',
                     type: "area",
@@ -161,7 +161,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             ] : (this.numPlayers % 3 == 0 ) ? 
                     (this.$.constants.role == "p3")? [
                     {
-                        name: 'U',
+                        name: 'C',
                         borderColor: null,
                         color: '#ffff00',
                         type: "area",
@@ -169,7 +169,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'C',
+                        name: 'B',
                         borderColor: null,
                         color: '#04f2ff',
                         type: "area",
@@ -177,7 +177,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'D',
+                        name: 'A',
                         borderColor: null,
                         color: '#9aff02',
                         type: "area",
@@ -201,7 +201,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     
                 ] : [
                     {
-                        name: 'C',
+                        name: 'B',
                         borderColor: null,
                         color: '#04f2ff',
                         type: "area",
@@ -209,7 +209,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'D',
+                        name: 'A',
                         borderColor: null,
                         color: '#9aff02',
                         type: "area",
@@ -224,14 +224,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                         step: "left"
                     },
                     {
-                        name: 'P3 Chooses C',
+                        name: 'P3 Chooses B',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
                         step: "left"
                     },
                     {
-                        name: 'P3 Chooses U',
+                        name: 'P3 Chooses A',
                         color: '#ff0000',
                         type: "line",
                         data: [[0, 0]],
@@ -242,7 +242,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
             (this.gameType == "MV1" || this.gameType == "MV2") ?
             [
                 {
-                    name: 'U',
+                    name: 'C',
                     borderColor: null,
                     color: '#ffff00',
                     type: "area",
@@ -250,7 +250,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'C',
+                    name: 'B',
                     borderColor: null,
                     color: '#04f2ff',
                     type: "area",
@@ -258,7 +258,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'D',
+                    name: 'A',
                     borderColor: null,
                     color: '#9aff02',
                     type: "area",
@@ -266,14 +266,14 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses C' : 'P2 Chooses C',
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses B' : 'P2 Chooses B',
                     color: '#ff0000',
                     type: "line",
                     data: [[0, 0]],
                     step: "left"
                 },
                 {
-                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses U' : 'P2 Chooses U',
+                    name: ( this.$.constants.role == "p2") ? 'P1 Chooses C' : 'P2 Chooses C',
                     color: '#ff0000',
                     type: "line",
                     data: [[0, 0]],
@@ -283,7 +283,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                 
             ] : [
                 {
-                    name: 'C',
+                    name: 'B',
                     borderColor: null,
                     color: '#04f2ff',
                     type: "area",
@@ -291,7 +291,7 @@ export class SubperiodStrategyGraph extends PolymerElement {
                     step: "left"
                 },
                 {
-                    name: 'D',
+                    name: 'A',
                     borderColor: null,
                     color: '#9aff02',
                     type: "area",
