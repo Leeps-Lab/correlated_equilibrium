@@ -51,49 +51,50 @@ class Results(Page):
             # I really don't like having to repeat these keys twice but I can't think of any clean way to avoid it
             return {
                 'role_average_payoff': float('nan'),
-                'role_average_u_payoff': float('nan'),
-                'role_average_c_payoff': float('nan'),
-                'role_average_d_payoff': float('nan'),
-                'freq_u': float('nan'),
-                'freq_c': float('nan'),
-                'freq_d': float('nan'),
-                'role_freq_u': float('nan'),
-                'role_freq_c': float('nan'),
-                'role_freq_d': float('nan'),
-                'role': 'none'
+                'role_average_C_payoff': float('nan'),
+                'role_average_B_payoff': float('nan'),
+                'role_average_A_payoff': float('nan'),
+                'freq_C': float('nan'),
+                'freq_B': float('nan'),
+                'freq_A': float('nan'),
+                'role_freq_C': float('nan'),
+                'role_freq_B': float('nan'),
+                'role_freq_A': float('nan'),
+                'role': 'none',
+                'show_C': False,
             }
         decisions = self.group.get_group_decisions_events()
 
         role_payoffs = [ p.payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
-        role_u_payoffs = [ p.u_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
-        role_c_payoffs = [ p.c_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
-        role_d_payoffs = [ p.d_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_C_payoffs = [ p.C_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_B_payoffs = [ p.B_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
+        role_A_payoffs = [ p.A_payoff for p in self.group.subsession.get_players() if p.role() == self.player.role() ]
         
 
         role_average_frequencies = self.player.get_role_frequency(decisions)
 
-        freq_u = self.player.get_frequency( 2, decisions)
-        freq_c = self.player.get_frequency( 1, decisions)
-        freq_d = self.player.get_frequency( 0, decisions)
+        freq_C = self.player.get_frequency( 2, decisions)
+        freq_B = self.player.get_frequency( 1, decisions)
+        freq_A = self.player.get_frequency( 0, decisions)
 
 
         return {
-            'u_payoff': round(self.player.u_payoff / freq_u) if freq_u else 0,
-            'c_payoff': round(self.player.c_payoff / freq_c) if freq_c else 0,
-            'd_payoff': round(self.player.d_payoff / freq_d) if freq_d else 0,
+            'C_payoff': round(self.player.C_payoff / freq_C) if freq_C else 0,
+            'B_payoff': round(self.player.B_payoff / freq_B) if freq_B else 0,
+            'A_payoff': round(self.player.A_payoff / freq_A) if freq_A else 0,
             'role_average_payoff': round(sum(role_payoffs) / len(role_payoffs)),
-            'role_average_u_payoff': round((round(sum(role_u_payoffs) / len(role_u_payoffs)) / role_average_frequencies[2])) if role_average_frequencies[2] else 0,
-            'role_average_c_payoff': round((round(sum(role_c_payoffs) / len(role_c_payoffs)) / role_average_frequencies[1])) if role_average_frequencies[1] else 0,
-            'role_average_d_payoff': round((round(sum(role_d_payoffs) / len(role_d_payoffs)) / role_average_frequencies[0])) if role_average_frequencies[0] else 0,
-            'freq_u': freq_u,
-            'freq_c': freq_c,
-            'freq_d': freq_d,
-            'role_freq_u': role_average_frequencies[2],
-            'role_freq_c': role_average_frequencies[1],
-            'role_freq_d': role_average_frequencies[0],
+            'role_average_C_payoff': round((round(sum(role_C_payoffs) / len(role_C_payoffs)) / role_average_frequencies[2])) if role_average_frequencies[2] else 0,
+            'role_average_B_payoff': round((round(sum(role_B_payoffs) / len(role_B_payoffs)) / role_average_frequencies[1])) if role_average_frequencies[1] else 0,
+            'role_average_A_payoff': round((round(sum(role_A_payoffs) / len(role_A_payoffs)) / role_average_frequencies[0])) if role_average_frequencies[0] else 0,
+            'freq_C': freq_C,
+            'freq_B': freq_B,
+            'freq_A': freq_A,
+            'role_freq_C': role_average_frequencies[2],
+            'role_freq_B': role_average_frequencies[1],
+            'role_freq_A': role_average_frequencies[0],
             'role': self.player.role(),
             'game': self.group.subsession.game_type(),
-            'show_u': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV1') or (self.group.subsession.game_type() == 'MV2')
+            'show_C': (self.player.role() == 'p3') or (self.group.subsession.game_type() == 'MV1') or (self.group.subsession.game_type() == 'MV2')
         }
 
 class Payment(Page):

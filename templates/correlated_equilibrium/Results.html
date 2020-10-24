@@ -45,36 +45,36 @@
             series: [{
                 name: 'Choices',
                 colorByPoint: true,
-                data: show_u ? [{
-                    name: 'D',
-                    y: {{ freq_d | floatformat:2  }},
-                    payoff: {{ d_payoff }},
+                data: show_C ? [{
+                    name: 'A',
+                    y: {{ freq_A | floatformat:2  }},
+                    payoff: {{ A_payoff }},
                     color: '#9aff02',
                     sliced: true,
                     selected: true
                 }, {
-                    name: 'C',
-                    y: {{ freq_c | floatformat:2  }},
-                    payoff: {{ c_payoff }},
+                    name: 'B',
+                    y: {{ freq_B | floatformat:2  }},
+                    payoff: {{ B_payoff }},
                     color: '#04f2ff'
                 }, {
-                    name: 'U',
-                    y: {{ freq_u  | floatformat:2 }},
-                    payoff: {{ u_payoff}},
+                    name: 'C',
+                    y: {{ freq_C  | floatformat:2 }},
+                    payoff: {{ C_payoff}},
                     color: '#ffff00',
                 }] 
                 : 
                 [{
-                    name: 'D',
-                    y: {{ freq_d  | floatformat:2 }},
-                    payoff: {{ d_payoff }},
+                    name: 'A',
+                    y: {{ freq_A  | floatformat:2 }},
+                    payoff: {{ A_payoff }},
                     color: '#9aff02',
                     sliced: true,
                     selected: true
                 }, {
-                    name: 'C',
-                    y: {{ freq_c | floatformat:2 }},
-                    payoff: {{ c_payoff }},
+                    name: 'B',
+                    y: {{ freq_B | floatformat:2 }},
+                    payoff: {{ B_payoff }},
                     color: '#04f2ff'
                 }]
             }]
@@ -114,36 +114,36 @@
             series: [{
                 name: 'Choices',
                 colorByPoint: true,
-                data: show_u ? [{
-                    name: 'D',
-                    y: {{ role_freq_d | floatformat:2 }},
-                    payoff: {{ role_average_d_payoff  }},
+                data: show_C ? [{
+                    name: 'A',
+                    y: {{ role_freq_A | floatformat:2 }},
+                    payoff: {{ role_average_A_payoff  }},
                     color: '#9aff02',
                     sliced: true,
                     selected: true,
                 }, {
-                    name: 'C',
-                    y: {{ role_freq_c | floatformat:2  }},
-                    payoff: {{ role_average_c_payoff }},
+                    name: 'B',
+                    y: {{ role_freq_B | floatformat:2  }},
+                    payoff: {{ role_average_B_payoff }},
                     color: '#04f2ff',
                 }, {
-                    name: 'U',
-                    y: {{ role_freq_u | floatformat:2  }},
-                    payoff: {{ role_average_u_payoff  }},
+                    name: 'C',
+                    y: {{ role_freq_C | floatformat:2  }},
+                    payoff: {{ role_average_C_payoff  }},
                     color: '#ffff00',
                 }]
                 :
                 [{
-                    name: 'D',
-                    y: {{ role_freq_d | floatformat:2 }},
-                    payoff: {{ role_average_d_payoff }},
+                    name: 'A',
+                    y: {{ role_freq_A | floatformat:2 }},
+                    payoff: {{ role_average_A_payoff }},
                     color: '#9aff02',
                     sliced: true,
                     selected: true,
                 }, {
-                    name: 'C',
-                    y: {{ role_freq_c | floatformat:2 }},
-                    payoff: {{ role_average_c_payoff  }},
+                    name: 'B',
+                    y: {{ role_freq_B | floatformat:2 }},
+                    payoff: {{ role_average_B_payoff  }},
                     color: '#04f2ff',
                 }]
             }]
@@ -169,29 +169,29 @@
             <td>
                 <table class="table" >
                     <th>
-                        {% if show_u %}
-                            <td>U</td>
+                        {% if show_C %}
+                            <td>C</td>
                         {% endif %}
-                        <td>C</td>
-                        <td>D</td>
+                        <td>B</td>
+                        <td>A</td>
                         <td>All</td>
                     </th>
                     <tr>
                         <td>% Time.</td>
-                        {% if show_u %}
-                            <td>{{ freq_u | floatformat:2 }}</td>
+                        {% if show_C %}
+                            <td>{{ freq_C | floatformat:2 }}</td>
                         {% endif %}
-                        <td>{{ freq_c | floatformat:2 }}</td>
-                        <td>{{ freq_d | floatformat:2 }}</td>
+                        <td>{{ freq_B | floatformat:2 }}</td>
+                        <td>{{ freq_A | floatformat:2 }}</td>
                         <td>1.00</td>
                     </tr>
                     <tr>
                         <td>Payoff Rate</td>
-                        {% if show_u %}
-                            <td>{{ u_payoff  }}</td>
+                        {% if show_C %}
+                            <td>{{ C_payoff  }}</td>
                         {% endif %}
-                        <td>{{  c_payoff  }}</td>
-                        <td>{{  d_payoff  }}</td>
+                        <td>{{  B_payoff  }}</td>
+                        <td>{{  A_payoff  }}</td>
                         <td>{{ player.payoff }}</td>
                     </tr>
                 </table>
@@ -200,29 +200,29 @@
             <td>
                 <table class="table" >
                     <th>
-                        {% if show_u %}
-                            <td>U</td>
+                        {% if show_C %}
+                            <td>C</td>
                         {% endif %}
-                        <td>C</td>
-                        <td>D</td>
+                        <td>B</td>
+                        <td>A</td>
                         <td>All</td>
                     </th>
                     <tr>
                         <td> </td>
-                        {% if show_u %}
-                            <td>{{ role_freq_u | floatformat:2 }}</td>
+                        {% if show_C %}
+                            <td>{{ role_freq_C | floatformat:2 }}</td>
                         {% endif %}
-                        <td>{{ role_freq_c | floatformat:2 }}</td>
-                        <td>{{ role_freq_d | floatformat:2 }}</td>
+                        <td>{{ role_freq_B | floatformat:2 }}</td>
+                        <td>{{ role_freq_A | floatformat:2 }}</td>
                         <td>1.00</td>
                     </tr>
                     <tr>
                         <td> </td>
-                        {% if show_u %}
-                            <td>{{ role_average_u_payoff}}</td>
+                        {% if show_C %}
+                            <td>{{ role_average_C_payoff}}</td>
                         {% endif %}
-                        <td>{{ role_average_c_payoff}}</td>
-                        <td>{{ role_average_d_payoff  }}</td>
+                        <td>{{ role_average_B_payoff}}</td>
+                        <td>{{ role_average_A_payoff  }}</td>
                         <td>{{ role_average_payoff }}</td>
                     </tr>
                 </table>

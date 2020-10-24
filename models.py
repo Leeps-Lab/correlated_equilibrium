@@ -228,6 +228,10 @@ class Group(DecisionGroup):
             for player in group.get_players():
                 if not player.payoff:
                     player.set_payoff(period_start, period_end, decisions, payoff_matrix)
+    
+    def _on_regret_event(self, event=None, **kwargs):
+        print(event.value)
+        self.save()
 
 
 
@@ -235,9 +239,9 @@ class Player(BasePlayer):
 
     silo_num = models.IntegerField()
     _initial_decision = models.IntegerField()
-    u_payoff = models.FloatField()
-    c_payoff = models.FloatField()
-    d_payoff = models.FloatField()
+    C_payoff = models.FloatField()
+    B_payoff = models.FloatField()
+    A_payoff = models.FloatField()
 
     def role(self):
         num_players = self.num_players()
@@ -316,9 +320,9 @@ class Player(BasePlayer):
         period_duration = period_end - period_start
 
         payoff = 0
-        calc_u_payoff = 0
-        calc_c_payoff = 0
-        calc_d_payoff = 0
+        calc_C_payoff = 0
+        calc_B_payoff = 0
+        calc_A_payoff = 0
         if(self.num_players() % 2 == 0):
             role_index = (self.id_in_group - 1) % 2 
         elif(self.num_players() % 3 == 0):
@@ -385,15 +389,15 @@ class Player(BasePlayer):
                 decision_length = (next_change_time - d.timestamp).total_seconds()
             payoff += decision_length * flow_payoff
             if (my_decision == 2):
-                calc_u_payoff += decision_length * flow_payoff
+                calc_C_payoff += decision_length * flow_payoff
             elif (my_decision == 1):
-                calc_c_payoff += decision_length * flow_payoff
+                calc_B_payoff += decision_length * flow_payoff
             else:
-                calc_d_payoff += decision_length * flow_payoff
+                calc_A_payoff += decision_length * flow_payoff
 
-        self.u_payoff = calc_u_payoff / period_duration.total_seconds()
-        self.c_payoff = calc_c_payoff / period_duration.total_seconds()
-        self.d_payoff = calc_d_payoff / period_duration.total_seconds()
+        self.C_payoff = calc_C_payoff / period_duration.total_seconds()
+        self.B_payoff = calc_B_payoff / period_duration.total_seconds()
+        self.A_payoff = calc_A_payoff / period_duration.total_seconds()
         self.payoff = payoff / period_duration.total_seconds()
         if self.group.subsession.practice():
             self.participant.payoff -= self.payoff
