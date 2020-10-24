@@ -10,6 +10,7 @@ var myHistory = [];
 var one = [];
 var zero = []; 
 var two = [];
+var tick = 0;
 
 
 export class RegretBar extends PolymerElement {
@@ -80,6 +81,10 @@ export class RegretBar extends PolymerElement {
             <redwood-channel
                 channel="group_decisions"
                 on-event="_handleGroupDecisionsEvent">
+            </redwood-channel>
+            <redwood-channel
+                channel="regret"
+                id="channel">
             </redwood-channel>
 
             <template is="dom-if" if="[[ _if3()]]">
@@ -425,7 +430,16 @@ export class RegretBar extends PolymerElement {
             if(this._if3()) {
                 elem2.style.width = Math.round(regret2Percent * 100) + '%';
                 elem2.innerHTML = Math.round(regret2);
-            }         
+            }   
+            let regretMessage = {
+                'pcode': this.$.constants.participantCode,
+                'tick': tick,
+                'regret0': Math.round(regret0),
+                'regret1': Math.round(regret1),
+                'regret2': Math.round(regret2),
+            };
+            tick += 1;
+            this.$.channel.send(regretMessage);
         }  
     }
     

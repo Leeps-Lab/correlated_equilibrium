@@ -230,6 +230,7 @@ class Group(DecisionGroup):
                     player.set_payoff(period_start, period_end, decisions, payoff_matrix)
     
     def _on_regret_event(self, event=None, **kwargs):
+        print(event.value)
         self.save()
 
 

@@ -52,6 +52,9 @@ def get_output_table_header(groups):
         header.append('p{}_code'.format(player_num))
         header.append('p{}_role'.format(player_num))
         header.append('p{}_strategy'.format(player_num))
+        header.append('p{}_regret0'.format(player_num))
+        header.append('p{}_regret1'.format(player_num))
+        header.append('p{}_regret2'.format(player_num))
         header.append('p{}_target'.format(player_num))
     
     return header
@@ -115,7 +118,16 @@ def get_output_cont_time(events):
 # build output for a round of discrete time bimatrix
 def get_output_discrete_time(events):
     rows = []
-    print(len(events))
+    regret_dict = {}
+    for event in events:
+        if event.channel == 'regret':
+            pcode = event.value['pcode']
+            if pcode not in regret_dict.keys():
+                regret_dict[pcode] = {}
+                regret_dict[pcode][event.value['tick']] = (event.value)
+            else:
+                regret_dict[pcode][event.value['tick']] = (event.value)
+
     players = events[0].group.get_players()
     group = events[0].group
     max_num_players = math.ceil(group.session.num_participants / group.session.config['num_silos'])
@@ -142,12 +154,26 @@ def get_output_discrete_time(events):
                     row += ['', '', '', '']
                 else:
                     pcode = players[player_num].participant.code
-                    row += [
-                        pcode,
-                        players[player_num].role(),
-                        event.value[pcode],
-                        targets[pcode],
-                    ]
+                    if tick in regret_dict[pcode].keys():
+                        row += [
+                            pcode,
+                            players[player_num].role(),
+                            event.value[pcode],
+                            regret_dict[pcode][tick]['regret0'],
+                            regret_dict[pcode][tick]['regret1'],
+                            regret_dict[pcode][tick]['regret2'],
+                            targets[pcode],
+                        ]
+                    else:
+                        row += [
+                            pcode,
+                            players[player_num].role(),
+                            event.value[pcode],
+                            'error',
+                            'error',
+                            'error',
+                            targets[pcode],
+                        ]
             
             rows.append(row)
             tick += 1
