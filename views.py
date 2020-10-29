@@ -154,7 +154,17 @@ def get_output_discrete_time(events):
                     row += ['', '', '', '']
                 else:
                     pcode = players[player_num].participant.code
-                    if tick in regret_dict[pcode].keys():
+                    if tick == 0:
+                        row += [
+                            pcode,
+                            players[player_num].role(),
+                            event.value[pcode],
+                            0,
+                            0,
+                            0,
+                            targets[pcode],
+                        ]
+                    elif tick in regret_dict[pcode].keys():
                         row += [
                             pcode,
                             players[player_num].role(),
