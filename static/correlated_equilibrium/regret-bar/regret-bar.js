@@ -10,7 +10,7 @@ var myHistory = [];
 var one = [];
 var zero = []; 
 var two = [];
-var tick = 0;
+var tick = 1;
 
 
 export class RegretBar extends PolymerElement {
