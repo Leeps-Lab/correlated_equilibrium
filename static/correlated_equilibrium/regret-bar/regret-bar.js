@@ -412,66 +412,62 @@ export class RegretBar extends PolymerElement {
                         regret2List[i] = 2;
                     }
                 }
-
+                let histLength = 0;
                 //Get payoffs-- adding over all decisions for mean matching
                 //only record payoff when the history decision = my current decision
                 for(var i = 0; i < myHistory.length; i++) {
-                    
-                    if(this.numPlayers % 2 == 0) {
-                        // if 2 player game
-                        if(this.$.constants.role == 'p1') {
-                            //If player 1
-                            if(myHistory[i] == lastDecision){
+                    if (myHistory[i] == lastDecision){
+                        histLength += 1;
+                        if(this.numPlayers % 2 == 0) {
+                            if(this.$.constants.role == 'p1') {
+                                //If player 1
                                 for(const p2 of historyDict['p2'][i]){
                                     regret0 += this.myPayoffs[regret0List[i]][p2];
                                     regret1 += this.myPayoffs[regret1List[i]][p2];
+    
                                     //If 3 rows
                                     if(this._if3()) {
                                         regret2 += this.myPayoffs[regret2List[i]][p2];
-                                    }            
-                                } 
-                            }
-                        } 
-                        else if(this.$.constants.role == 'p2') { 
-                            //If player 2
-                            if(myHistory[i] == lastDecision){
+                                    }
+                                }
+    
+                            } 
+                            else if(this.$.constants.role == 'p2') { 
+                                //If player 2
                                 for(const p1 of historyDict['p1'][i]){
                                     regret0 += this.myPayoffs[regret0List[i]][p1];
                                     regret1 += this.myPayoffs[regret1List[i]][p1];
+    
                                     //If 3 rows
                                     if(this._if3()) {
                                         regret2 += this.myPayoffs[regret2List[i]][p1];
                                     }
-                                } 
+                                }
                             }
                         }
-                    }
-                    else if(this.numPlayers % 3 == 0) {
-                        if(this.$.constants.role == 'p1') {
-                            //If player 1
-                            if(myHistory[i] == lastDecision){
+                        else if(this.numPlayers % 3 == 0) {
+                            if(this.$.constants.role == 'p1') {
+                                //If player 1
                                 for(const p2 of historyDict['p2'][i]){
                                     for(const p3 of historyDict['p3'][i]){
                                         regret0 += this.payoffMatrix[p3][regret0List[i]][p2][0];
                                         regret1 += this.payoffMatrix[p3][regret1List[i]][p2][0];
                                     }
-                                }     
-                            }               
-                        }
-                        else if(this.$.constants.role == 'p2') {
-                            //If player 2
-                            if(myHistory[i] == lastDecision){
+                                }
+                                        
+                            }
+                            else if(this.$.constants.role == 'p2') {
+                                //If player 2
                                 for(const p1 of historyDict['p1'][i]){
                                     for(const p3 of historyDict['p3'][i]){
                                         regret0 += this.originalPayoffMatrix[p3][p1][regret0List[i]][1];
                                         regret1 += this.originalPayoffMatrix[p3][p1][regret1List[i]][1];
                                     }
                                 }
-                            }          
-                        }
-                        else if(this.$.constants.role == 'p3') {
-                            //If player 3
-                            if(myHistory[i] == lastDecision){
+                                        
+                            }
+                            else if(this.$.constants.role == 'p3') {
+                                //If player 3
                                 for(const p1 of historyDict['p1'][i]){
                                     for(const p2 of historyDict['p2'][i]){
                                         regret0 += this.originalPayoffMatrix[regret0List[i]][p1][p2][2];
@@ -479,6 +475,7 @@ export class RegretBar extends PolymerElement {
                                         regret2 += this.originalPayoffMatrix[regret2List[i]][p1][p2][2];
                                     }
                                 }
+                                
                             }
                         }
                     }
@@ -497,9 +494,12 @@ export class RegretBar extends PolymerElement {
 
                 //take the average conditional on group size, 2/3 populations share equal sizes.
                 //not the total average, only the average when the current decison was played in history.
-                CalculateLength = [choice for c in myHistory if c == lastDecision]
-                let histLength = CalculateLength.length;
-
+                //let CalculateLength = [choice for c in myHistory if c == lastDecision]
+                //let histLength = 1;
+                //for(let c in myHistory){
+                //    if(c == lastDecision) histLength += 1;
+                // }
+                
                 regret0 /= histLength;
                 regret1 /= histLength;
                 regret2 /= histLength;
@@ -521,18 +521,6 @@ export class RegretBar extends PolymerElement {
             regret0Percent = Math.max(0, regret0Percent);
             regret1Percent = Math.max(0, regret1Percent);
             regret2Percent = Math.max(0, regret2Percent);
-
-            //Update regret bars
-            //elem0.style.width = Math.round(regret0 * 100) + '%';
-            //elem0.innerHTML = Math.round(regret0 * 100) + '%';
-
-            //elem1.style.width = Math.round(regret1 * 100) + '%';
-            //elem1.innerHTML = Math.round(regret1 * 100) + '%';
-
-            //if(this._if3()) {
-            //    elem2.style.width = Math.round(regret2 * 100) + '%';
-            //    elem2.innerHTML = Math.round(regret2 * 100) + '%';
-            //}
             
             elem0.style.width = Math.round(regret0Percent * 100) + '%';
             elem0.innerHTML = Math.round(regret0);
