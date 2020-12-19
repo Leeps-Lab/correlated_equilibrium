@@ -1,0 +1,3 @@
+round,shuffle_role,period_length,num_subperiods,gamma,mean_matching,max_info,players_per_group,game,regret,practice
+1,TRUE,80,10,1,TRUE,TRUE,2,BM1,3,TRUE
+2,TRUE,80,10,1,TRUE,TRUE,2,MV1,3,TRUE
