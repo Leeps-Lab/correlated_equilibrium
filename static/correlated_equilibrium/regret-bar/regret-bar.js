@@ -503,7 +503,83 @@ export class RegretBar extends PolymerElement {
                 regret0 /= histLength;
                 regret1 /= histLength;
                 regret2 /= histLength;
-      
+                
+                // -------------------------------------------------------------------------
+                // Calculating ave payoff for j (regret 2 type)
+                var payoff = 0;
+                if(this.numPlayers % 2 == 0) {
+                    if(this.$.constants.role == 'p1') {
+                        //If player 1
+                        for(const p2 of p2_decisions){
+                            payoff += this.myPayoffs[this.myDecision][p2];
+                        }
+
+                    } 
+                    else if(this.$.constants.role == 'p2') { 
+                        //If player 2
+                        for(const p1 of p1_decisions){
+                            payoff += this.myPayoffs[this.myDecision][p1];
+                        }
+                    }
+                }
+                else if(this.numPlayers % 3 == 0) {
+                    if(this.$.constants.role == 'p1') {
+                        //If player 1
+                        for(const p2 of p2_decisions){
+                            for(const p3 of p3_decisions){
+                                payoff += this.payoffMatrix[p3][this.myDecision][p2][0];
+                            }
+                        }
+                                
+                    }
+                    else if(this.$.constants.role == 'p2') {
+                        //If player 2
+                        for(const p1 of p1_decisions){
+                            for(const p3 of p3_decisions){
+                                payoff += this.originalPayoffMatrix[p3][p1][this.myDecision][1];
+                            }
+                        }
+                                
+                    }
+                    else if(this.$.constants.role == 'p3') {
+                        //If player 3
+                        for(const p1 of p1_decisions){
+                            for(const p2 of p2_decisions){
+                                payoff += this.originalPayoffMatrix[this.myDecision][p1][p2][2];
+                            }
+                        }
+                        
+                    }
+                }
+                
+                // Take average payoff for mean-matching
+                if(this.numPlayers % 2 == 0){
+                    payoff /= pop_size;
+                }else if(this.numPlayers % 3 == 0){
+                    payoff /= (pop_size * pop_size);
+                }
+
+                //Push the payoff on the respective history list
+                //For each decision, sum up payoffs (get average payoffs for all round)
+                //If the list is not empty, divide the calculation by length
+                if(this.myDecision == 0) {
+                    zero.push(payoff);
+                    regret0 = 0;
+                    for (const p of zero) regret0 += p;
+                    regret0 = (zero.length > 0) ? regret0 / zero.length : 0;
+                }
+                else if(this.myDecision == 1) {
+                    one.push(payoff);
+                    regret1 = 0;
+                    for (const p of one) regret1 += p;
+                    regret1 = (one.length > 0) ? regret1 / one.length : 0;
+                }
+                else {
+                    two.push(payoff);
+                    regret2 = 0;
+                    for (const p of two) regret2 += p;
+                    regret2 = (two.length > 0) ? regret2 / two.length : 0;
+                }
             
             }
 
